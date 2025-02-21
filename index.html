@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>kirkr.xyz</title>
+    <style>
+        @font-face {
+            font-family: 'SuisseIntlMono';
+            src: url('SuisseIntlMono-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'SuisseIntlMono', monospace;
+            -webkit-font-smoothing: antialiased;
+            margin: 0; /* Reset default body margin */
+            font-size: 0.95rem; /* Reduced base font size */
+        }
+        .container {
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 2rem;
+        }
+        .section-title {
+            font-size: 1.1rem; /* Reduced from 1.25rem (text-lg) */
+            font-weight: bold; /* font-bold */
+            margin-bottom: 0.5rem; /* mb-2 */
+            padding-left: 0.5rem; /* pl-2 */
+            position: relative; /* relative */
+        }
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -2px;
+        }
+        .box {
+            border-width: 1px;
+            border-color: black;
+            border-style: solid;
+            background-color: white;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        a {
+            color: #3b82f6; /* text-blue-500 */
+            text-decoration: underline; /* underline */
+        }
+        .blogroll-list li::before {
+            content: '• ';
+        }
+        .mb-2 {
+            margin-bottom: 0.5rem;
+        }
+        .mb-8 {
+            margin-bottom: 2rem;
+        }
+        .text-2xl {
+            font-size: 1.25rem; /* Reduced from 1.5rem */
+        }
+        .font-bold {
+            font-weight: bold;
+        }
+        .list-disc {
+            list-style-type: disc;
+        }
+        .pl-5 {
+            padding-left: 1.25rem;
+        }
+        .list-none {
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body >
+    <div class="container">
+        <header class="mb-8">
+            <h1 class="text-2xl font-bold">kirkr.xyz</h1>
+        </header>
+
+        <section class="box">
+            <h2 class="section-title">about me</h2>
+            <div>
+                <p class="mb-2">you can find me here:</p>
+                <ul class="list-disc pl-5">
+                    <li><a href="https://github.com/Kirkr101" target="_blank">kirkr101</a> on github</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="box">
+            <h2 class="section-title">projects</h2>
+            <div>
+                <p class="mb-2">here are some projects I'm working on:</p>
+                <ul class="list-disc pl-5">
+                    <li>
+                        <p><a href="https://github.com/Kirkr101/Voxor">Voxor</a> - full stack chat app / replacement for slack or discord, using flask and tailwind.</p>
+                    </li>
+                    <li>
+                        <p><a href="https://github.com/Kirkr101/Streamline">Streamline</a> - lan file transfer command-line tool built in rust.</p>
+                    </li>
+                    <li>
+                        <p><a href="#">https://github.com/Kirkr101/RMT-Debrid</a> - flask server for interacting with the real-debrid api to remote download torrents onto a host server.</p>
+                    </li>
+                    <li>
+                        <p><a href="#">https://github.com/Kirkr101/Audioshare</a> - nextjs app to share large audio files with a built in player.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
