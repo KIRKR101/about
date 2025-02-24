@@ -1,30 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <title>kirkr.xyz</title>
-    <script>
-        (function () {
-            const savedTheme = localStorage.getItem("theme") || "light";
-            document.documentElement.setAttribute("data-theme", savedTheme);
-        })();
-    </script>
+    <link rel="preload" href="SuisseIntlMono-Regular.otf" as="font" type="font/opentype" crossorigin="anonymous">
     <style>
-        @font-face {
-            font-family: 'SuisseIntlMono';
-            src: url('SuisseIntlMono-Regular.otf') format('opentype');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        :root {
+        :where(html) {
             --bg-color: white;
             --text-color: black;
             --border-color: black;
-            --box-bg: white;
+            --box-bg: rgba(0, 0, 0, 0);
             --link-color: #3b82f6;
             --toggle-bg: white;
             --toggle-handle-bg: black;
@@ -34,11 +21,11 @@
             --toggle-active-border: #3b82f6;
         }
 
-        [data-theme="dark"] {
+        :where(html[data-theme="dark"]) {
             --bg-color: #121212;
             --text-color: #e4e4e4;
             --border-color: #555;
-            --box-bg: #121212;
+            --box-bg: rgba(255, 255, 255, 0);
             --link-color: #90caf9;
             --toggle-bg: #121212;
             --toggle-handle-bg: white;
@@ -48,9 +35,18 @@
             --toggle-active-border: #90caf9;
         }
 
+        @font-face {
+            font-family: 'SuisseIntlMono';
+            src: url('SuisseIntlMono-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
         body {
             font-family: 'SuisseIntlMono', monospace;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             margin: 0;
             font-size: .95rem;
             background-color: var(--bg-color);
@@ -58,76 +54,84 @@
             transition: background .3s, color .3s;
         }
 
-        .container {
+        .main-container {
             max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto;
             padding: 2rem;
         }
 
-        .theme-toggle-container {
+        .theme-toggle {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            align-items: center;
         }
 
-        .theme-toggle-checkbox {
-            display: none;
+        .theme-toggle__checkbox {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0; /* More efficient border: 0 */
         }
 
-        .theme-toggle-label {
-            display: inline-block;
+        .theme-toggle__label {
             width: 40px;
             height: 20px;
             background-color: var(--toggle-bg);
             border: 1px solid var(--toggle-border);
             border-radius: 20px;
-            position: relative;
             cursor: pointer;
             transition: all .3s ease;
+            display: flex;
+            align-items: center;
         }
 
-        .theme-toggle-label::after {
+        .theme-toggle__label::after {
             content: '';
-            position: absolute;
             width: 16px;
             height: 16px;
             border-radius: 50%;
             background-color: var(--toggle-handle-bg);
-            top: 2px;
-            left: 2px;
-            transition: all .3s ease;
+            transition: transform .3s ease; /* More specific transition */
+            transform: translateX(2px);
         }
 
-        .theme-toggle-checkbox:checked+.theme-toggle-label {
+        .theme-toggle__checkbox:checked + .theme-toggle__label {
             background-color: var(--toggle-active-bg);
             border-color: var(--toggle-active-border);
         }
 
-        .theme-toggle-checkbox:checked+.theme-toggle-label::after {
-            transform: translateX(20px);
+        .theme-toggle__checkbox:checked + .theme-toggle__label::after {
+            transform: translateX(22px);
             background-color: var(--toggle-active-handle);
         }
 
-        .section-title {
+        .section-heading {
             font-size: 1.1rem;
             font-weight: bold;
-            margin-bottom: .5rem;
-            padding-left: .5rem;
+            margin-bottom: 1rem;
+            padding-bottom: .5rem;
             position: relative;
         }
 
-        .section-title::before {
+        .section-heading::after {
             content: '';
             position: absolute;
             left: 0;
-            top: -2px;
+            bottom: -1px;
+            width: 100px;
+            height: 1px;
+            background-color: var(--border-color);
         }
 
-        .box {
-            border-width: 1px;
-            border-color: var(--border-color);
-            border-style: solid;
+        .content-box {
+            border: 1px solid var(--border-color);
             background-color: var(--box-bg);
             padding: 1rem;
             margin-bottom: 1rem;
@@ -135,6 +139,11 @@
 
         a {
             color: var(--link-color);
+            text-decoration: none;
+            transition: color .2s ease, text-decoration .2s ease;
+        }
+
+        a:hover {
             text-decoration: underline;
         }
 
@@ -142,90 +151,83 @@
             content: '• ';
         }
 
-        .mb-2 {
-            margin-bottom: .5rem;
+        .mb-2 { margin-bottom: .5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .text-2xl { font-size: 1.25rem; }
+        .font-bold { font-weight: bold; }
+        .list-disc { list-style-type: lower-greek; }
+        .list-none { list-style-type: none; }
+        .pl-5 { padding-left: 1.25rem; }
+        .list-disc > li { margin-bottom: .5rem; }
+
+        .project-list li {
+            margin-left: 1rem;
+            margin-bottom: .75rem;
         }
 
-        .mb-8 {
-            margin-bottom: 2rem;
-        }
-
-        .text-2xl {
-            font-size: 1.25rem;
-        }
-
-        .font-bold {
-            font-weight: bold;
-        }
-
-        .list-disc {
-            list-style-type: disc;
-        }
-
-        .pl-5 {
-            padding-left: 1.25rem;
-        }
-
-        .list-none {
-            list-style-type: none;
+        .project-list li p {
+            margin-bottom: .25rem;
         }
     </style>
 </head>
 <body>
-    <div class="theme-toggle-container">
-        <input type="checkbox" class="theme-toggle-checkbox" id="theme-toggle-checkbox">
-        <label class="theme-toggle-label" for="theme-toggle-checkbox"></label>
+    <div class="theme-toggle">
+        <input type="checkbox" class="theme-toggle__checkbox" id="theme-toggle">
+        <label class="theme-toggle__label" for="theme-toggle"></label>
     </div>
-    <div class="container">
+    <div class="main-container">
         <header class="mb-8">
             <h1 class="text-2xl font-bold">kirkr.xyz</h1>
         </header>
-        <section class="box">
-            <h2 class="section-title">about me</h2>
+        <section class="content-box">
+            <h2 class="section-heading">about me</h2>
             <div>
                 <p class="mb-2">you can find me here:</p>
-                <ul class="list-disc pl-5">
-                    <li><a href="https://github.com/Kirkr101" target="_blank">kirkr101</a> on github</li>
+                <ul class="list-disc pl-5 project-list">
+                    <li><a href="https://github.com/Kirkr101" target="_blank" rel="noopener noreferrer">kirkr101</a> on github</li>
                 </ul>
             </div>
         </section>
-        <section class="box">
-            <h2 class="section-title">projects</h2>
+        <section class="content-box">
+            <h2 class="section-heading">projects</h2>
             <div>
                 <p class="mb-2">here are some projects I'm working on:</p>
-                <ul class="list-disc pl-5">
+                <ul class="list-disc pl-5 project-list">
                     <li>
-                        <p><a href="https://github.com/Kirkr101/Voxor">Voxor</a> - full stack chat app / replacement for
-                            slack or discord, using flask and tailwind.</p>
+                        <p><a href="https://github.com/Kirkr101/Voxor" target="_blank" rel="noopener noreferrer">Voxor</a> - full stack chat app / replacement for slack or discord, using flask and tailwind.</p>
                     </li>
                     <li>
-                        <p><a href="https://github.com/Kirkr101/Streamline">Streamline</a> - lan file transfer
-                            command-line tool built in rust.</p>
+                        <p><a href="https://github.com/Kirkr101/Streamline" target="_blank" rel="noopener noreferrer">Streamline</a> - lan file transfer command-line tool built in rust.</p>
                     </li>
                     <li>
-                        <p><a href="https://github.com/Kirkr101/RMT-Debrid">RMT-Debrid</a> - flask server for
-                            interacting with the real-debrid api to remote download torrents onto a host server.</p>
+                        <p><a href="https://github.com/Kirkr101/RMT-Debrid" target="_blank" rel="noopener noreferrer">RMT-Debrid</a> - flask server for interacting with the real-debrid api to remote download torrents onto a host server.</p>
                     </li>
                     <li>
-                        <p><a href="https://github.com/Kirkr101/Audioshare">Audioshare</a> - nextjs app to share large
-                            audio files with a built in player.</p>
+                        <p><a href="https://github.com/Kirkr101/Audioshare" target="_blank" rel="noopener noreferrer">Audioshare</a> - nextjs app to share large audio files with a built in player.</p>
                     </li>
                 </ul>
             </div>
         </section>
     </div>
+
     <script>
-        const themeToggleCheckbox = document.getElementById("theme-toggle-checkbox");
-        function setTheme(theme) {
-            document.documentElement.setAttribute("data-theme", theme);
-            localStorage.setItem("theme", theme);
-        }
-        themeToggleCheckbox.addEventListener("change", () => {
-            const newTheme = themeToggleCheckbox.checked ? "dark" : "light";
-            setTheme(newTheme);
-        });
-        const currentTheme = document.documentElement.getAttribute("data-theme");
-        themeToggleCheckbox.checked = currentTheme === "dark";
+        (function() {
+            const savedTheme = localStorage.getItem("theme") || "light";
+            const html = document.documentElement;
+            html.setAttribute("data-theme", savedTheme);
+            const themeToggle = document.getElementById("theme-toggle");
+            themeToggle.checked = savedTheme === "dark";
+
+            function setTheme(theme) {
+                html.setAttribute("data-theme", theme);
+                localStorage.setItem("theme", theme);
+                themeToggle.checked = theme === "dark";
+            }
+
+            themeToggle.addEventListener("change", () => {
+                setTheme(themeToggle.checked ? "dark" : "light");
+            });
+        })();
     </script>
 </body>
 </html>
