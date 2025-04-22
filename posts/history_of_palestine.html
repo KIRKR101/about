@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <title>Palestine, an Early History - kirkr.xyz</title>
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem("theme") || "light";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+        })();
+    </script>
     <link rel="preload" href="SuisseIntlMono-Regular.otf" as="font" type="font/opentype" crossorigin="anonymous">
     <style>
     
@@ -256,6 +262,21 @@
         .project-list li { margin-left: 1rem; margin-bottom: .75rem; }
         .project-list li p { margin-bottom: .25rem; }
 
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;   
+            font-size: 0.9em;        
+            transition: color 0.2s ease, text-decoration 0.2s ease; 
+        }
+
+        .back-link:hover,
+        .back-link:focus {
+            color: var(--link-color);
+            text-decoration: underline;
+            outline: none;
+        }
     
     </style>
 </head>
@@ -265,7 +286,7 @@
         <label class="theme-toggle__label" for="theme-toggle"></label>
     </div>
     <div class="main-container">
-        <a href="/index" class="blog-content">← Back</a>
+        <a href="/" class="back-link">← Back</a>
         <div class="blog-content">
              <h1>Palestine, an Early History</h1>
              <span class="read-time">12 min read</span>
