@@ -32,13 +32,14 @@
             --toggle-active-bg: #3b82f6;
             --toggle-active-handle: white;
             --toggle-active-border: #3b82f6;
+            --subtle-text-color: #666;
         }
 
         [data-theme="dark"] {
             --bg-color: #121212;
             --text-color: #e4e4e4;
             --border-color: #555;
-            --box-bg: #121212;
+            --box-bg: #1f1f1f;
             --link-color: #90caf9;
             --toggle-bg: #121212;
             --toggle-handle-bg: white;
@@ -46,6 +47,7 @@
             --toggle-active-bg: #90caf9;
             --toggle-active-handle: #121212;
             --toggle-active-border: #90caf9;
+            --subtle-text-color: #aaa;
         }
 
         body {
@@ -56,6 +58,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background .3s, color .3s;
+            line-height: 1.6;
         }
 
         .container {
@@ -63,16 +66,21 @@
             margin-left: auto;
             margin-right: auto;
             padding: 2rem;
+            padding-top: 4rem;
         }
 
+        /* --- Theme Toggle --- */
         .theme-toggle-container {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 1rem;
+            right: 1rem;
         }
 
         .theme-toggle-checkbox {
-            display: none;
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
         }
 
         .theme-toggle-label {
@@ -85,6 +93,7 @@
             position: relative;
             cursor: pointer;
             transition: all .3s ease;
+            vertical-align: middle;
         }
 
         .theme-toggle-label::after {
@@ -94,138 +103,188 @@
             height: 16px;
             border-radius: 50%;
             background-color: var(--toggle-handle-bg);
-            top: 2px;
-            left: 2px;
+            top: 1px;
+            left: 1px;
             transition: all .3s ease;
         }
 
-        .theme-toggle-checkbox:checked+.theme-toggle-label {
+        .theme-toggle-checkbox:checked + .theme-toggle-label {
             background-color: var(--toggle-active-bg);
             border-color: var(--toggle-active-border);
         }
 
-        .theme-toggle-checkbox:checked+.theme-toggle-label::after {
+        .theme-toggle-checkbox:checked + .theme-toggle-label::after {
             transform: translateX(20px);
             background-color: var(--toggle-active-handle);
         }
 
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: .5rem;
-            padding-left: .5rem;
-            position: relative;
+        .theme-toggle-checkbox:focus + .theme-toggle-label {
+            outline: 2px solid var(--link-color);
+            outline-offset: 2px;
+        }
+         .theme-toggle-checkbox:focus:not(:focus-visible) + .theme-toggle-label {
+             outline: none;
+         }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 1.5em;
+            margin-bottom: 0.75em;
+            line-height: 1.3;
         }
 
-        .section-title::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: -2px;
-        }
+        h1 { font-size: 1.5rem; }
+        h2 { font-size: 1.25rem; }
+        h3 { font-size: 1.1rem; }
 
-        .box {
-            border-width: 1px;
-            border-color: var(--border-color);
-            border-style: solid;
-            background-color: var(--box-bg);
-            padding: 1rem;
+        p {
+            margin-top: 0;
             margin-bottom: 1rem;
         }
 
         a {
             color: var(--link-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        a:hover {
             text-decoration: underline;
         }
 
-        .blogroll-list li::before {
-            content: '• ';
+        ul, ol {
+             margin-bottom: 1rem;
         }
 
-        .mb-2 {
-            margin-bottom: .5rem;
+        li {
+             margin-bottom: 0.5rem;
         }
 
-        .mb-8 {
-            margin-bottom: 2rem;
+        .box {
+            border: 1px solid var(--border-color);
+            background-color: var(--box-bg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: border-color .3s, background-color .3s;
+            border-radius: 4px;
         }
 
-        .text-2xl {
-            font-size: 1.25rem;
-        }
-
-        .font-bold {
+        .section-title {
+            font-size: 1.1rem;
             font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
         }
 
-        .list-disc {
-            list-style-type: disc;
+        .list-disc { list-style-type: disc; }
+        .list-none { list-style-type: none; }
+
+        .pl-0 { padding-left: 0rem; }
+        .pl-5 { padding-left: 1.25rem; } 
+
+        .mb-2 { margin-bottom: .5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-8 { margin-bottom: 2rem; }
+
+        .text-2xl { font-size: 1.25rem; }
+        .font-bold { font-weight: bold; }
+
+        .project-list li p { margin-bottom: 0.25rem; }
+
+        .blog-post-list li {
+             /* Using utility mb-3 for spacing */
+        }
+        .post-date {
+            font-size: 0.85em;
+            color: var(--subtle-text-color);
+            margin-left: 0.5em;
+            white-space: nowrap;
         }
 
-        .pl-5 {
-            padding-left: 1.25rem;
-        }
-
-        .list-none {
-            list-style-type: none;
-        }
     </style>
 </head>
 <body>
     <div class="theme-toggle-container">
         <input type="checkbox" class="theme-toggle-checkbox" id="theme-toggle-checkbox">
-        <label class="theme-toggle-label" for="theme-toggle-checkbox"></label>
+        <label class="theme-toggle-label" for="theme-toggle-checkbox" title="Toggle theme"></label>
     </div>
+
     <div class="container">
         <header class="mb-8">
             <h1 class="text-2xl font-bold">kirkr.xyz</h1>
         </header>
+
         <section class="box">
             <h2 class="section-title">about me</h2>
             <div>
                 <p class="mb-2">you can find me here:</p>
                 <ul class="list-disc pl-5">
-                    <li><a href="https://github.com/Kirkr101" target="_blank">kirkr101</a> on github</li>
+                    <li><a href="https://github.com/Kirkr101" target="_blank" rel="noopener noreferrer">kirkr101</a> on github</li>
                 </ul>
             </div>
         </section>
+
         <section class="box">
             <h2 class="section-title">projects</h2>
             <div>
                 <p class="mb-2">here are some projects I'm working on:</p>
-                <ul class="list-disc pl-5">
+                <ul class="list-disc pl-5 project-list">
                     <li>
-                        <p><a href="https://github.com/Kirkr101/Voxor">Voxor</a> - full stack chat app / replacement for
-                            slack or discord, using flask and tailwind.</p>
+                        <p><a href="https://github.com/Kirkr101/Voxor" target="_blank" rel="noopener noreferrer">Voxor</a> - full stack chat app / replacement for slack or discord, using flask and tailwind.</p>
                     </li>
                     <li>
-                        <p><a href="https://github.com/Kirkr101/Streamline">Streamline</a> - lan file transfer
-                            command-line tool built in rust.</p>
+                        <p><a href="https://github.com/Kirkr101/Streamline" target="_blank" rel="noopener noreferrer">Streamline</a> - lan file transfer command-line tool built in rust.</p>
                     </li>
                     <li>
-                        <p><a href="https://github.com/Kirkr101/RMT-Debrid">RMT-Debrid</a> - flask server for
-                            interacting with the real-debrid api to remote download torrents onto a host server.</p>
+                        <p><a href="https://github.com/Kirkr101/RMT-Debrid" target="_blank" rel="noopener noreferrer">RMT-Debrid</a> - flask server for interacting with the real-debrid api to remote download torrents onto a host server.</p>
                     </li>
                     <li>
-                        <p><a href="https://github.com/Kirkr101/Audioshare">Audioshare</a> - nextjs app to share large
-                            audio files with a built in player.</p>
+                        <p><a href="https://github.com/Kirkr101/Audioshare" target="_blank" rel="noopener noreferrer">Audioshare</a> - nextjs app to share large audio files with a built in player.</p>
                     </li>
                 </ul>
             </div>
         </section>
+        
+        <section class="box">
+            <h2 class="section-title">blog posts</h2>
+            <ul class="list-none pl-0 blog-post-list">
+
+                <!-- Palestine, an Early History -->
+                <ul class="mb-3 pl-5 list-disc">
+                    <li class="list-disc">
+                        <a href="/posts/history_of_palestine.html">Palestine, an Early History</a>
+                        <span class="post-date">- Apr 22, 2025</span>
+                    </li>
+                </ul>
+
+            </ul>
+        </section>
+
     </div>
+
     <script>
         const themeToggleCheckbox = document.getElementById("theme-toggle-checkbox");
+
         function setTheme(theme) {
             document.documentElement.setAttribute("data-theme", theme);
             localStorage.setItem("theme", theme);
+            if (themeToggleCheckbox) {
+                 themeToggleCheckbox.checked = (theme === "dark");
+            }
         }
-        themeToggleCheckbox.addEventListener("change", () => {
-            const newTheme = themeToggleCheckbox.checked ? "dark" : "light";
-            setTheme(newTheme);
-        });
-        const currentTheme = document.documentElement.getAttribute("data-theme");
-        themeToggleCheckbox.checked = currentTheme === "dark";
+
+        if (themeToggleCheckbox) {
+            themeToggleCheckbox.checked = (document.documentElement.getAttribute("data-theme") === "dark");
+
+            themeToggleCheckbox.addEventListener("change", () => {
+                const newTheme = themeToggleCheckbox.checked ? "dark" : "light";
+                setTheme(newTheme);
+            });
+        } else {
+             console.warn("Theme toggle checkbox not found.");
+        }
+
     </script>
 </body>
 </html>
