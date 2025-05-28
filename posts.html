@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en"> <!-- js-loading class will be added by the script below -->
+<head>
+    <!-- VERY FIRST SCRIPT: Add a class to hide content initially -->
+    <script>document.documentElement.className = 'js-loading';</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Blog | kirkr.xyz</title>
+
+    <!-- PRELOAD THE FONT -->
+    <link rel="preload" href="SuisseIntlMono-Regular.otf" as="font" type="font/opentype" crossorigin="anonymous">
+
+    <style>
+        /* Style to hide body when js-loading class is present */
+        .js-loading body {
+            visibility: hidden;
+            /* For a fade-in effect, you could use opacity instead:
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out; */
+        }
+
+        @font-face {
+            font-family: 'SuisseIntlMono';
+            src: url('SuisseIntlMono-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap; /* Keep swap; preload makes it effective */
+        }
+
+        :root {
+            --bg-color: #000000;
+            --text-color: #e0e0e0;
+            --card-bg-color: #050505;
+            --card-border-color: #1c1c1c;
+            --link-color: #e0e0e0;
+            --subtle-text-color: #7f7f7f;
+            --icon-color: #b0b0b0;
+            --button-text-color: var(--text-color);
+            --button-hover-bg-color: #3a3a3a;
+            --button-disabled-bg-color: #202020;
+            --button-disabled-text-color: #555;
+        }
+
+        body {
+            font-family: 'SuisseIntlMono', monospace;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            margin: 0;
+            font-size: .95rem;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .page-header {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-header h1 {
+            font-size: 1.75rem;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        .back-to-home-link {
+            color: var(--icon-color);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            transition: color 0.2s ease-in-out;
+        }
+        .back-to-home-link:hover {
+            color: var(--text-color);
+        }
+        .back-to-home-link .svg-icon-back {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+
+        .blog-posts-container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .blog-post-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .blog-post-list li {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--card-border-color);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+
+        .blog-post-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .blog-post-list .post-title {
+            font-size: 1.2rem;
+            color: var(--link-color);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.35rem;
+            font-weight: normal;
+            transition: color 0.2s ease-in-out;
+        }
+        .blog-post-list .post-title:hover {
+            text-decoration: underline;
+            color: var(--link-color);
+        }
+
+        .blog-post-list .post-date {
+            font-size: 0.8rem;
+            color: var(--subtle-text-color);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .blog-post-list .post-snippet {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 768px) {
+            .page-header, .blog-posts-container {
+                max-width: 95%;
+            }
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            .blog-post-list .post-title {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="page-header">
+        <h1>blog posts</h1>
+        <a href="/" class="back-to-home-link">
+            <svg class="svg-icon-back" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            <span>back</span>
+        </a>
+    </header>
+
+    <main class="blog-posts-container">
+        <ul id="blog-post-list-ul" class="blog-post-list">
+            <!-- Posts injected here by JavaScript -->
+            <p style="text-align: center; color: var(--subtle-text-color);"></p>
+        </ul>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.documentElement.classList.remove('js-loading');
+
+            const blogListUL = document.getElementById('blog-post-list-ul');
+            if (blogListUL) {
+                fetch('/posts/manifest.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(posts => {
+                        blogListUL.innerHTML = '';
+                        if (posts && posts.length > 0) {
+                            posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                            posts.forEach(post => {
+                                const listItem = document.createElement('li');
+
+                                const titleLink = document.createElement('a');
+                                titleLink.href = `/post-viewer.html?name=${post.file}`;
+                                titleLink.classList.add('post-title');
+                                titleLink.textContent = post.title;
+
+                                const dateSpan = document.createElement('span');
+                                dateSpan.classList.add('post-date');
+                                dateSpan.textContent = `Published on: ${post.date}`;
+
+                                const snippetP = document.createElement('p');
+                                snippetP.classList.add('post-snippet');
+                                snippetP.textContent = post.snippet || 'Click to read more...';
+
+                                listItem.appendChild(titleLink);
+                                listItem.appendChild(dateSpan);
+                                listItem.appendChild(snippetP);
+                                blogListUL.appendChild(listItem);
+                            });
+                        } else {
+                            blogListUL.innerHTML = '<p style="text-align: center; color: var(--subtle-text-color);">No posts found.</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching blog posts:', error);
+                        blogListUL.innerHTML = '<p style="text-align: center; color: var(--subtle-text-color);">Could not load blog posts.</p>';
+                    });
+            } else {
+                document.documentElement.classList.remove('js-loading');
+            }
+        });
+    </script>
+</body>
+</html>

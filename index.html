@@ -4,13 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="preload" href="SuisseIntlMono-Regular.otf" as="font" type="font/opentype" crossorigin="anonymous">
     <title>kirkr.xyz</title>
-    <script>
-        (function () {
-            const savedTheme = localStorage.getItem("theme") || "light";
-            document.documentElement.setAttribute("data-theme", savedTheme);
-        })();
-    </script>
     <style>
         @font-face {
             font-family: 'SuisseIntlMono';
@@ -21,270 +16,471 @@
         }
 
         :root {
-            --bg-color: white;
-            --text-color: black;
-            --border-color: black;
-            --box-bg: white;
-            --link-color: #3b82f6;
-            --toggle-bg: white;
-            --toggle-handle-bg: black;
-            --toggle-border: black;
-            --toggle-active-bg: #3b82f6;
-            --toggle-active-handle: white;
-            --toggle-active-border: #3b82f6;
-            --subtle-text-color: #666;
-        }
-
-        [data-theme="dark"] {
-            --bg-color: #121212;
-            --text-color: #e4e4e4;
-            --border-color: #555;
-            --box-bg: #121212;
-            --link-color: #90caf9;
-            --toggle-bg: #121212;
-            --toggle-handle-bg: white;
-            --toggle-border: white;
-            --toggle-active-bg: #90caf9;
-            --toggle-active-handle: #121212;
-            --toggle-active-border: #90caf9;
-            --subtle-text-color: #aaa;
+            --bg-color: #000000;
+            --text-color: #e0e0e0;
+            --card-bg-color: #050505;
+            --card-border-color: #1c1c1c;
+            --link-color: #e0e0e0;
+            --subtle-text-color: #7f7f7f;
+            --icon-color: #b0b0b0;
+            --button-text-color: var(--text-color);
+            --button-hover-bg-color: #3a3a3a;
+            --button-disabled-bg-color: #202020;
+            --button-disabled-text-color: #555;
         }
 
         body {
             font-family: 'SuisseIntlMono', monospace;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             margin: 0;
             font-size: .95rem;
             background-color: var(--bg-color);
             color: var(--text-color);
-            transition: background .3s, color .3s;
             line-height: 1.6;
-        }
-
-        .container {
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             padding: 2rem;
-            padding-top: 4rem;
+            box-sizing: border-box;
         }
 
-        /* --- Theme Toggle --- */
-        .theme-toggle-container {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
+        .main-container {
+            display: flex;
+            gap: 4rem;
+            max-width: 65%;
+            width: 100%;
+            align-items: center;
+            max-height: 60vh;
         }
 
-        .theme-toggle-checkbox {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
+        .intro-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-top: 0;
+            margin-bottom: 3.5rem;
         }
 
-        .theme-toggle-label {
-            display: inline-block;
-            width: 40px;
-            height: 20px;
-            background-color: var(--toggle-bg);
-            border: 1px solid var(--toggle-border);
-            border-radius: 20px;
+        .intro-section h1 {
+            font-size: 1.75rem;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-weight: normal;
+        }
+
+        .intro-section p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: row;
+            gap: 0.75rem;
+            margin-top: 1.75rem;
+        }
+
+        .social-links a {
+            color: var(--icon-color);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem; 
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+            transition: color 0.2s ease-in-out;
+        }
+        .social-links a:hover {
+            color: var(--text-color);
+        }
+        .social-links a .svg-icon-social {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .projects-section {
+            flex: 1.2;
             position: relative;
-            cursor: pointer;
-            transition: all .3s ease;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .project-cards-viewport {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-cards-list {
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.4s ease-in-out;
+        }
+
+        .project-card {
+            background-color: var(--card-bg-color);
+            padding: 1.25rem 1.5rem;
+            border-radius: 14px;
+            border: 2px solid var(--card-border-color);
+            margin-bottom: 0.75rem;
+            box-sizing: border-box;
+        }
+
+        .project-card h3 {
+            font-size: 1rem;
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+        }
+
+        .project-icon {
+            margin-right: 0.6rem;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            line-height: 1;
+        }
+        .project-icon-char {
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .project-icon-img {
+            width: 16px;
+            height: 16px;
+            margin-right: 0.6rem;
             vertical-align: middle;
         }
 
-        .theme-toggle-label::after {
-            content: '';
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background-color: var(--toggle-handle-bg);
-            top: 2px;
-            left: 2px;
-            transition: all .3s ease;
-        }
-
-        .theme-toggle-checkbox:checked + .theme-toggle-label {
-            background-color: var(--toggle-active-bg);
-            border-color: var(--toggle-active-border);
-        }
-
-        .theme-toggle-checkbox:checked + .theme-toggle-label::after {
-            transform: translateX(20px);
-            background-color: var(--toggle-active-handle);
-        }
-
-        .theme-toggle-checkbox:focus + .theme-toggle-label {
-            outline: 2px solid var(--link-color);
-            outline-offset: 2px;
-        }
-         .theme-toggle-checkbox:focus:not(:focus-visible) + .theme-toggle-label {
-             outline: none;
-         }
-
-        h1, h2, h3, h4, h5, h6 {
-            margin-top: 1.5em;
-            margin-bottom: 0.75em;
-            line-height: 1.3;
-        }
-
-        h1 { font-size: 1.5rem; }
-        h2 { font-size: 1.25rem; }
-        h3 { font-size: 1.1rem; }
-
-        p {
-            margin-top: 0;
-            margin-bottom: 1rem;
-        }
-
-        a {
-            color: var(--link-color);
+        .project-link {
+            font-size: 0.8rem;
+            color: var(--subtle-text-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
             text-decoration: none;
-            transition: color 0.2s ease;
+            transition: color 0.15s ease-in-out;
         }
-        a:hover {
+        .project-link:hover {
+            color: var(--link-color);
             text-decoration: underline;
         }
-
-        ul, ol {
-             margin-bottom: 1rem;
+        .project-link .external-icon-text {
+            opacity: 0.85;
+        }
+        .project-link .custom-external-link-icon {
+            width: 0.7rem;
+            height: 0.7rem;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .project-link .custom-external-link-icon .icon-arrow-group {
+            transition: transform 0.15s ease-in-out;
+        }
+        .project-link:hover .custom-external-link-icon .icon-arrow-group {
+            transform: translateX(1.5px) translateY(-1.5px);
         }
 
-        li {
-             margin-bottom: 0.5rem;
-        }
 
-        .box {
-            border: 1px solid var(--border-color);
-            background-color: var(--box-bg);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            transition: border-color .3s, background-color .3s;
-            border-radius: 4px;
-        }
-
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-top: 0;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-            position: relative;
-        }
-
-        .list-disc { list-style-type: disc; }
-        .list-none { list-style-type: none; }
-
-        .pl-0 { padding-left: 0rem; }
-        .pl-5 { padding-left: 1.25rem; } 
-
-        .mb-2 { margin-bottom: .5rem; }
-        .mb-3 { margin-bottom: 0.75rem; }
-        .mb-8 { margin-bottom: 2rem; }
-
-        .text-2xl { font-size: 1.25rem; }
-        .font-bold { font-weight: bold; }
-
-        .project-list li p { margin-bottom: 0.25rem; }
-
-        .blog-post-list li {
-             /* Using utility mb-3 for spacing */
-        }
-        .post-date {
-            font-size: 0.85em;
+        .project-card p {
+            font-size: 0.85rem;
             color: var(--subtle-text-color);
-            margin-left: 0.5em;
-            white-space: nowrap;
+            line-height: 1.5;
+            margin-bottom: 0;
         }
 
+        .pagination-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+        }
+        .pagination-controls button {
+            background-color: var(--card-bg-color);
+            color: var(--button-text-color);
+            border: 2px solid var(--card-border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-family: 'SuisseIntlMono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .pagination-controls button:hover:not(:disabled) {
+            background-color: var(--button-hover-bg-color);
+        }
+        .pagination-controls button:disabled {
+            background-color: var(--button-disabled-bg-color);
+            color: var(--button-disabled-text-color);
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                align-items: flex-start;
+                padding: 2rem 1rem;
+            }
+            .main-container {
+                flex-direction: column;
+                gap: 2.5rem;
+                align-items: center;
+                max-height: none;
+            }
+            .intro-section {
+                padding-right: 0;
+                width: 100%;
+                max-width: 400px;
+                text-align: center;
+            }
+            .intro-section h1 {
+                justify-content: center;
+            }
+            .social-links {
+                align-items: center;
+                justify-content: center;
+            }
+            .projects-section {
+                margin-top: 1rem;
+                width: 100%;
+                max-width: 400px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="theme-toggle-container">
-        <input type="checkbox" class="theme-toggle-checkbox" id="theme-toggle-checkbox">
-        <label class="theme-toggle-label" for="theme-toggle-checkbox" title="Toggle theme"></label>
-    </div>
-
-    <div class="container">
-        <header class="mb-8">
-            <h1 class="text-2xl font-bold">kirkr.xyz</h1>
-        </header>
-
-        <section class="box">
-            <h2 class="section-title">about me</h2>
-            <div>
-                <p class="mb-2">you can find me here:</p>
-                <ul class="list-disc pl-5">
-                    <li><a href="https://github.com/Kirkr101" target="_blank" rel="noopener noreferrer">kirkr101</a> on github</li>
-                </ul>
+    <div class="main-container">
+        <section class="intro-section">
+            <h1>Kirkr.xyz</h1>
+            <p class="description">
+                0.01x dev
+            </p>
+            <div class="social-links">
+                <a href="https://github.com/Kirkr101" title="GitHub" target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 16 16" class="svg-icon-social"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                    <span>Kirkr101</span>
+                </a>
+                <a href="/posts.html" title="posts" rel="noopener noreferrer">
+                    <span>posts</span>
+                </a>
             </div>
         </section>
 
-        <section class="box">
-            <h2 class="section-title">projects</h2>
-            <div>
-                <p class="mb-2">here are some projects I'm working on:</p>
-                <ul class="list-disc pl-5 project-list">
-                    <li>
-                        <p><a href="https://github.com/Kirkr101/Voxor" target="_blank" rel="noopener noreferrer">Voxor</a> - full stack chat app / replacement for slack or discord, using flask and tailwind.</p>
-                    </li>
-                    <li>
-                        <p><a href="https://github.com/Kirkr101/Streamline" target="_blank" rel="noopener noreferrer">Streamline</a> - lan file transfer command-line tool built in rust.</p>
-                    </li>
-                    <li>
-                        <p><a href="https://github.com/Kirkr101/RMT-Debrid" target="_blank" rel="noopener noreferrer">RMT-Debrid</a> - flask server for interacting with the real-debrid api to remote download torrents onto a host server.</p>
-                    </li>
-                    <li>
-                        <p><a href="https://github.com/Kirkr101/Audioshare" target="_blank" rel="noopener noreferrer">Audioshare</a> - nextjs app to share large audio files with a built in player.</p>
-                    </li>
-                </ul>
+        <section class="projects-section">
+            <div class="project-cards-viewport">
+                <div class="project-cards-list">
+                    <div class="project-card">
+                        <h3>
+                            <span class="project-icon">V</span>
+                            voxor
+                        </h3>
+                        <a href="https://voxor.kirkr.xyz" target="_blank" rel="noopener noreferrer" class="project-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="custom-external-link-icon">
+                                <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
+                                <g class="icon-arrow-group">
+                                    <path d="m21 3-9 9" />
+                                    <path d="M15 3h6v6" />
+                                </g>
+                            </svg>
+                            <span class="external-icon-text">voxor.kirkr.xyz</span>
+                        </a>
+                        <p>
+                            self-hosted chat solution built with flask and tailwind. send messages and files without limits. custom bot integration with full API.
+                        </p>
+                    </div>
+
+                    <div class="project-card">
+                        <h3>
+                            <span class="project-icon project-icon-char">C</span>
+                            CPUsim
+                        </h3>
+                        <a href="https://github.com/Kirkr101/CPUsim" target="_blank" rel="noopener noreferrer" class="project-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="custom-external-link-icon">
+                                <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
+                                <g class="icon-arrow-group">
+                                    <path d="m21 3-9 9" />
+                                    <path d="M15 3h6v6" />
+                                </g>
+                            </svg>
+                            <span class="external-icon-text">github</span>
+                        </a>
+                        <p>
+                            C program to simulate a basic CPU & custom instruction set. supporting operations such as arithmetic, data movement, I/O, and control flow.
+                        </p>
+                    </div>
+
+                    <div class="project-card">
+                        <h3>
+                            <span class="project-icon project-icon-char">S</span>
+                            streamline
+                        </h3>
+                        <a href="https://github.com/Kirkr101/Streamline" target="_blank" rel="noopener noreferrer" class="project-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="custom-external-link-icon">
+                                <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
+                                <g class="icon-arrow-group">
+                                    <path d="m21 3-9 9" />
+                                    <path d="M15 3h6v6" />
+                                </g>
+                            </svg>
+                            <span class="external-icon-text">github</span>
+                        </a>
+                        <p>
+                            simple and efficient cli built with Rust for transferring files and directories over LAN. supports zipping, chunking, parallel transfers, and SHA256 hashing.
+                        </p>
+                    </div>
+
+                    <div class="project-card">
+                        <h3>
+                            <span class="project-icon project-icon-char">R</span>
+                            rmt-debrid
+                        </h3>
+                        <a href="https://github.com/Kirkr101/RMT-Debrid" target="_blank" rel="noopener noreferrer" class="project-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="custom-external-link-icon">
+                                <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
+                                <g class="icon-arrow-group">
+                                    <path d="m21 3-9 9" />
+                                    <path d="M15 3h6v6" />
+                                </g>
+                            </svg>
+                            <span class="external-icon-text">github</span>
+                        </a>
+                        <p>
+                            fast-api interface for real-debrid to remotely download torrents. supports regular or magnet links, as well as viewing and controlling the download status.
+                        </p>
+                    </div>
+
+                    <div class="project-card">
+                        <h3>
+                           <span class="project-icon project-icon-char">A</span>
+                            audioshare
+                        </h3>
+                        <a href="https://github.com/Kirkr101/audioshare" target="_blank" rel="noopener noreferrer" class="project-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="custom-external-link-icon">
+                                <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2-2h6" />
+                                <g class="icon-arrow-group">
+                                    <path d="m21 3-9 9" />
+                                    <path d="M15 3h6v6" />
+                                </g>
+                            </svg>
+                            <span class="external-icon-text">github</span>
+                        </a>
+                        <p>
+                            next.js app for uploading and playing large lossless audio files online. supports high quality audio and rich metadata to keep the files as original as possible.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="pagination-controls">
+                <button id="prev-project" aria-label="Previous projects">‹ Prev</button>
+                <button id="next-project" aria-label="Next projects">Next ›</button>
             </div>
         </section>
-        
-        <section class="box">
-            <h2 class="section-title">blog posts</h2>
-            <ul class="list-none pl-0 blog-post-list">
-
-                <!-- Palestine, an Early History -->
-                <ul class="mb-3 pl-5 list-disc">
-                    <li class="list-disc">
-                        <a href="/posts/history_of_palestine.html">Palestine, an Early History</a>
-                        <span class="post-date">- Apr 22, 2025</span>
-                    </li>
-                </ul>
-
-            </ul>
-        </section>
-
     </div>
 
     <script>
-        const themeToggleCheckbox = document.getElementById("theme-toggle-checkbox");
+        document.addEventListener('DOMContentLoaded', () => {
+            const viewport = document.querySelector('.project-cards-viewport');
+            const list = document.querySelector('.project-cards-list');
+            const cards = Array.from(list.querySelectorAll('.project-card'));
+            const prevButton = document.getElementById('prev-project');
+            const nextButton = document.getElementById('next-project');
 
-        function setTheme(theme) {
-            document.documentElement.setAttribute("data-theme", theme);
-            localStorage.setItem("theme", theme);
-            if (themeToggleCheckbox) {
-                 themeToggleCheckbox.checked = (theme === "dark");
+            if (!list || cards.length === 0 || !prevButton || !nextButton || !viewport) {
+                console.warn('Pagination elements not found. Pagination will not be initialized.');
+                if(prevButton) prevButton.style.display = 'none';
+                if(nextButton) nextButton.style.display = 'none';
+                return;
             }
-        }
 
-        if (themeToggleCheckbox) {
-            themeToggleCheckbox.checked = (document.documentElement.getAttribute("data-theme") === "dark");
+            const cardsPerPage = 3;
+            let currentPage = 0;
+            const totalPages = Math.ceil(cards.length / cardsPerPage);
+            let viewportHeight = 0;
 
-            themeToggleCheckbox.addEventListener("change", () => {
-                const newTheme = themeToggleCheckbox.checked ? "dark" : "light";
-                setTheme(newTheme);
+            function setViewportHeight() {
+                if (cards.length > 0) {
+                    let heightForThreeCards = 0;
+                    for (let i = 0; i < cardsPerPage && i < cards.length; i++) {
+                        const card = cards[i];
+                        const cardStyle = getComputedStyle(card);
+                        heightForThreeCards += card.offsetHeight;
+                        if (i < cardsPerPage - 1) { // Add margin for all but the last of the 3
+                           heightForThreeCards += parseFloat(cardStyle.marginBottom);
+                        }
+                    }
+                     // If fewer than 3 cards in total, calculate height based on actual number
+                    if (cards.length < cardsPerPage) {
+                        heightForThreeCards = 0; // Recalculate
+                        for (let i = 0; i < cards.length; i++) {
+                            const card = cards[i];
+                            const cardStyle = getComputedStyle(card);
+                            heightForThreeCards += card.offsetHeight;
+                            if (i < cards.length - 1) {
+                                heightForThreeCards += parseFloat(cardStyle.marginBottom);
+                            }
+                        }
+                    }
+
+                    viewportHeight = heightForThreeCards;
+                    viewport.style.height = `${viewportHeight}px`;
+                }
+            }
+
+            function updateListPosition() {
+                const translateY = -currentPage * viewportHeight;
+                list.style.transform = `translateY(${translateY}px)`;
+            }
+
+            function updateButtonStates() {
+                prevButton.disabled = currentPage === 0;
+                nextButton.disabled = currentPage >= totalPages - 1;
+                 if (totalPages <= 1) {
+                    prevButton.style.display = 'none';
+                    nextButton.style.display = 'none';
+                } else {
+                    prevButton.style.display = 'inline-block';
+                    nextButton.style.display = 'inline-block';
+                }
+            }
+            
+            setViewportHeight()
+            updateButtonStates();
+
+            // Recalculate on resize, as card heights might change with text wrapping
+            let resizeTimer = null;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    setViewportHeight();
+                    updateListPosition(); // Reposition list after height change
+                }, 250);
             });
-        } else {
-             console.warn("Theme toggle checkbox not found.");
-        }
 
+            nextButton.addEventListener('click', () => {
+                if (currentPage < totalPages - 1) {
+                    currentPage++;
+                    updateListPosition();
+                    updateButtonStates();
+                }
+            });
+
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 0) {
+                    currentPage--;
+                    updateListPosition();
+                    updateButtonStates();
+                }
+            });
+        });
     </script>
 </body>
 </html>
