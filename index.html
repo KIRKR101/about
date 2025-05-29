@@ -387,7 +387,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('load', () => {
             const viewport = document.querySelector('.project-cards-viewport');
             const list = document.querySelector('.project-cards-list');
             const cards = Array.from(list.querySelectorAll('.project-card'));
@@ -413,13 +413,12 @@
                         const card = cards[i];
                         const cardStyle = getComputedStyle(card);
                         heightForThreeCards += card.offsetHeight;
-                        if (i < cardsPerPage - 1) { // Add margin for all but the last of the 3
+                        if (i < cardsPerPage - 1) {
                            heightForThreeCards += parseFloat(cardStyle.marginBottom);
                         }
                     }
-                     // If fewer than 3 cards in total, calculate height based on actual number
                     if (cards.length < cardsPerPage) {
-                        heightForThreeCards = 0; // Recalculate
+                        heightForThreeCards = 0;
                         for (let i = 0; i < cards.length; i++) {
                             const card = cards[i];
                             const cardStyle = getComputedStyle(card);
@@ -455,13 +454,12 @@
             setViewportHeight()
             updateButtonStates();
 
-            // Recalculate on resize, as card heights might change with text wrapping
             let resizeTimer = null;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimer);
                 resizeTimer = setTimeout(() => {
                     setViewportHeight();
-                    updateListPosition(); // Reposition list after height change
+                    updateListPosition();
                 }, 250);
             });
 
