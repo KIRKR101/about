@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="preload" href="SuisseIntlMono-Regular.otf" as="font" crossorigin="anonymous">
+    <title>kirkr.xyz</title>
+    <style>
+        @font-face {
+            font-family: 'SuisseIntlMono';
+            src: url('SuisseIntlMono-Regular.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --bg-color: #000;
+            --text-color: #e0e0e0;
+            --card-bg-color: #050505;
+            --card-border-color: #1c1c1c;
+            --subtle-text-color: #7f7f7f;
+            --button-hover-bg-color: #3a3a3a;
+            --button-disabled-bg-color: #202020;
+            --button-disabled-text-color: #555;
+            --overlay-color: rgba(0, 0, 0, 0.9);
+            --lightbox-bg: #0a0a0a;
+            --skeleton-bg-color: #111;
+            --skeleton-shine-color: #1a1a1a;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font: .95rem/1.6 'SuisseIntlMono', monospace;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding-block: 2rem;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .main-container,
+        .arts-section {
+            width: 100%;
+        }
+
+        .arts-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .art-cards-viewport {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .art-cards-list {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            will-change: transform;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .art-card {
+            display: inline-flex;
+            flex-direction: column;
+            width: max-content;
+            background-color: var(--card-bg-color);
+            border: 2px solid var(--card-border-color);
+            border-radius: 14px;
+            cursor: pointer;
+            overflow: hidden;
+            flex-shrink: 0;
+            transform: scale(0.9);
+            opacity: 0.6;
+            will-change: transform, opacity;
+            transition: border-color .3s ease, transform .6s cubic-bezier(.25, 1, .5, 1), opacity .6s cubic-bezier(.25, 1, .5, 1);
+        }
+
+        .art-card.active-card {
+            transform: scale(1);
+            opacity: 1;
+            border-color: #444;
+        }
+
+        .art-card:hover:not(.active-card) {
+            transform: scale(0.95);
+            opacity: 0.8;
+            border-color: #333;
+        }
+
+        .art-image {
+            display: block;
+            height: auto;
+            max-height: 60vh;
+            background-color: var(--skeleton-bg-color);
+        }
+
+        .art-content {
+            padding: 1.25rem 1.5rem;
+            box-sizing: border-box;
+            width: 400px;
+        }
+
+        .art-card h3 {
+            font-size: 1rem;
+            font-weight: 400;
+            margin: 0 0 0.5rem;
+            text-transform: capitalize;
+        }
+
+        .art-card p {
+            font-size: 0.85rem;
+            color: var(--subtle-text-color);
+            line-height: 1.3;
+            margin: 0;
+        }
+
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .pagination-controls button {
+            background-color: var(--card-bg-color);
+            color: var(--text-color);
+            border: 2px solid var(--card-border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            font-family: 'SuisseIntlMono';
+        }
+
+        .pagination-controls button:hover:not(:disabled) {
+            background-color: var(--button-hover-bg-color);
+        }
+
+        .pagination-controls button:disabled {
+            background-color: var(--button-disabled-bg-color);
+            color: var(--button-disabled-text-color);
+            cursor: not-allowed;
+        }
+
+        .skeleton {
+            cursor: progress;
+        }
+
+        .skeleton .skeleton-image,
+        .skeleton .skeleton-line {
+            background-color: var(--skeleton-bg-color);
+            background-image: linear-gradient(90deg, var(--skeleton-bg-color) 0px, var(--skeleton-shine-color) 40px, var(--skeleton-bg-color) 80px);
+            background-size: 600px;
+            animation: shimmer 1.5s infinite linear;
+        }
+
+        .skeleton .skeleton-image {
+            width: 100%;
+        }
+
+        .skeleton .skeleton-content {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            width: 300px;
+        }
+
+        .skeleton .skeleton-line {
+            height: 1em;
+            border-radius: 4px;
+        }
+
+        @keyframes shimmer {
+            to { background-position: 600px; }
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background-color: var(--overlay-color);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            background-color: var(--lightbox-bg);
+            border: 2px solid var(--card-border-color);
+            border-radius: 14px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+            display: flex;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .lightbox-image-container {
+            flex: 1;
+            max-width: 50%;
+        }
+
+        .lightbox-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .lightbox-info {
+            flex: 1;
+            max-width: 50%;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--card-bg-color);
+            border: 2px solid var(--card-border-color);
+            color: var(--text-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .lightbox-close:hover {
+            background-color: var(--button-hover-bg-color);
+        }
+
+        .lightbox h2 {
+            margin: 0 0 1rem;
+            font-size: 1.5rem;
+            font-weight: 400;
+            text-transform: capitalize;
+        }
+
+        .lightbox-description {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .lightbox-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .lightbox-table th,
+        .lightbox-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--card-border-color);
+            font-size: 0.9rem;
+            text-transform: capitalize;
+        }
+
+        .lightbox-table th {
+            font-weight: 400;
+        }
+
+        .lightbox-table td {
+            color: var(--subtle-text-color);
+        }
+
+        @media (max-width: 1200px) {
+            .lightbox-content {
+                flex-direction: column;
+                max-width: 95%;
+                max-height: 95%;
+            }
+            .lightbox-image-container, .lightbox-info {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 800px) {
+            body {
+                padding-block: 1rem;
+                font-size: 1rem;
+            }
+            .arts-section {
+                gap: 1.25rem;
+            }
+            .art-cards-list {
+                gap: 1rem;
+            }
+            .art-card {
+                width: 85vw;
+            }
+            .art-content {
+                width: 100%;
+                padding: 1rem 1.25rem;
+            }
+            .art-image {
+                max-height: 50vh;
+            }
+            .pagination-controls {
+                max-width: 85vw;
+            }
+            .pagination-controls button {
+                padding: 0.75rem;
+                flex-grow: 1;
+            }
+            .lightbox-content {
+                padding: 1rem;
+                margin: 1rem;
+                gap: 1rem;
+            }
+            .lightbox-info {
+                 font-size: 0.9rem;
+            }
+            .lightbox h2 {
+                font-size: 1.25rem;
+            }
+            .lightbox-close {
+                top: 0.5rem;
+                right: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <section class="arts-section">
+            <div class="art-cards-viewport">
+                <div class="art-cards-list">
+                    <div class="art-card skeleton"><div class="skeleton-image" style="aspect-ratio:58/68"></div><div class="skeleton-content"><div class="skeleton-line" style="width:60%"></div><div class="skeleton-line" style="width:90%"></div></div></div>
+                    <div class="art-card skeleton"><div class="skeleton-image" style="aspect-ratio:41/34"></div><div class="skeleton-content"><div class="skeleton-line" style="width:70%"></div><div class="skeleton-line" style="width:85%"></div></div></div>
+                    <div class="art-card skeleton"><div class="skeleton-image" style="aspect-ratio:60/73.5"></div><div class="skeleton-content"><div class="skeleton-line" style="width:50%"></div><div class="skeleton-line" style="width:95%"></div></div></div>
+                    <div class="art-card skeleton"><div class="skeleton-image" style="aspect-ratio:67.3/77.3"></div><div class="skeleton-content"><div class="skeleton-line" style="width:75%"></div><div class="skeleton-line" style="width:80%"></div></div></div>
+                    <div class="art-card skeleton"><div class="skeleton-image" style="aspect-ratio:129.2/99.7"></div><div class="skeleton-content"><div class="skeleton-line" style="width:65%"></div><div class="skeleton-line" style="width:90%"></div></div></div>
+                    <div class="art-card skeleton"><div class="skeleton-image" style="aspect-ratio:92.1/123"></div><div class="skeleton-content"><div class="skeleton-line" style="width:55%"></div><div class="skeleton-line" style="width:88%"></div></div></div>
+                    <div class="art-card skeleton"><div class="skeleton-image" style="aspect-ratio:136.5/168.5"></div><div class="skeleton-content"><div class="skeleton-line" style="width:70%"></div><div class="skeleton-line" style="width:90%"></div></div></div>
+                    <div class="art-card skeleton"><div class="skeleton-image" style="aspect-ratio:25.2/38.2"></div><div class="skeleton-content"><div class="skeleton-line" style="width:60%"></div><div class="skeleton-line" style="width:85%"></div></div></div>
+                    <div class="art-card skeleton"><div class="skeleton-image" style="aspect-ratio:15/10"></div><div class="skeleton-content"><div class="skeleton-line" style="width:50%"></div><div class="skeleton-line" style="width:92%"></div></div></div>
+
+                    <div class="art-card" data-art-id="the-sentry" style="display: none;"><img loading="lazy" decoding="async" src="https://corsproxy.io/?https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Carel_Fabritius_-_De_poort_bewaker_(1654).jpg/960px-Carel_Fabritius_-_De_poort_bewaker_(1654).jpg" alt="The Sentry" class="art-image"><div class="art-content"><h3>The Sentry</h3><p>One of Fabritius' few remaining works, this one remains enigmatic. A civic guard and his dog sit beneath an archway. The emotion of the sentry lay implicit in his stature & isolation. </p></div></div>
+                    <div class="art-card" data-art-id="the-mill" style="display: none;"><img loading="lazy" decoding="async" src="https://corsproxy.io/?https://media.nga.gov/iiif/b9d543b3-e55a-490c-b72e-5b038071bc9c/full/full/0/default.jpg?attachment_filename=the_mill_1942.9.62.jpg" alt="The Mill" class="art-image"><div class="art-content"><h3>The Mill</h3><p>A landscape. A solitary windmill stands against a brooding sky. The contrast of brown and blue evokes a sense of grandeur.</p></div></div>
+                    <div class="art-card" data-art-id="delft-courtyard" style="display: none;"><img loading="lazy" decoding="async" src="https://corsproxy.io/?https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Pieter_de_Hooch_-_The_Courtyard_of_a_House_in_Delft.jpg/960px-Pieter_de_Hooch_-_The_Courtyard_of_a_House_in_Delft.jpg" alt="A Courtyard of a House in Delft" class="art-image"><div class="art-content"><h3>A Courtyard of a House in Delft</h3><p>A tranquil domestic scene capturing the quiet virtues of home life through detailed architecture and serene figures.</p></div></div>
+                    <div class="art-card" data-art-id="card-players" style="display: none;"><img loading="lazy" decoding="async" src="https://corsproxy.io/?https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Card_Players_in_a_sunlit_Room%2C_by_Pieter_de_Hooch.jpg/960px-Card_Players_in_a_sunlit_Room%2C_by_Pieter_de_Hooch.jpg" alt="Card Players in a Sunlit Room" class="art-image"><div class="art-content"><h3>Card Players in a Sunlit Room</h3><p>A scene where light floods from a courtyard into an interior, an examplar in de Hooch's skill with complex light and perspective.</p></div></div>
+                    <div class="art-card" data-art-id="forest-stream" style="display: none;"><img loading="lazy" decoding="async" src="https://corsproxy.io/?https://images.metmuseum.org/CRDImages/ep/original/DP146457.jpg" alt="The Forest Stream" class="art-image"><div class="art-content"><h3>The Forest Stream</h3><p>A moody landscape featuring a cascading stream and grand trees, typical of Ruisdael's dramatic vision of nature.</p></div></div>
+                    <div class="art-card" data-art-id="arbeiterstadt" style="display: none;"><img loading="lazy" decoding="async" src="https://corsproxy.io/?https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Hans_Baluschek_-_Arbeiterstadt_%281920%29.jpg/960px-Hans_Baluschek_-_Arbeiterstadt_%281920%29.jpg" alt="Arbeiterstadt" class="art-image"><div class="art-content"><h3>Arbeiterstadt</h3><p>A depiction of a dark, industrial working-class district in Berlin, dominated by train tracks and factory smoke.</p></div></div>
+                    <div class="art-card" data-art-id="moses" style="display: none;"><img loading="lazy" decoding="async" src="https://corsproxy.io/?https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Rembrandt_-_Moses_with_the_Ten_Commandments_-_Google_Art_Project.jpg/960px-Rembrandt_-_Moses_with_the_Ten_Commandments_-_Google_Art_Project.jpg" alt="Moses Smashing the Tablets of the Law" class="art-image"><div class="art-content"><h3>Moses Smashing the Tablets</h3><p>A depiction of Moses in a moment of righteous fury, moments before shattering the stone tablets.</p></div></div>
+                    <div class="art-card" data-art-id="nikko-kaido" style="display: none;"><img loading="lazy" decoding="async" src="https://corsproxy.io/?https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Nikko_kaido_hasui_kawase.jpg/800px-Nikko_kaido_hasui_kawase.jpg" alt="Nikkō Kaidō" class="art-image"><div class="art-content"><h3>Nikkō Kaidō</h3><p>A serene woodblock print capturing the atmosphere of the historic Nikkō Kaidō road, lined with majestic cedar trees.</p></div></div>
+                    <div class="art-card" data-art-id="suzukawa-river" style="display: none;"><img loading="lazy" decoding="async" src="https://corsproxy.io/?https://moonlitseaprints.com/wp-content/uploads/2024/10/hiroshi-yoshida-suzukawa.jpg" alt="Suzukawa River" class="art-image"><div class="art-content"><h3>Suzukawa River</h3><p>A refined view of a snow-capped Mount Fuji reflected on the tranquil surface of the Suzukawa River.</p></div></div>
+                </div>
+            </div>
+            <div class="pagination-controls">
+                <button id="prev-art" aria-label="Previous art">‹ Prev</button>
+                <button id="next-art" aria-label="Next art">Next ›</button>
+            </div>
+        </section>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close lightbox">×</button>
+        <div class="lightbox-content">
+            <div class="lightbox-image-container">
+                <img id="lightbox-image" class="lightbox-image" src="" alt="">
+            </div>
+            <div class="lightbox-info">
+                <h2 id="lightbox-title"></h2>
+                <p id="lightbox-description" class="lightbox-description"></p>
+                <table class="lightbox-table">
+                    <tbody id="lightbox-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const artData ={'the-sentry':{title:'The Sentry',image:'https://corsproxy.io/?https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Carel_Fabritius_-_De_poort_bewaker_(1654).jpg/960px-Carel_Fabritius_-_De_poort_bewaker_(1654).jpg',description:"In my opinion Fabritius would be as well known as Rembrandt, his teacher, if not for his early death in the Delft Gunpowder Explosion of 1654. His lack of surviving works can likely be attributed to the same fate. A 2004 restoration revealed a second soldier whose legs are visible under the arch. The initial covering up of this makes sense, considering its improvement to the picture",data:[['artist','Carel Fabritius'],['year','1654'],['medium','Oil on canvas'],['dimensions','68 x 58 cm']]},'the-mill':{title:'The Mill',image:'https://corsproxy.io/?https://media.nga.gov/iiif/b9d543b3-e55a-490c-b72e-5b038071bc9c/full/full/0/default.jpg?attachment_filename=the_mill_1942.9.62.jpg',description:"One of Rembrandt's many great landscapes. For a long time, its attribution to Rembrandt was doubted, but has been restored in recent years. The colour and brushwork is magnificent.",data:[['artist','Rembrandt van Rijn'],['year','c. 1645-1648'],['medium','Oil on canvas'],['dimensions','87.6 x 105.6 cm']]},'delft-courtyard':{title:'A Courtyard of a House in Delft',image:'https://corsproxy.io/?https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Pieter_de_Hooch_-_The_Courtyard_of_a_House_in_Delft.jpg/960px-Pieter_de_Hooch_-_The_Courtyard_of_a_House_in_Delft.jpg',description:"A pictoral examplar of Dutch genre painting, this work beautifully depicts domestic life. The stone tablet above the arch is a real tablet from a Delft cloister, and can be seen in the Prinsenhof Museum.",data:[['artist','Pieter De Hooch'],['year','1658'],['medium','Oil on canvas'],['dimensions','73.5 x 60 cm']]},'card-players':{title:'Card Players in a Sunlit Room',image:'https://corsproxy.io/?https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Card_Players_in_a_sunlit_Room%2C_by_Pieter_de_Hooch.jpg/960px-Card_Players_in_a_sunlit_Room%2C_by_Pieter_de_Hooch.jpg',description:"De Hooch demonstrates his mastery of light and perspective, creating a view from a shadowy interior into a bright, sunlit courtyard. The effect is a calm, reflective mood, with restrained figures absorbed in their game.",data:[['artist','Pieter de Hooch'],['year','1658'],['medium','Oil on canvas'],['dimensions','77.3 x 67.3 cm']]},'forest-stream':{title:'The Forest Stream',image:'https://corsproxy.io/?https://images.metmuseum.org/CRDImages/ep/original/DP146457.jpg',description:"Ruisdael was a master of Dutch landscape painting. This work is remarkable for its rich textures and colors, depicting an untamed vision of nature with a rushing stream, rocky hills, and expansive trees.",data:[['artist','Jacob Van Ruisdael'],['year','c. 1660'],['medium','Oil on canvas'],['dimensions','99.7 x 129.2 cm']]},'arbeiterstadt':{title:'Arbeiterstadt (City of Workers)',image:'https://corsproxy.io/?https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Hans_Baluschek_-_Arbeiterstadt_%281920%29.jpg/960px-Hans_Baluschek_-_Arbeiterstadt_%281920%29.jpg',description:"A work of the Berlin Secession, this painting depicts a dark and dirty working-class sector of Berlin. The scene is dominated by industrial smoke and train tracks, with a silhouetted figure looking over the oppressive city.",data:[['artist','Hans Baluschek'],['year','1920'],['medium','Oil on canvas'],['dimensions','123 x 92.1 cm']]},'moses':{title:'Moses Smashing the Tablets of the Law',image:'https://corsproxy.io/?https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Rembrandt_-_Moses_with_the_Ten_Commandments_-_Google_Art_Project.jpg/960px-Rembrandt_-_Moses_with_the_Ten_Commandments_-_Google_Art_Project.jpg',description:"Rembrandt captures the biblical figure of Moses in a moment of fury. The monumental quality of the figure is achieved through dramatic lighting, expressive brushwork, and a reduced colour palette.",data:[['artist','Rembrandt van Rijn'],['year','1659'],['medium','Oil on canvas'],['dimensions','168.5 x 136.5 cm']]},'nikko-kaido':{title:'Nikkō Kaidō',image:'https://corsproxy.io/?https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Nikko_kaido_hasui_kawase.jpg/800px-Nikko_kaido_hasui_kawase.jpg',description:'An iconic work of the shin-hanga ("new prints") movement. Hasui Kawase was a master of capturing the atmosphere of Japanese landscapes, conveying the tranquil and almost mystical quality of the historic Nikkō highway.',data:[['artist','Hasui Kawase'],['year','1930'],['medium','Woodblock print'],['dimensions','38.2 x 25.2 cm']]},'suzukawa-river':{title:'Suzukawa River',image:'https://corsproxy.io/?https://moonlitseaprints.com/wp-content/uploads/2024/10/hiroshi-yoshida-suzukawa.jpg',description:"Another leading figure of the shin-hanga movement, Hiroshi Yoshida was known for his landscape prints. This work presents a serene and majestic view of Mount Fuji, its snow-capped peak perfectly reflected in the calm waters.",data:[['artist','Yoshida Hiroshi'],['year','1935'],['medium','Woodblock print'],['dimensions','27.3 x 40.5 cm']]}};
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const viewport = document.querySelector('.art-cards-viewport');
+            const list = document.querySelector('.art-cards-list');
+            const prevButton = document.getElementById('prev-art');
+            const nextButton = document.getElementById('next-art');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxClose = document.getElementById('lightbox-close');
+            const lightboxImage = document.getElementById('lightbox-image');
+            const lightboxTitle = document.getElementById('lightbox-title');
+            const lightboxDescription = document.getElementById('lightbox-description');
+            const lightboxTableBody = document.getElementById('lightbox-table-body');
+
+            const skeletonCards = document.querySelectorAll('.art-card.skeleton');
+            skeletonCards.forEach(card => card.remove());
+            
+            const realCards = document.querySelectorAll('.art-card:not(.skeleton)');
+            realCards.forEach(card => card.style.display = 'flex');
+
+            const cards = Array.from(realCards);
+            if (!list || cards.length === 0) return;
+
+            let currentIndex = 0;
+            let resizeTimer;
+
+            function updateCarousel() {
+                const activeCard = cards[currentIndex];
+                if (!activeCard) return;
+
+                const viewportWidth = viewport.offsetWidth;
+                const cardOffsetLeft = activeCard.offsetLeft;
+                const cardWidth = activeCard.offsetWidth;
+                const translateX = (viewportWidth / 2) - cardOffsetLeft - (cardWidth / 2);
+                list.style.transform = `translateX(${translateX}px)`;
+
+                cards.forEach((card, index) => {
+                    const isCurrent = index === currentIndex;
+                    card.classList.toggle('active-card', isCurrent);
+                    card.setAttribute('aria-current', isCurrent);
+                });
+
+                prevButton.disabled = currentIndex === 0;
+                nextButton.disabled = currentIndex === cards.length - 1;
+            }
+
+            function openLightbox(artId) {
+                const art = artData[artId];
+                if (!art) return;
+
+                lightboxImage.src = art.image;
+                lightboxImage.alt = art.title;
+                lightboxTitle.textContent = art.title;
+                lightboxDescription.textContent = art.description;
+
+                let tableHtml = '';
+                art.data.forEach(([key, value]) => {
+                    tableHtml += `<tr><th>${key}</th><td>${value}</td></tr>`;
+                });
+                lightboxTableBody.innerHTML = tableHtml;
+
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            nextButton.addEventListener('click', () => {
+                if (currentIndex < cards.length - 1) {
+                    currentIndex++;
+                    updateCarousel();
+                }
+            });
+
+            prevButton.addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateCarousel();
+                }
+            });
+
+            cards.forEach((card, index) => {
+                card.addEventListener('click', () => {
+                    if (currentIndex === index) {
+                        openLightbox(card.dataset.artId);
+                    } else {
+                        currentIndex = index;
+                        updateCarousel();
+                    }
+                });
+            });
+
+            lightboxClose.addEventListener('click', closeLightbox);
+            
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) closeLightbox();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                const isLightboxActive = lightbox.classList.contains('active');
+                if (e.key === 'Escape' && isLightboxActive) closeLightbox();
+                if (isLightboxActive) return;
+                if (e.key === 'ArrowRight') nextButton.click();
+                if (e.key === 'ArrowLeft') prevButton.click();
+            });
+
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(updateCarousel, 100);
+            });
+
+            requestAnimationFrame(updateCarousel);
+        });
+    </script>
+</body>
+</html>
