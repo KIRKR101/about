@@ -33,7 +33,30 @@ export async function onRequest(context) {
 
         const data = await response.json();
 
-        return new Response(JSON.stringify(data), {
+        const track = data.recenttracks.track[0];
+        if (!track) {
+            return new Response(
+                JSON.stringify({
+                    error: "No tracks found.",
+                }),
+                {
+                    status: 404,
+                    headers: { "Content-Type": "application/json" },
+                }
+            );
+        }
+
+        const isNowPlaying = track["@attr"] && track["@attr"].nowplaying === "true";
+
+        const responseBody = {
+            status: isNowPlaying ? "Currently playing" : "Last Listen",
+            title: track.name,
+            artist: track.artist["#text"],
+            albumArt: track.image.find((img) => img.size === "large")["#text"],
+            trackUrl: track.url,
+        };
+
+        return new Response(JSON.stringify(responseBody), {
             headers: {
                 "Content-Type": "application/json",
                 "Cache-Control":

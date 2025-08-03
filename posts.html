@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en"> <!-- js-loading class will be added by the script below -->
+<html lang="en">
 <head>
-    <!-- VERY FIRST SCRIPT: Add a class to hide content initially -->
     <script>document.documentElement.className = 'js-loading';</script>
 
     <meta charset="UTF-8">
@@ -9,16 +8,11 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <title>Blog | kirkr.xyz</title>
 
-    <!-- PRELOAD THE FONT -->
     <link rel="preload" href="SuisseIntlMono-Regular.otf" as="font" type="font/opentype" crossorigin="anonymous">
 
     <style>
-        /* Style to hide body when js-loading class is present */
         .js-loading body {
             visibility: hidden;
-            /* For a fade-in effect, you could use opacity instead:
-            opacity: 0;
-            transition: opacity 0.2s ease-in-out; */
         }
 
         @font-face {
@@ -26,7 +20,7 @@
             src: url('SuisseIntlMono-Regular.otf') format('opentype');
             font-weight: normal;
             font-style: normal;
-            font-display: swap; /* Keep swap; preload makes it effective */
+            font-display: swap;
         }
 
         :root {
@@ -170,7 +164,7 @@
 
     <main class="blog-posts-container">
         <ul id="blog-post-list-ul" class="blog-post-list">
-            <!-- Posts injected here by JavaScript -->
+            <!-- Posts injected here -->
             <p style="text-align: center; color: var(--subtle-text-color);"></p>
         </ul>
     </main>
