@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="preload" href="SuisseIntlMono-Regular.otf" as="font" type="font/opentype" crossorigin="anonymous">
+    <link rel="preload" href="SuisseIntlMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
     <title>kirkr.xyz</title>
     <style>
         @font-face {
             font-family: 'SuisseIntlMono';
-            src: url('SuisseIntlMono-Regular.otf') format('opentype');
+            src: url('SuisseIntlMono-Regular.woff2') format('woff2');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -398,7 +398,7 @@
                 <a href="/posts.html" title="posts" rel="noopener noreferrer">
                     <span>posts</span>
                 </a>
-                <a href="https://letterboxd.com/Kirkr101" title="GitHub" target="_blank" rel="noopener noreferrer">
+                <a href="/films.html" title="film" rel="noopener noreferrer">
                     <span>film</span>
                 </a>    
                 <a href="/art.html" title="art" rel="noopener noreferrer">
@@ -665,6 +665,14 @@
                     currentPage--;
                     updateListPosition();
                     updateButtonStates();
+                }
+            });
+
+            window.addEventListener('keydown', (event) => {
+                if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                    prevButton.click();
+                } else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+                    nextButton.click();
                 }
             });
         });

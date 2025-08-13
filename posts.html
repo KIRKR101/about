@@ -8,7 +8,7 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <title>Blog | kirkr.xyz</title>
 
-    <link rel="preload" href="SuisseIntlMono-Regular.otf" as="font" type="font/opentype" crossorigin="anonymous">
+    <link rel="preload" href="SuisseIntlMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 
     <style>
         .js-loading body {
@@ -17,7 +17,7 @@
 
         @font-face {
             font-family: 'SuisseIntlMono';
-            src: url('SuisseIntlMono-Regular.otf') format('opentype');
+            src: url('SuisseIntlMono-Regular.woff2') format('woff2');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -52,40 +52,54 @@
             min-height: 100vh;
             padding: 2rem;
             box-sizing: border-box;
+            position: relative;
         }
 
         .page-header {
             width: 100%;
             max-width: 800px;
-            margin-top: 1rem;
-            margin-bottom: 1rem;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: center;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         .page-header h1 {
             font-size: 1.75rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
             font-weight: normal;
-            margin: 0;
+            text-align: center;
+            flex-grow: 1;
         }
 
-        .back-to-home-link {
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 100;
             color: var(--icon-color);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.5rem;
             font-size: 0.9rem;
             transition: color 0.2s ease-in-out;
+            padding: 0.25rem 0.5rem;
         }
-        .back-to-home-link:hover {
+
+        .back-button:hover {
             color: var(--text-color);
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
         }
-        .back-to-home-link .svg-icon-back {
-            width: 16px;
-            height: 16px;
+
+        .back-button .arrow-icon {
+            width: 18px;
+            height: 18px;
             fill: currentColor;
+            transform: rotate(180deg);
         }
 
 
@@ -141,6 +155,10 @@
         }
 
         @media (max-width: 768px) {
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+            }
             .page-header, .blog-posts-container {
                 max-width: 95%;
             }
@@ -154,12 +172,14 @@
     </style>
 </head>
 <body>
+    <a href="index.html" class="back-button">
+        <svg class="arrow-icon" viewBox="0 0 24 24">
+            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+        </svg>
+        Back
+    </a>
     <header class="page-header">
-        <h1>blog posts</h1>
-        <a href="/" class="back-to-home-link">
-            <svg class="svg-icon-back" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-            <span>back</span>
-        </a>
+        <h1>Blog Posts</h1>
     </header>
 
     <main class="blog-posts-container">

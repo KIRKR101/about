@@ -52,7 +52,7 @@ export async function onRequest(context) {
             status: isNowPlaying ? "Currently playing" : "Last Listen",
             title: track.name,
             artist: track.artist["#text"],
-            albumArt: track.image.find((img) => img.size === "large")["#text"],
+            albumArt: track.image.find((img) => img.size === "medium")["#text"],
             trackUrl: track.url,
         };
 

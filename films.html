@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Films - Kirk R</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="preload" href="SuisseIntlMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <style>
+        @font-face {
+            font-family: 'SuisseIntlMono';
+            src: url('SuisseIntlMono-Regular.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --bg-color: #000000;
+            --text-color: #e0e0e0;
+            --card-bg-color: #050505;
+            --card-border-color: #1c1c1c;
+            --link-color: #e0e0e0;
+            --subtle-text-color: #7f7f7f;
+            --icon-color: #b0b0b0;
+        }
+
+        body {
+            font-family: 'SuisseIntlMono', monospace;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            margin: 0;
+            font-size: .95rem;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        header, main, footer {
+            width: 100%;
+            max-width: 50%;
+        }
+
+        header {
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 2rem; 
+            left: 2rem;
+            z-index: 100;
+            color: var(--icon-color);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: color 0.2s ease-in-out;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .back-button:hover {
+            color: var(--text-color);
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .back-button .arrow-icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+            transform: rotate(180deg);
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .social-links a {
+            color: var(--icon-color);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem; 
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+            transition: color 0.2s ease-in-out;
+        }
+        .social-links a:hover {
+            color: var(--text-color);
+        }
+        .social-links a .svg-icon-social {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-weight: normal;
+            text-align: center;
+        }
+        
+        .film-item {
+            background-color: var(--card-bg-color);
+            padding: 1.25rem 1.5rem;
+            border-radius: 14px;
+            border: 2px solid var(--card-border-color);
+            margin-bottom: 0.75rem;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .film-item h2 {
+            font-size: 1rem;
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 0.25rem;
+            color: var(--text-color);
+        }
+
+        .film-item h2 a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .film-item h2 a:hover {
+            text-decoration: underline;
+        }
+
+        .film-item p {
+            font-size: 0.85rem;
+            color: var(--subtle-text-color);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .film-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .film-poster {
+            width: 90px;
+            height: auto;
+            border-radius: 8px;
+            flex-shrink: 0;
+            object-fit: cover;
+        }
+
+        .film-info {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            flex: 1;
+        }
+
+        #films-container {
+            width: 100%;
+        }
+        
+        footer {
+            margin-top: 2rem;
+            color: var(--subtle-text-color);
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 2rem 1rem;
+            }
+            .back-button {
+                top: 1rem; 
+                left: 1rem;
+            }
+            header, main, footer {
+                max-width: 90%;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .social-links {
+                gap: 1rem;
+            }
+            .social-links a {
+                font-size: 0.9rem;
+            }
+            .film-item {
+                padding: 1rem 1.25rem;
+            }
+            .film-item h2 {
+                font-size: 0.95rem;
+            }
+            .film-item p {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header, main, footer {
+                max-width: 95%;
+            }
+            h1 {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Desktop Grid Layout */
+        @media (min-width: 769px) {
+            #films-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+                justify-content-items: center;
+            }
+
+            .film-item {
+                width: 100%;
+                max-width: 300px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 1rem;
+                margin-bottom: 0;
+            }
+
+            .film-header {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.75rem;
+            }
+
+            .film-poster {
+                width: 100%;
+                height: auto;
+                max-width: 180px;
+                object-fit: contain;
+                margin-bottom: 0.5rem;
+            }
+
+            .film-info {
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">
+        <svg class="arrow-icon" viewBox="0 0 24 24">
+            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+        </svg>
+        Back
+    </a>
+    <header>
+        <h1>Films</h1>
+    </header>
+
+    <main>
+        <div id="films-container" style="text-align: center;">
+            Loading films...
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const targetRssUrl = 'https://letterboxd.com/kirkr101/rss/';
+            const proxyUrl = 'https://api.allorigins.win/raw?url=';
+            const rssFeedUrl = proxyUrl + encodeURIComponent(targetRssUrl);
+            
+            const filmsContainer = document.getElementById('films-container');
+
+            const createStarRating = (ratingStr) => {
+                if (!ratingStr) return '';
+                const rating = parseFloat(ratingStr);
+                if (isNaN(rating)) return '';
+
+                const fullStars = Math.floor(rating);
+                const hasHalfStar = (rating % 1 !== 0);
+                let starsHtml = '★'.repeat(fullStars);
+                if (hasHalfStar) {
+                    starsHtml += '½';
+                }
+                
+                return `<p><strong>Rating:</strong> ${starsHtml}</p>`;
+            };
+
+            fetch(rssFeedUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+                    return response.text();
+                })
+                .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+                .then(data => {
+                    const parserError = data.querySelector('parsererror');
+                    if (parserError) {
+                        console.error('Error parsing XML:', parserError);
+                        throw new Error('Failed to parse RSS feed. The proxy may be down or the feed is invalid.');
+                    }
+                    
+                    const items = data.querySelectorAll('item');
+                    if (items.length === 0) {
+                        filmsContainer.innerHTML = '<p>No films found in the RSS feed.</p>';
+                        return;
+                    }
+
+                    filmsContainer.innerHTML = ''; 
+
+                    items.forEach(item => {
+                        const link = item.querySelector('link')?.textContent.trim() || '#';
+                        const filmTitle = item.querySelector('filmTitle')?.textContent || 'Unknown Film';
+                        const filmYear = item.querySelector('filmYear')?.textContent || '';
+                        const memberRating = item.querySelector('memberRating')?.textContent || '';
+                        const watchedDate = item.querySelector('watchedDate')?.textContent;
+                        const rewatch = item.querySelector('rewatch')?.textContent === 'Yes' ? ' (Rewatch)' : '';
+
+                        const description = item.querySelector('description')?.textContent || '';
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(description, 'text/html');
+                        const posterImg = doc.querySelector('img');
+                        const posterUrl = posterImg ? posterImg.src.trim() : '';
+                        
+                        const watchedDateFormatted = watchedDate 
+                            ? new Date(watchedDate).toLocaleDateString(undefined, { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' }) 
+                            : 'N/A';
+                        
+                        const filmElement = document.createElement('div');
+                        filmElement.classList.add('film-item');
+                        
+                        filmElement.innerHTML = `
+                            <div class="film-header">
+                                ${posterUrl ? `<img src="${posterUrl}" alt="${filmTitle} poster" class="film-poster" loading="lazy">` : ''}
+                                <div class="film-info">
+                                    <h2><a href="${link}" target="_blank" rel="noopener noreferrer">${filmTitle}${filmYear ? ` (${filmYear})` : ''}</a></h2>
+                                    <p><strong>Watched:</strong> ${watchedDateFormatted}${rewatch}</p>
+                                    ${createStarRating(memberRating)}
+                                </div>
+                            </div>
+                        `;
+                        
+                        filmsContainer.appendChild(filmElement);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching or processing RSS feed:', error);
+                    filmsContainer.innerHTML = `<p style="color: #ff8a8a;">Failed to load films. ${error.message}</p>`;
+                });
+        });
+    </script>
+</body>
+</html>
