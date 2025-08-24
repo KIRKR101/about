@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="Read blog posts and articles on various topics by me" id="meta-description">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <title>post | kirkr.xyz</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -240,9 +242,14 @@
                 const postMeta = manifest.find(p => p.file === postFileName);
 
                 let pageTitle = "Blog Post";
+                const metaDescriptionTag = document.getElementById('meta-description');
+
                 if (postMeta) {
                     pageTitle = postMeta.title;
-                    postTitleH1.textContent = postMeta.title; 
+                    postTitleH1.textContent = postMeta.title;
+                    if (metaDescriptionTag && postMeta.snippet) {
+                        metaDescriptionTag.setAttribute('content', postMeta.snippet);
+                    }
                 } else {
                     postTitleH1.textContent = "Post Not Found";
                 }
