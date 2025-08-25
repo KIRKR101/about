@@ -359,7 +359,11 @@
                         const parser = new DOMParser();
                         const doc = parser.parseFromString(description, 'text/html');
                         const posterImg = doc.querySelector('img');
-                        const posterUrl = posterImg ? posterImg.src.trim() : '';
+                        let posterUrl = posterImg ? posterImg.src.trim() : '';
+                        
+                        if (posterUrl.includes('/resized/film-poster/')) {
+                            posterUrl = posterUrl.replace(/-0-\d+-0-\d+-crop\.jpg/, '-0-200-0-300-crop.jpg');
+                        }
                         
                         const watchedDateFormatted = watchedDate 
                             ? new Date(watchedDate).toLocaleDateString(undefined, { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' }) 
