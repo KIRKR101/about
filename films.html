@@ -326,6 +326,8 @@
                 return `<p><strong>Rating:</strong> ${starsHtml}</p>`;
             };
 
+            const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
             fetch(rssFeedUrl)
                 .then(response => {
                     if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
@@ -347,7 +349,7 @@
 
                     filmsContainer.innerHTML = ''; 
 
-                    items.forEach(item => {
+                    items.forEach((item, index) => {
                         const link = item.querySelector('link')?.textContent.trim() || '#';
                         const filmTitle = item.querySelector('filmTitle')?.textContent || 'Unknown Film';
                         const filmYear = item.querySelector('filmYear')?.textContent || '';
@@ -361,8 +363,18 @@
                         const posterImg = doc.querySelector('img');
                         let posterUrl = posterImg ? posterImg.src.trim() : '';
                         
-                        if (posterUrl.includes('/resized/film-poster/')) {
-                            posterUrl = posterUrl.replace(/-0-\d+-0-\d+-crop\.jpg/, '-0-200-0-300-crop.jpg');
+                        let imgWidth, imgHeight;
+
+                        if (posterUrl.includes('/resized/')) {
+                            if (isMobile) {
+                                posterUrl = posterUrl.replace(/-0-\d+-0-\d+-crop\.jpg/, '-0-100-0-150-crop.jpg');
+                                imgWidth = 100;
+                                imgHeight = 150;
+                            } else {
+                                posterUrl = posterUrl.replace(/-0-\d+-0-\d+-crop\.jpg/, '-0-200-0-300-crop.jpg');
+                                imgWidth = 200;
+                                imgHeight = 300;
+                            }
                         }
                         
                         const watchedDateFormatted = watchedDate 
@@ -372,9 +384,11 @@
                         const filmElement = document.createElement('div');
                         filmElement.classList.add('film-item');
                         
+                        const loadingAttribute = index < 5 ? '' : 'loading="lazy"';
+                        
                         filmElement.innerHTML = `
                             <div class="film-header">
-                                ${posterUrl ? `<img src="${posterUrl}" alt="${filmTitle} poster" class="film-poster" loading="lazy">` : ''}
+                                ${posterUrl ? `<img src="${posterUrl}" alt="${filmTitle} poster" class="film-poster" width="${imgWidth}" height="${imgHeight}" ${loadingAttribute}>` : ''}
                                 <div class="film-info">
                                     <h2><a href="${link}" target="_blank" rel="noopener noreferrer">${filmTitle}${filmYear ? ` (${filmYear})` : ''}</a></h2>
                                     <p><strong>Watched:</strong> ${watchedDateFormatted}${rewatch}</p>
