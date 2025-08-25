@@ -140,7 +140,7 @@
             box-sizing: border-box;
         }
 
-        .project-card h3 {
+        .project-card h2 {
             font-size: 1rem;
             font-weight: normal;
             margin-top: 0;
@@ -180,9 +180,6 @@
         .project-link:hover {
             color: var(--link-color);
             text-decoration: underline;
-        }
-        .project-link .external-icon-text {
-            opacity: 0.85;
         }
         .project-link .custom-external-link-icon {
             width: 0.7rem;
@@ -284,13 +281,13 @@
             min-width: 0;
             flex: 1;
         }
-        .lastfm-info h3, .lastfm-info p {
+        .lastfm-info h4, .lastfm-info p {
             margin: 0;
             white-space: normal;
             word-wrap: break-word;
             min-width: 0;
         }
-        .lastfm-info h3 {
+        .lastfm-info h4 {
             margin-bottom: 0.25rem;
             font-size: 1rem;
             font-weight: normal;
@@ -348,7 +345,7 @@
                 width: 56px;
                 height: 56px;
             }
-            .lastfm-info h3 {
+            .lastfm-info h4 {
                 font-size: 0.95rem;
             }
             .lastfm-info p {
@@ -379,7 +376,7 @@
                 width: 48px;
                 height: 48px;
             }
-            .lastfm-info h3 {
+            .lastfm-info h4 {
                 font-size: 0.9rem;
             }
             .lastfm-info p {
@@ -417,10 +414,10 @@
             <div class="project-cards-viewport">
                 <div class="project-cards-list">
                     <div class="project-card">
-                        <h3>
+                        <h2>
                             <span class="project-icon">V</span>
                             voxor
-                        </h3>
+                        </h2>
                         <a href="https://voxor.kirkr.xyz" target="_blank" rel="noopener noreferrer" class="project-link">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="custom-external-link-icon">
                                 <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
@@ -437,10 +434,10 @@
                     </div>
 
                     <div class="project-card">
-                        <h3>
+                        <h2>
                             <span class="project-icon project-icon-char">C</span>
                             CPUsim
-                        </h3>
+                        </h2>
                         <a href="https://github.com/Kirkr101/CPUsim" target="_blank" rel="noopener noreferrer" class="project-link">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="custom-external-link-icon">
                                 <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
@@ -457,10 +454,10 @@
                     </div>
 
                     <div class="project-card">
-                        <h3>
+                        <h2>
                             <span class="project-icon project-icon-char">S</span>
                             streamline
-                        </h3>
+                        </h2>
                         <a href="https://github.com/Kirkr101/Streamline" target="_blank" rel="noopener noreferrer" class="project-link">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="custom-external-link-icon">
                                 <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
@@ -477,10 +474,10 @@
                     </div>
 
                     <div class="project-card">
-                        <h3>
+                        <h2>
                             <span class="project-icon project-icon-char">R</span>
                             rmt-debrid
-                        </h3>
+                        </h2>
                         <a href="https://github.com/Kirkr101/RMT-Debrid" target="_blank" rel="noopener noreferrer" class="project-link">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="custom-external-link-icon">
                                 <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
@@ -497,10 +494,10 @@
                     </div>
 
                     <div class="project-card">
-                        <h3>
+                        <h2>
                            <span class="project-icon project-icon-char">A</span>
                             audioshare
-                        </h3>
+                        </h2>
                         <a href="https://github.com/Kirkr101/audioshare" target="_blank" rel="noopener noreferrer" class="project-link">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="custom-external-link-icon">
                                 <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
@@ -566,7 +563,7 @@
                 <div class="lastfm-content">
                     ${albumArt}
                     <div class="lastfm-info">
-                        <h3><a href="${trackData.trackUrl}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">${trackData.title}</a></h3>
+                        <h4><a href="${trackData.trackUrl}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">${trackData.title}</a></h4>
                         <p>${trackData.artist}</p>
                     </div>
                 </div>
