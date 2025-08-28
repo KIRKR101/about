@@ -8,8 +8,20 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <title>post | kirkr.xyz</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tomorrow-night-bright.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/mipsasm.min.js"></script>
     <link rel="preload" href="SuisseIntlMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="SuisseIntl-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
     <style>
+        @font-face {
+            font-family: 'SuisseIntl';
+            src: url('SuisseIntl-Regular.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
         @font-face {
             font-family: 'SuisseIntlMono';
             src: url('SuisseIntlMono-Regular.woff2') format('woff2');
@@ -29,7 +41,7 @@
         }
 
         body {
-            font-family: 'SuisseIntlMono', monospace;
+            font-family: 'SuisseIntl', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             margin: 0;
@@ -91,12 +103,13 @@
         #post-content-area {
         }
 
-        #post-content-area h1, 
+        #post-content-area h1,
         #post-content-area h2, 
         #post-content-area h3,
         #post-content-area h4,
         #post-content-area h5,
         #post-content-area h6 {
+            font-family: 'SuisseIntlMono', monospace;
             color: var(--text-color);
             margin-top: 1.8em;
             margin-bottom: 0.8em;
@@ -108,8 +121,12 @@
             margin-top: 0;
         }
 
-        #post-content-area h1 { font-size: 2rem; }
-        #post-content-area h2 { font-size: 1.6rem; }
+        #post-content-area h1 { font-size: 1.8rem; }
+        #post-content-area h2 {
+            font-size: 1.6rem;
+            margin-top: 0.9em;
+            margin-bottom: 0.4em;
+        }
         #post-content-area h3 { font-size: 1.3rem; }
 
 
@@ -121,7 +138,7 @@
 
         #post-content-area a {
             color: var(--icon-color);
-            text-decoration: none;
+            text-decoration: underline;
             transition: color 0.2s ease-in-out;
         }
         #post-content-area a:hover {
@@ -140,7 +157,6 @@
         #post-content-area pre {
             background-color: var(--card-bg-color);
             border: 1px solid var(--card-border-color);
-            padding: 1em;
             border-radius: 6px;
             overflow-x: auto;
             font-size: 0.9em;
@@ -175,14 +191,14 @@
             max-width: 100%;
             height: auto;
             border-radius: 4px;
-            margin: 1em 0;
+            margin: 0.5em 0;
         }
 
         #post-content-area hr {
             border: 0;
             height: 1px;
-            background-color: var(--card-border-color);
-            margin: 2.5em 0;
+            background-color: #222222;
+            margin: 1.5em 0;
         }
 
         @media (max-width: 768px) {
@@ -270,6 +286,9 @@
                 
                 if (typeof marked !== 'undefined') {
                     postContentDiv.innerHTML = marked.parse(contentToParse);
+                    document.querySelectorAll('#post-content-area pre code').forEach((block) => {
+                        hljs.highlightElement(block);
+                    });
                 } else {
                     postContentDiv.innerHTML = '<p>Error: Markdown parser (marked.js) not loaded.</p>';
                 }

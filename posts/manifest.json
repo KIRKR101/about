@@ -1,8 +1,14 @@
 [
-  {
-    "file": "history-of-palestine",
-    "title": "Palestine, an Early History",
-    "date": "2025-04-22",
-    "snippet": "An early history of Palestine and Zionism..."
-  }
+    {
+        "file": "history-of-palestine",
+        "title": "Palestine, an Early History",
+        "date": "2025-04-22",
+        "snippet": "An early history of Palestine and Zionism..."
+    },
+    {
+        "file": "risc-v",
+        "title": "RISC-V, an Overview",
+        "date": "2025-08-28",
+        "snippet": "An introduction to the RISC-V ISA"
+    }
 ]
