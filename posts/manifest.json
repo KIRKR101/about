@@ -9,6 +9,12 @@
         "file": "risc-v",
         "title": "RISC-V, an Overview",
         "date": "2025-08-28",
-        "snippet": "An introduction to the RISC-V ISA"
+        "snippet": "An introduction to the RISC-V ISA..."
+    },
+    {
+        "file": "fpga",
+        "title": "Intro to FPGAs",
+        "date": "2025-08-30",
+        "snippet": "A starting point to FPGA architecture..."
     }
 ]

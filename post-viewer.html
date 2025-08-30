@@ -7,12 +7,11 @@
     <meta name="description" content="Read blog posts and articles on various topics by me." id="meta-description">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <title>post | kirkr.xyz</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tomorrow-night-bright.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/mipsasm.min.js"></script>
+    
     <link rel="preload" href="SuisseIntlMono-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" href="SuisseIntl-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/marked@9.1.6/lib/marked.esm.js">
+    
     <style>
         @font-face {
             font-family: 'SuisseIntl';
@@ -54,6 +53,52 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-y: scroll;
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: var(--bg-color);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--card-border-color);
+            border-radius: 6px;
+            border: 2px solid var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: var(--icon-color);
+        }
+
+        ::-webkit-scrollbar-thumb:active {
+            background-color: var(--subtle-text-color);
+        }
+
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--card-border-color) var(--bg-color);
+        }
+
+        .content-wrapper {
+            width: 100%;
+            max-width: 700px;
+            margin-top: 1rem;
+        }
+
+        .dynamic-content {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+        }
+
+        .dynamic-content.loaded {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .content-wrapper {
@@ -99,8 +144,17 @@
             background-color: var(--card-border-color);
             margin-bottom: 2.5rem;
         }
-        
-        #post-content-area {
+
+        .footer-divider {
+            border: 0;
+            height: 1px;
+            background-color: var(--card-border-color);
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            text-align: right;
+            margin-right: 2rem;
         }
 
         #post-content-area h1,
@@ -128,7 +182,6 @@
             margin-bottom: 0.4em;
         }
         #post-content-area h3 { font-size: 1.3rem; }
-
 
         #post-content-area p {
             margin-bottom: 1.2em;
@@ -161,9 +214,11 @@
             overflow-x: auto;
             font-size: 0.9em;
             margin-bottom: 1.5em;
+            padding: 1rem;
         }
         #post-content-area code {
            font-family: 'SuisseIntlMono', monospace;
+           background-color: var(--card-bg-color);
         }
         #post-content-area p > code, 
         #post-content-area li > code,
@@ -216,11 +271,10 @@
                 font-size: 1.5rem;
             }
         }
-
     </style>
 </head>
 <body>
-    <div class="content-wrapper">
+    <div class="content-wrapper" id="content-wrapper">
         <nav class="top-navigation">
             <a href="/posts.html" class="back-link">
                  <svg class="svg-icon-back" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
@@ -229,7 +283,7 @@
         </nav>
 
         <header>
-            <h1 id="post-title-display-h1" class="post-title-display"></h1>
+            <h1 id="post-title-display-h1" class="post-title-display">Loading...</h1>
         </header>
         
         <hr class="title-divider">
@@ -237,67 +291,92 @@
         <article id="post-content-area">
             <p style="color: var(--subtle-text-color);">Loading post content...</p>
         </article>
+
+        <hr class="footer-divider">
+        <footer>By Kirk.</footer>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+    <script type="module">
+        import { marked } from 'https://cdn.jsdelivr.net/npm/marked@9.1.6/lib/marked.esm.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
             const postContentDiv = document.getElementById('post-content-area');
             const postTitleH1 = document.getElementById('post-title-display-h1');
+            const contentWrapper = document.getElementById('content-wrapper');
             const params = new URLSearchParams(window.location.search);
             const postFileName = params.get('name');
 
-            if (!postFileName || !postTitleH1) {
-                if (postContentDiv) postContentDiv.innerHTML = '<p>Error: No post specified or title element missing.</p>';
-                return;
+            function showContent() {
+                contentWrapper.classList.add('loaded');
             }
 
-            try {
-                const manifestResponse = await fetch('/posts/manifest.json');
-                if (!manifestResponse.ok) throw new Error('Could not load post manifest.');
-                const manifest = await manifestResponse.json();
-                const postMeta = manifest.find(p => p.file === postFileName);
-
-                let pageTitle = "Blog Post";
-                const metaDescriptionTag = document.getElementById('meta-description');
-
-                if (postMeta) {
-                    pageTitle = postMeta.title;
-                    postTitleH1.textContent = postMeta.title;
-                    if (metaDescriptionTag && postMeta.snippet) {
-                        metaDescriptionTag.setAttribute('content', postMeta.snippet);
-                    }
-                } else {
-                    postTitleH1.textContent = "Post Not Found";
+            if (!postFileName) {
+                postContentDiv.innerHTML = '<p>Error: No post specified.</p>';
+                postTitleH1.textContent = 'Error';
+                showContent();
+            } else {
+            Promise.all([
+                fetch('/posts/manifest.json').then(r => r.ok ? r.json() : null).catch(() => null),
+                fetch(`/posts/${postFileName}.md`).then(r => r.ok ? r.text() : Promise.reject('Not found'))
+            ]).then(([manifest, markdownText]) => {
+                const postMeta = manifest?.find(p => p.file === postFileName);
+                const pageTitle = postMeta?.title || 'Blog Post';
+                
+                postTitleH1.textContent = pageTitle;
+                document.title = `${pageTitle} | kirkr.xyz`;
+                
+                if (postMeta?.snippet) {
+                    document.getElementById('meta-description')?.setAttribute('content', postMeta.snippet);
                 }
-                document.title = pageTitle + " | kirkr.xyz";
-
-
-                const response = await fetch(`/posts/${postFileName}.md`);
-                if (!response.ok) {
-                    throw new Error(`Post "${postFileName}.md" not found (status: ${response.status})`);
-                }
-                let markdownText = await response.text();
 
                 const frontmatterMatch = markdownText.match(/^---\s*([\s\S]*?)\s*---/);
-                let contentToParse = markdownText;
-                if (frontmatterMatch) {
-                    contentToParse = markdownText.substring(frontmatterMatch[0].length).trimStart();
-                }
-                
-                if (typeof marked !== 'undefined') {
-                    postContentDiv.innerHTML = marked.parse(contentToParse);
-                    document.querySelectorAll('#post-content-area pre code').forEach((block) => {
-                        hljs.highlightElement(block);
-                    });
-                } else {
-                    postContentDiv.innerHTML = '<p>Error: Markdown parser (marked.js) not loaded.</p>';
-                }
+                const contentToParse = frontmatterMatch 
+                    ? markdownText.substring(frontmatterMatch[0].length).trimStart()
+                    : markdownText;
 
-            } catch (error) {
-                console.error('Error loading post:', error);
-                if (postContentDiv) postContentDiv.innerHTML = `<p>Error loading post: ${error.message}.</p>`;
-                if (postTitleH1 && !postMeta) postTitleH1.textContent = "Error Loading Post";
-            }
+                postContentDiv.innerHTML = marked.parse(contentToParse);
+
+                showContent();
+
+                const codeBlocks = postContentDiv.querySelectorAll('pre code');
+                if (codeBlocks.length > 0) {
+                    const languages = [...new Set(
+                        [...codeBlocks].map(block => {
+                            const langClass = [...block.classList].find(cls => cls.startsWith('language-'));
+                            return langClass ? langClass.substring(9) : null;
+                        }).filter(Boolean)
+                    )];
+
+                    const hljs = import('https://cdn.skypack.dev/@highlightjs/cdn-assets@11.9.0/es/highlight.min.js');
+                    const theme = new Promise(resolve => {
+                        const link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.href = 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/tomorrow-night-bright.min.css';
+                        link.onload = resolve;
+                        document.head.appendChild(link);
+                    });
+
+                    Promise.all([hljs, theme]).then(([hljsModule]) => {
+                        const hljs = hljsModule.default;
+                        
+                        const langPromises = languages.map(lang =>
+                            import(`https://cdn.skypack.dev/@highlightjs/cdn-assets@11.9.0/es/languages/${lang}.min.js`)
+                                .then(module => hljs.registerLanguage(lang, module.default))
+                                .catch(() => {})
+                        );
+
+                        Promise.all(langPromises).then(() => {
+                            hljs.highlightAll();
+                        });
+                    });
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                postContentDiv.innerHTML = `<p style="color: #ff6b6b;">Error loading post: ${error}</p>`;
+                postTitleH1.textContent = 'Error Loading Post';
+                showContent();
+            });
+        }
         });
     </script>
 </body>

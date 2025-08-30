@@ -1,4 +1,4 @@
-# RISC-V
+## RISC-V
 
 For decades, processor design has been dominated by proprietary ISAs like x86 and Arm, which impose licensing fees and limit hardware customisation. RISC-V is a compelling alternative: a free and open standard Instruction Set Architecture (*ISA*) that allows anyone to design, build, and sell custom processors without royalties. This post provides an overview of its modular architecture and core features, as well as the growing ecosystem that makes it a viable option today. This post was largely inspired by recent RISC-V developments in China, like Beijing’s [hedge on RISC-V](https://www.tomshardware.com/pc-components/cpus/chinese-government-shifts-focus-from-x86-and-arm-cpus-promoting-the-adoption-of-risc-v-chips) and [new chips](https://www.tomshardware.com/pc-components/cpus/chinas-push-for-chip-independence-continues-with-its-first-risc-v-server-cpu) starting to come within the performance magnitude of western designs.
 
