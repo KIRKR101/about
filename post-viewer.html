@@ -86,8 +86,9 @@
 
         .content-wrapper {
             width: 100%;
-            max-width: 700px;
-            margin-top: 1rem;
+            max-width: 850px;
+            margin: 1rem auto 2rem auto;
+            padding: 0 1rem;
         }
 
         .dynamic-content {
@@ -99,12 +100,6 @@
         .dynamic-content.loaded {
             opacity: 1;
             transform: translateY(0);
-        }
-
-        .content-wrapper {
-            width: 100%;
-            max-width: 700px;
-            margin-top: 1rem;
         }
 
         .top-navigation {
@@ -258,7 +253,7 @@
 
         @media (max-width: 768px) {
             body {
-                padding: 1.5rem;
+                padding: 1rem;
             }
             .content-wrapper {
                 max-width: 100%;
@@ -268,7 +263,19 @@
                 font-size: 1.8rem;
             }
              #post-content-area > h1:first-child {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
+            }
+            #post-content-area h1 {
+                font-size: 1.4rem;
+            }
+            #post-content-area h2 {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .content-wrapper {
+                max-width: 900px;
             }
         }
     </style>
