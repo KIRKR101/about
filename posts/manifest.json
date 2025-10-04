@@ -16,5 +16,11 @@
         "title": "Intro to FPGAs",
         "date": "2025-08-30",
         "snippet": "A starting point to FPGA architecture..."
+    },
+    {
+        "file": "asic",
+        "title": "Intro to ASICs",
+        "date": "2025-10-04",
+        "snippet": "A starting point to ASIC architecture..."
     }
 ]

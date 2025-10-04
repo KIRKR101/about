@@ -302,8 +302,11 @@
         <footer>By Kirk.</footer>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/marked-footnote@1.4.0/dist/index.umd.js"></script>
     <script type="module">
         import { marked } from 'https://cdn.jsdelivr.net/npm/marked@9.1.6/lib/marked.esm.js';
+
+        marked.use(window.markedFootnote());
 
         document.addEventListener('DOMContentLoaded', () => {
             const postContentDiv = document.getElementById('post-content-area');
@@ -340,7 +343,7 @@
                     ? markdownText.substring(frontmatterMatch[0].length).trimStart()
                     : markdownText;
 
-                postContentDiv.innerHTML = marked.parse(contentToParse);
+                postContentDiv.innerHTML = marked.parse(contentToParse, { gfm: true, breaks: true });
 
                 showContent();
 
