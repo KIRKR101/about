@@ -339,11 +339,39 @@
                 }
 
                 const frontmatterMatch = markdownText.match(/^---\s*([\s\S]*?)\s*---/);
-                const contentToParse = frontmatterMatch 
+                const contentToParse = frontmatterMatch
                     ? markdownText.substring(frontmatterMatch[0].length).trimStart()
                     : markdownText;
 
-                postContentDiv.innerHTML = marked.parse(contentToParse, { gfm: true, breaks: true });
+                // Process wikilinks ![[file]] to standard markdown images
+                const processedContent = contentToParse.replace(/!\[\[([^\]]+)\]\]/g, '![$1](posts/$1)');
+
+                postContentDiv.innerHTML = marked.parse(processedContent, { gfm: true, breaks: true });
+
+                // Replace SVG imgs with inline SVG elements
+                const svgs = postContentDiv.querySelectorAll('img[src$=".svg"]');
+                if (svgs.length > 0) {
+                    Promise.all([...svgs].map(async (img) => {
+                        try {
+                            const response = await fetch(img.src);
+                            if (response.ok) {
+                                const svgText = await response.text();
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(svgText, 'text/html');
+                                const svgElement = doc.querySelector('svg');
+                                if (svgElement) {
+                                    svgElement.style.maxWidth = '100%';
+                                    svgElement.style.height = 'auto';
+                                    svgElement.style.borderRadius = '4px';
+                                    svgElement.style.margin = '0.5em 0';
+                                    img.parentNode.replaceChild(svgElement, img);
+                                }
+                            }
+                        } catch (e) {
+                            console.error('Error loading SVG:', e);
+                        }
+                    }));
+                }
 
                 showContent();
 

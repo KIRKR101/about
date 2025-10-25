@@ -22,5 +22,11 @@
         "title": "Intro to ASICs",
         "date": "2025-10-04",
         "snippet": "A starting point to ASIC architecture..."
+    },
+    {
+        "file": "carel-fabritius",
+        "title": "The Short Corpus of Works by Carel Fabritius",
+        "date": "2025-10-25",
+        "snippet": "A look into the paintings of Carel Fabritius..."
     }
 ]
