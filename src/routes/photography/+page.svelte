@@ -216,13 +216,10 @@
 
 <div class="flex min-h-full flex-col items-center px-6 py-6 font-mono md:py-16">
 	<div class="w-full max-w-7xl" bind:this={contentContainer}>
-		<div class="py-7">
+		<div class="py-4">
 			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-white">
 				<span class="opacity-90">Photography</span><span class="opacity-20">.</span>
 			</h1>
-			<div class="mt-2 font-sans text-[11px] tracking-[0.1em] text-muted uppercase">
-				selected photos from travels
-			</div>
 		</div>
 
 		<div class="mb-8 h-px bg-bd"></div>

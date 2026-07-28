@@ -73,7 +73,7 @@
 			</a>
 		</div>
 
-		<div class="py-6">
+		<div class="py-4">
 			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-white/90">
 				{longTitle || title || 'Writing'}
 			</h1>

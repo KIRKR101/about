@@ -182,13 +182,10 @@
 
 <div class="flex min-h-screen flex-col items-center px-6 py-6 font-mono md:py-16">
 	<main class="w-full max-w-[600px]">
-		<div class="py-7">
+		<div class="py-4">
 			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-white">
 				<span class="opacity-90">Books</span><span class="opacity-20">.</span>
 			</h1>
-			<div class="mt-2 font-sans text-[12px] tracking-[0.1em] text-muted uppercase">
-				a collection of books
-			</div>
 		</div>
 
 		<div class="mb-8 h-px bg-bd"></div>
