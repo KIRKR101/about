@@ -383,7 +383,7 @@
 						class="group flex w-full items-baseline justify-between py-3 no-underline"
 					>
 						<span
-							class="font-sans text-[13px] text-white/70 transition-colors duration-100 group-hover:text-white"
+							class="font-sans text-[13px] text-white/70 transition-colors duration-100 group-hover:text-white hover:underline hover:decoration-white/70 hover:underline-offset-2"
 							>{writing.title}</span
 						>
 						<span class="font-mono text-[11px] tracking-wider text-muted/60 uppercase"
