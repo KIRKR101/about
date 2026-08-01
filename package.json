@@ -25,6 +25,7 @@
 		"@tailwindcss/vite": "^4.1.13",
 		"@types/node": "^20",
 		"concurrently": "^9.2.1",
+		"csstype": "^3.2.3",
 		"eslint": "^9.36.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.12.4",
@@ -41,5 +42,8 @@
 		"typescript": "^5.9.2",
 		"typescript-eslint": "^8.44.1",
 		"vite": "^7.1.7"
+	},
+	"dependencies": {
+		"bits-ui": "^2.18.1"
 	}
 }
