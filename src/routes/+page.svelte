@@ -344,10 +344,10 @@
 	<link rel="preconnect" href="https://i.scdn.co" />
 </svelte:head>
 
-<div class="flex min-h-full items-center justify-center px-6 py-10 lg:py-16 relative">
-	<main bind:this={mainContentEl} class="w-full max-w-[600px]">
+<div class="flex min-h-[calc(100dvh-4rem)] items-center justify-center px-6 py-10 lg:py-16 relative">
+	<main bind:this={mainContentEl} class="w-full max-w-[34rem]">
 		<section class="pb-10">
-			<div class="space-y-5 font-sans text-[16px] leading-[1.75] text-white/70">
+			<div class="space-y-4 font-sans text-[16px] leading-[1.75] text-white/70">
 				<p>
 					My main academic interest is in computer engineering, particularly architecture. I'm a
 					fan of C, Zig, and TypeScript, and web technologies in general; this site is built on
