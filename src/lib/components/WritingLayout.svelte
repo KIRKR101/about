@@ -80,7 +80,6 @@
 			<div
 				class="mt-3 flex items-center justify-between font-mono text-[11px] tracking-[0.1em] text-muted uppercase"
 			>
-				<span>kirkr.xyz</span>
 				<span>{formatDate(date)}</span>
 			</div>
 		</div>
