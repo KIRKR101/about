@@ -60,7 +60,11 @@ const config = {
 			smartypants: false,
 			remarkPlugins: [remarkFootnotes],
 			layout: {
-				_: resolve(__dirname, './src/lib/components/WritingLayout.svelte').replace(/\\/g, '/')
+				_: resolve(__dirname, './src/lib/components/WritingLayout.svelte').replace(/\\/g, '/'),
+				ProjectLayout: resolve(__dirname, './src/lib/components/ProjectLayout.svelte').replace(
+					/\\/g,
+					'/'
+				)
 			}
 		})
 	],

@@ -38,7 +38,6 @@ export const projects = [
 	{
 		id: 'voxor',
 		title: 'Voxor',
-		link: 'https://voxor.kirkr.xyz',
 		github: 'https://github.com/Kirkr101/Voxor',
 		description:
 			'Self-hosted chat with threading, typing indicators, LaTeX rendering, and a CMD+K quick-search modal.',

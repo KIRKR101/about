@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { projects } from '$lib/projects-data';
 	import { getContributionColor } from '$lib/utils';
-	import Lightbox from '$lib/components/Lightbox.svelte';
 
 	interface ContributionDay {
 		date: string;
@@ -205,72 +204,12 @@
 		touchStartX = null;
 		touchStartY = null;
 	}
-
-	let lightboxOpen = $state(false);
-	let lightboxProjectTitle = $state('');
-	let lightboxMediaIndex = $state(0);
-
-	let lightboxProject = $derived(projects.find((p) => p.title === lightboxProjectTitle) ?? null);
-
-	let lightboxMediaCount = $derived(lightboxProject?.media?.length ?? 0);
-
-	let lightboxCurrentUrl = $derived(lightboxProject?.media?.[lightboxMediaIndex] ?? '');
-
-	let lightboxNextUrl = $derived.by(() => {
-		if (!lightboxProject?.media?.length) return undefined;
-		return lightboxProject.media[(lightboxMediaIndex + 1) % lightboxProject.media.length];
-	});
-
-	let lightboxPrevUrl = $derived.by(() => {
-		if (!lightboxProject?.media?.length) return undefined;
-		return lightboxProject.media[
-			(lightboxMediaIndex - 1 + lightboxProject.media.length) % lightboxProject.media.length
-		];
-	});
-
-	let lightboxItem = $derived.by(() => {
-		if (!lightboxProject) return undefined;
-		const item: {
-			image: string;
-			title: string;
-			description: string;
-			data?: [string, string][];
-		} = {
-			image: lightboxCurrentUrl,
-			title: lightboxProject.title,
-			description: lightboxProject.description
-		};
-		if (lightboxProject.tech.length > 0) {
-			item.data = [['tech', lightboxProject.tech.join(', ')]];
-		}
-		return item;
-	});
-
-	function openLightbox(title: string, idx: number) {
-		lightboxProjectTitle = title;
-		lightboxMediaIndex = idx;
-		lightboxOpen = true;
-	}
-
-	function closeLightbox() {
-		lightboxOpen = false;
-		lightboxProjectTitle = '';
-	}
-
-	function nextMedia() {
-		if (!lightboxProject?.media?.length) return;
-		lightboxMediaIndex = (lightboxMediaIndex + 1) % lightboxProject.media.length;
-	}
-
-	function prevMedia() {
-		if (!lightboxProject?.media?.length) return;
-		lightboxMediaIndex =
-			(lightboxMediaIndex - 1 + lightboxProject.media.length) % lightboxProject.media.length;
-	}
 </script>
 
 <svelte:head>
 	<title>Projects | kirkr.xyz</title>
+	<meta name="description" content="Projects I've built." />
+	<meta name="robots" content="index, follow" />
 	<link rel="preconnect" href="https://github.kirkr.xyz" crossorigin="anonymous" />
 </svelte:head>
 
@@ -360,7 +299,9 @@
 			</div>
 		</div>
 
-		<div class="contribution-graph relative min-w-0 [touch-action:pan-y]" bind:this={graphContainer}
+		<div
+			class="contribution-graph relative min-w-0 [touch-action:pan-y]"
+			bind:this={graphContainer}
 			ontouchstart={handleTouchStart}
 			ontouchend={handleTouchEnd}
 		>
@@ -452,88 +393,35 @@
 
 	<div class="h-px w-full max-w-[850px] bg-bd"></div>
 
-	<main class="mt-8 w-full max-w-[850px]">
-		<div class="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-2">
+	<main class="w-full max-w-[850px] py-7">
+		<div class="flex flex-col">
 			{#each projects as project (project.title)}
-				<div class="project-card flex flex-col border-b border-sep pb-8 last:border-0">
-					<h2 class="mb-2 font-sans text-[16px] font-bold text-white/80">
-						{project.title}
-					</h2>
-					<p class="mb-2 flex-1 font-sans text-[13px] leading-relaxed text-muted">
-						{project.description}
-					</p>
-
-					<div class="mt-1 flex items-center gap-4">
-						{#if project.media?.length}
-							<button
-								onclick={() => openLightbox(project.title, 0)}
-								aria-label={`View gallery, ${project.media.length} ${project.media.length === 1 ? 'item' : 'items'}`}
-								class="group flex cursor-pointer items-center gap-1.5 self-start text-left font-sans text-[11px] tracking-wider text-muted uppercase transition-colors hover:text-white/85 focus-visible:ring-1 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-black focus-visible:outline-none"
-							>
-								<svg
-									class="h-3.5 w-3.5 shrink-0 opacity-80 transition-opacity group-hover:opacity-100"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.8"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									aria-hidden="true"
-								>
-									<rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-									<circle cx="9" cy="9" r="2" />
-									<path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-								</svg>
-								<span>view gallery ({project.media.length})</span>
-							</button>
-						{/if}
-
-						{#if project.link}
+				<div class="group flex w-full flex-col border-b border-bd/30 py-4 last:border-0">
+					<div class="flex w-full gap-6">
+						<div class="min-w-0 flex-1">
 							<a
-								href={project.link}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="font-sans text-[10px] tracking-[0.15em] text-muted uppercase no-underline hover:text-white/60"
+								href={`/project/${project.id}`}
+								class="font-sans text-[17px] text-white/70 transition-colors duration-100 group-hover:text-white hover:underline hover:decoration-white/70 hover:underline-offset-2"
 							>
-								{project.link.replace('https://', '')} ↗
+								{project.title}
 							</a>
-						{:else if project.github}
-							<a
-								href={project.github}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="font-sans text-[10px] tracking-[0.15em] text-muted uppercase no-underline hover:text-white/60"
-							>
-								github ↗
-							</a>
-						{/if}
+							{#if project.description}
+								<p class="mt-1.5 line-clamp-2 font-sans text-[14px] leading-relaxed text-white/40">
+									{project.description}
+								</p>
+							{/if}
+						</div>
+						<a
+							href={project.link ?? project.github}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="shrink-0 font-mono text-[12px] tracking-wider text-muted/60 transition-colors duration-100 hover:text-white/85"
+						>
+							{project.link ? project.link.replace('https://', '') : 'github'} ↗
+						</a>
 					</div>
 				</div>
 			{/each}
 		</div>
 	</main>
 </div>
-
-{#if lightboxOpen && lightboxItem}
-	<Lightbox
-		item={lightboxItem}
-		currentIndex={lightboxMediaIndex}
-		totalItems={lightboxMediaCount}
-		nextUrl={lightboxNextUrl}
-		prevUrl={lightboxPrevUrl}
-		onClose={closeLightbox}
-		onNext={nextMedia}
-		onPrev={prevMedia}
-	/>
-{/if}
-
-<style>
-	.project-card:last-child {
-		border-bottom-width: 0;
-	}
-	@media (min-width: 768px) {
-		.project-card:nth-last-child(-n + 2) {
-			border-bottom-width: 0;
-		}
-	}
-</style>

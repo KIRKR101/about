@@ -16,12 +16,12 @@
 	<title>kirkr.xyz</title>
 	<meta
 		name="description"
-		content="Writing on art history, computer engineering, and other interests."
+		content="Writing on computer engineering, and other interests."
 	/>
 	<meta property="og:title" content="kirkr.xyz" />
 	<meta
 		property="og:description"
-		content="Writing on art history, computer engineering, and other interests."
+		content="Writing on computer engineering, and other interests."
 	/>
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://kirkr.xyz" />
@@ -29,7 +29,7 @@
 	<meta name="twitter:title" content="kirkr.xyz" />
 	<meta
 		name="twitter:description"
-		content="Writing on art history, computer engineering, and other interests."
+		content="Writing on computer engineering, and other interests."
 	/>
 </svelte:head>
 

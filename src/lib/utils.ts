@@ -56,3 +56,30 @@ export function getHardcoverSrcset(coverUrl: string): string {
 		return `${base}?${params} ${w}w`;
 	}).join(', ');
 }
+
+export async function getLastCommitDate(repoUrl: string): Promise<string | null> {
+	try {
+		const res = await fetch('https://github.kirkr.xyz/api/last-commit');
+		if (!res.ok) return null;
+
+		const data: {
+			repositories: { name: string; url: string; lastCommitDate: string | null }[] | null;
+		} = await res.json();
+
+		if (!data.repositories) return null;
+
+		const normalise = (url: string) =>
+			url
+				.replace(/^https?:\/\//, '')
+				.replace(/\/+$/, '')
+				.replace(/\.git$/, '')
+				.toLowerCase();
+		const target = normalise(repoUrl);
+
+		const repo = data.repositories.find((r) => normalise(r.url) === target);
+
+		return repo?.lastCommitDate ?? null;
+	} catch {
+		return null;
+	}
+}

@@ -8,7 +8,7 @@
 	}: {
 		data: {
 			allWritings: { title: string; date: string; file: string; snippet: string | null }[];
-			allProjects: { title: string; description: string; github: string }[];
+			allProjects: { id: string; title: string; description: string; github: string }[];
 		};
 	} = $props();
 
@@ -612,7 +612,7 @@
 			<div class="flex flex-col">
 				{#each visibleProjects as project (project.title)}
 					<a
-						href={project.github}
+						href={`/project/${project.id}`}
 						class="group flex w-full flex-col border-b border-bd/30 py-3 no-underline last:border-0"
 					>
 						<div class="flex w-full items-baseline justify-between">

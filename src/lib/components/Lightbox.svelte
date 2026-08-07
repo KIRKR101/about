@@ -222,7 +222,7 @@
 	></div>
 
 	<button
-		class="absolute top-4 right-4 z-50 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 md:top-6 md:right-6 md:h-11 md:w-11"
+		class="absolute top-4 right-4 z-50 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 cursor-pointer md:top-6 md:right-6 md:h-11 md:w-11"
 		onclick={handleClose}
 		aria-label="Close lightbox"
 	>
@@ -233,7 +233,7 @@
 
 	{#if totalItems > 1}
 		<button
-			class="absolute top-1/2 left-3 z-50 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 disabled:opacity-100 md:left-6 md:h-14 md:w-14"
+			class="absolute top-1/2 left-3 z-50 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 cursor-pointer disabled:opacity-100 md:left-6 md:h-14 md:w-14"
 			onclick={handlePrev}
 			disabled={isAnimating || isClosing}
 			aria-label="Previous image"
@@ -250,7 +250,7 @@
 		</button>
 
 		<button
-			class="absolute top-1/2 right-3 z-50 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 disabled:opacity-100 md:right-6 md:h-14 md:w-14"
+			class="absolute top-1/2 right-3 z-50 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 cursor-pointer disabled:opacity-100 md:right-6 md:h-14 md:w-14"
 			onclick={handleNext}
 			disabled={isAnimating || isClosing}
 			aria-label="Next image"
