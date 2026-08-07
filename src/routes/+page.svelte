@@ -431,15 +431,15 @@
 							{/if}
 						</div>
 
-						<div class="min-w-0 flex-1 pt-0.5">
-							<div class="truncate font-serif text-[17px] leading-tight text-white/85 italic">
+						<div class="min-w-0 flex-1">
+							<div class="truncate font-serif text-[15px] leading-tight text-white/90">
 								{#if currentTrack}
 									{#if currentTrack.url}
 										<a
 											href={currentTrack.url}
 											target="_blank"
 											rel="noopener noreferrer"
-											class="text-inherit no-underline transition-colors hover:text-white"
+											class="text-inherit no-underline transition-colors duration-75 hover:text-white/80"
 										>
 											{currentTrack.title}
 										</a>
@@ -499,7 +499,10 @@
 						<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 							{#each currentlyReading as item (item.book.id)}
 								<div class="flex gap-3">
-									<div
+									<a
+										href="https://hardcover.app/books/{item.book.slug}?referrer_id=120657"
+										target="_blank"
+										rel="noopener noreferrer"
 										class="relative flex h-20 w-14 shrink-0 items-center justify-center overflow-hidden rounded-sm border border-bd bg-[#141416] text-white/20"
 									>
 										<span
@@ -517,7 +520,7 @@
 											loading="lazy"
 											onerror={(e) => ((e.target as HTMLElement).style.opacity = '0')}
 										/>
-									</div>
+									</a>
 									<div class="flex min-w-0 flex-1 flex-col justify-center">
 										<div class="truncate font-serif text-[15px] leading-tight text-white/90">
 											<a
