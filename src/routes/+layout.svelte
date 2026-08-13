@@ -25,6 +25,7 @@
 		name="twitter:description"
 		content="Writing on computer engineering, and other interests."
 	/>
+	<link rel="describedby" type="text/plain" href="/llms.txt" />
 </svelte:head>
 
 <a

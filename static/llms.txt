@@ -1,0 +1,93 @@
+<!-- LLMS.txt -->
+<!-- Domain: kirkr.xyz -->
+<!-- Last updated: 2026-08-14 -->
+<!-- Version: 1 -->
+<!-- Content types: personal-site, essays, projects, art, photography, books, films -->
+<!-- URLs last crawled: https://kirkr.xyz/, https://kirkr.xyz/writings, https://kirkr.xyz/projects, https://kirkr.xyz/art, https://kirkr.xyz/photography, https://kirkr.xyz/books, https://kirkr.xyz/films -->
+
+# kirkr.xyz
+
+> kirkr.xyz is the personal website of a first-year Computer Engineering student at the University of Warwick. It contains long-form essays on computer engineering, economics, politics, philosophy, and (particularly Dutch) art; write-ups of the author's software projects; and collections of art, photography, books, and films. The site is built with SvelteKit and is fully static.
+
+This file lists every page on the site, organised by section, so an agent can find and fetch the right content. The site has no JavaScript-required content: every page is plain HTML that renders identically to its markdown source. For agents that want the full text of every essay and project page in a single fetch, see [Full site context](https://kirkr.xyz/llms-full.txt) (generated, ~100 KB) in the Optional section.
+
+About the author: a first-year Computer Engineering student at Warwick who enjoys C and TypeScript and web technologies generally. Interests include politics, philosophy, economics, and art — particularly Dutch painting. Reachable by email at theo@kirkr.xyz; code lives on GitHub as [KIRKR101](https://github.com/KIRKR101).
+
+## Site
+
+- [Home](https://kirkr.xyz/): Landing page. Author bio, current activity (GitHub contributions, Last.fm now-playing), and links to every section — writings, projects, art, photography, books, and films.
+- [All writings](https://kirkr.xyz/writings): Chronological index of every essay published on the site, newest first.
+- [All projects](https://kirkr.xyz/projects): Index of the author's software projects with per-project pages, galleries, and last-commit dates.
+
+## Writings
+
+Essays and long-form writing. Each link is the rendered article; articles are dated and written in the author's voice (first person, opinionated). Newest first.
+
+### Hardware and engineering
+
+- [Intro to ASICs](https://kirkr.xyz/writing/asic): A starting point to application-specific integrated circuit (ASIC) architecture — why single-purpose silicon is faster, cheaper at scale, and more power-efficient than general-purpose CPUs, and when an ASIC is the better choice.
+- [Intro to FPGAs](https://kirkr.xyz/writing/fpga): A starting point to field-programmable gate array architecture — the chip that sits between CPU and ASIC, full of unconnected logic gates you wire together after manufacture to implement whatever circuit you need.
+- [RISC-V, an Overview](https://kirkr.xyz/writing/risc-v): An introduction to the RISC-V open-source instruction set — the royalty-free ISA that permits anyone to build custom processors without licence fees, from its Berkeley origins to its current geopolitical significance.
+- [Distillation](https://kirkr.xyz/writing/distillation): The ethics and politics of AI model distillation — a polemic on American AI labs' data practices versus China's open-source model distillation, arguing that distilling models is ethically sound.
+
+### Economics and politics
+
+- [Land Value Tax](https://kirkr.xyz/writing/lvt): The case for a land-value tax, from Adam Smith and Ricardo's treatment of rent to the modern argument that landlords are rewarded for holding a deed to an asset whose value society generates.
+- [The Casino Economy](https://kirkr.xyz/writing/investing-degeneracy): Contemporary investing as degeneracy — the stock market's divorce from the physical economy, AI infrastructure spending, concentration in semiconductor names, and the collapse of portfolio diversification.
+- [Rent Control](https://kirkr.xyz/writing/rent-control): How rent control can succeed — analysis of the June 2026 NYC Rent Guidelines Board freeze (a Zohran Mamdani policy), including the dissenting economist's means-testing and upzoning proposals.
+- [Palestine, an Early History](https://kirkr.xyz/writing/history-of-palestine): An early history of Palestine and the origins of Zionism — the 1945–46 period in which the infrastructure for the Nakba was finalised, beginning with Earl G. Harrison's investigation into Jewish Displaced Persons.
+
+### Art
+
+- [Rooms, Light, Reverence](https://kirkr.xyz/writing/sacred-ordinary): A short essay on the life and art of Pieter de Hooch — his rendering of the Dutch domestic interior, from Rotterdam to Delft, and the dignity he gave to routine household labour.
+- [Carel Fabritius](https://kirkr.xyz/writing/carel-fabritius): A look into the paintings of Carel Fabritius and the shortened corpus of his works, set against the flourishing art market of the Dutch Golden Age in Delft.
+- [Frans Hals](https://kirkr.xyz/writing/frans-hals): The art of Frans Hals — his fast, directional brushstrokes and how they differentiated him from the Dutch academic style (work in progress).
+
+### Philosophy
+
+- [A Philosophical Credo](https://kirkr.xyz/writing/philosophical-credo): The author's philosophical leanings — consequentialist, contextualist, compatibilist, empiricist, individualist, libertarian-leaning, meritocratic, existentialist, progressive, and dualist-curious.
+
+## Projects
+
+Write-ups of the author's software projects, each with a description, screenshots, and a link to the source on GitHub. All code is under the [KIRKR101](https://github.com/KIRKR101) account.
+
+- [Audioshare](https://kirkr.xyz/project/audioshare): Stream any audio format, including lossless, with automatic metadata and cover-art parsing. Built for sharing large music files; inspired by pillowcase.su.
+- [CPUsim](https://kirkr.xyz/project/cpusim): A 16-bit CPU emulator written from scratch in C, including a custom assembler and binary simulator. Handles arithmetic, stack ops, and function calls.
+- [Dezoomify-rs-jxl](https://kirkr.xyz/project/dezoomify-rs-jxl): Download and stitch massive zoomable images from museum archives. Outputs JPEG XL with multithreaded encoding and colour profile preservation; a fork of dezoomify-rs.
+- [Linux Keylogger](https://kirkr.xyz/project/linux-keylogger): A minimal daemon written in C that hooks Linux input device drivers to log keystrokes. Written as a low-level systems exercise.
+- [Mini Malloc](https://kirkr.xyz/project/mini_malloc): A minimal memory allocator written in C as a learning exercise — a from-scratch mini_malloc/mini_free with a test-first structure, optionally substitutable for libc's malloc and free.
+- [Open Gallery](https://kirkr.xyz/project/open-gallery): A Go web application to browse the National Gallery's collection with full historical metadata, search, and filtering. Single binary serving HTML templates against SQLite.
+- [RMT-Debrid](https://kirkr.xyz/project/rmt-debrid): Manage torrent downloads through Real-Debrid from a web dashboard, with real-time progress over WebSockets. FastAPI-based.
+- [Streamline](https://kirkr.xyz/project/streamline): Copy large folders across a local network without SFTP or Samba overhead. A plain-TCP tool in Rust that zips, chunks, and transfers in parallel with SHA256 verification, mDNS discovery, and resume support.
+- [Voxor](https://kirkr.xyz/project/voxor): Self-hosted chat with threading, typing indicators, LaTeX rendering, and a CMD+K quick-search modal. Flask backend with vanilla JavaScript and Tailwind.
+- [WASMagick](https://kirkr.xyz/project/wasmagick): Run ImageMagick filters directly in the browser through WebAssembly. Everything is local: no servers, no uploads.
+
+## Collections
+
+Visual and media collections. These pages are image-heavy and load their data from external APIs (IIIF museum metadata, Last.fm, OpenLibrary, TMDB); the image data itself is not available as markdown.
+
+### Art
+
+- [Art collection](https://kirkr.xyz/art): A curated, lightweight collection of artworks presented as a scrollable gallery, with lightbox viewing. Data sourced from museum APIs with IIIF imagery.
+
+### Photography
+
+- [Photography](https://kirkr.xyz/photography): The author's own photography, organised by city, presented as a masonry gallery with lightbox viewing.
+
+### Books
+
+- [Books](https://kirkr.xyz/books): Books the author has read, sourced from OpenLibrary — covers, authors, descriptions, page counts, and ratings, with reading-tracker style organisation.
+
+### Films
+
+- [Films](https://kirkr.xyz/films): Films the author has watched, sourced from Last.fm's movie data — titles, release years, posters, ratings, watch dates, and rewatch flags.
+
+## Feeds and data
+
+- [Sitemap](https://kirkr.xyz/sitemap.xml): Full list of indexable URLs on the site.
+- [robots.txt](https://kirkr.xyz/robots.txt): Site-wide crawling allowance (all user agents allowed).
+
+## Optional
+
+- [Full site context (llms-full.txt)](https://kirkr.xyz/llms-full.txt): A single generated file containing the complete text of every essay and project page, starting with a table of contents. Prefer this over fetching pages individually when the full corpus is needed.
+- [GitHub profile](https://github.com/KIRKR101): The author's GitHub account — source code for every project on the site, contributions, and pinned repositories.

@@ -5,8 +5,8 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json && vite build",
-		"build:all": "vite build && cd lastfm-server && cargo build --release",
+		"build": "node scripts/generate-llms-full.mjs && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json && vite build",
+		"build:all": "node scripts/generate-llms-full.mjs && vite build && cd lastfm-server && cargo build --release",
 		"preview": "vite preview",
 		"start": "concurrently \"vite preview\" \"cd lastfm-server && cargo run --release\"",
 		"prepare": "svelte-kit sync || echo ''",
