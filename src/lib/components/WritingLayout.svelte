@@ -15,18 +15,18 @@
 		<div class="py-4">
 			<a
 				href="/writings"
-				class="font-sans text-[11px] tracking-[0.1em] text-muted uppercase no-underline hover:text-white/60"
+				class="font-sans text-[11px] tracking-[0.1em] text-ink-70 uppercase no-underline hover:text-ink"
 			>
 				← all writings
 			</a>
 		</div>
 
 		<div class="py-4">
-			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-white/90">
+			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
 				{longTitle || title || 'Writing'}
 			</h1>
 			<div
-				class="mt-3 flex items-center justify-between font-mono text-[11px] tracking-[0.1em] text-muted uppercase"
+				class="mt-3 flex items-center justify-between font-mono text-[11px] tracking-[0.1em] text-ink-70 uppercase"
 			>
 				<span>{formatDate(date)}</span>
 			</div>
@@ -37,7 +37,7 @@
 		<article
 			use:externalLinks
 			use:footnoteBackref
-			class="prose prose-invert prose-sm sm:prose-base max-w-none font-sans text-[#c0c0c0]"
+			class="prose prose-invert prose-sm sm:prose-base max-w-none font-sans text-ink-70"
 		>
 			{@render children()}
 		</article>

@@ -27,6 +27,22 @@
 		/>
 		<link rel="preconnect" href="https://spotify.kirkr.xyz" crossorigin="anonymous" />
 
+		<script>
+			(function () {
+				var isDark = false;
+				try {
+					var theme = localStorage.getItem('theme');
+					isDark = theme === 'dark';
+					if (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+						isDark = true;
+					}
+				} catch {
+					if (window.matchMedia('(prefers-color-scheme: dark)').matches) isDark = true;
+				}
+				if (isDark) document.documentElement.classList.add('dark');
+			})();
+		</script>
+
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="tap">

@@ -7,20 +7,24 @@ export const projects = [
 		github: 'https://github.com/Kirkr101/wasmagick',
 		description:
 			'Run ImageMagick filters directly in the browser through WebAssembly. Everything is local: no servers, no uploads.',
-		tech: ['Svelte 5', 'WebAssembly', 'TypeScript'],
+		shortDescription: 'Browser-based ImageMagick',
+		tech: ['Svelte', 'WebAssembly', 'TypeScript'],
+		firstCommit: '10 Apr 2026',
 		media: [
 			'https://res.cloudinary.com/dvnkil9d4/image/upload/v1782515675/wasmagick_owgsva.webp',
 			'https://res.cloudinary.com/dvnkil9d4/video/upload/v1782514387/wasmagick__ug5f2q.mp4'
 		]
 	},
 	{
-		id: 'audioshare-sv',
+		id: 'audioshare',
 		title: 'Audioshare',
 		link: null,
 		github: 'https://github.com/Kirkr101/audioshare-sv',
 		description:
 			'Stream any audio format, including lossless, with automatic metadata and cover-art parsing. Built for sharing large music files.',
-		tech: ['Svelte 5', 'TypeScript', 'Drizzle', 'SQLite'],
+		shortDescription: 'Lossless audio sharing',
+		tech: ['Svelte', 'TypeScript', 'Drizzle'],
+		firstCommit: '25 May 2026',
 		media: [
 			'https://res.cloudinary.com/dvnkil9d4/image/upload/v1782515675/audioshare1_z17tz0.webp',
 			'https://res.cloudinary.com/dvnkil9d4/image/upload/v1782515675/audioshare2_n4wyrq.webp'
@@ -33,7 +37,9 @@ export const projects = [
 		github: 'https://github.com/Kirkr101/dezoomify-rs-jxl',
 		description:
 			'Download and stitch massive zoomable images from museum archives. Outputs JPEG XL with multithreaded encoding and colour profile preservation.',
-		tech: ['Rust']
+		shortDescription: 'Tiled image downloader and stitcher',
+		tech: ['Rust'],
+		firstCommit: '24 May 2026'
 	},
 	{
 		id: 'voxor',
@@ -41,7 +47,9 @@ export const projects = [
 		github: 'https://github.com/Kirkr101/Voxor',
 		description:
 			'Self-hosted chat with threading, typing indicators, LaTeX rendering, and a CMD+K quick-search modal.',
-		tech: ['Python', 'Flask', 'JavaScript', 'Tailwind']
+		shortDescription: 'Self-hosted realtime chat',
+		tech: ['Python', 'Flask', 'JavaScript'],
+		firstCommit: '13 Oct 2024'
 	},
 	{
 		id: 'cpusim',
@@ -50,7 +58,9 @@ export const projects = [
 		github: 'https://github.com/Kirkr101/CPUsim',
 		description:
 			'A 16-bit CPU emulator written from scratch, including a custom assembler and binary simulator. Handles arithmetic, stack ops, and function calls.',
-		tech: ['C']
+		shortDescription: '16-bit CPU emulator',
+		tech: ['C'],
+		firstCommit: '19 Apr 2025'
 	},
 	{
 		id: 'streamline',
@@ -59,7 +69,9 @@ export const projects = [
 		github: 'https://github.com/Kirkr101/Streamline',
 		description:
 			'Copy large folders across a local network without SFTP or Samba overhead. Zips, chunks, and transfers in parallel with SHA256 verification.',
-		tech: ['Rust']
+		shortDescription: 'Parallel local-network file transfer',
+		tech: ['Rust'],
+		firstCommit: '31 Aug 2024'
 	},
 	{
 		id: 'linux-keylogger',
@@ -68,7 +80,9 @@ export const projects = [
 		github: 'https://github.com/KIRKR101/linux_keylogger',
 		description:
 			'A minimal daemon that hooks Linux input device drivers to log keystrokes. Written as a low-level systems exercise.',
-		tech: ['C']
+		shortDescription: 'Linux input-device logger',
+		tech: ['C'],
+		firstCommit: '15 May 2025'
 	},
 	{
 		id: 'mini_malloc',
@@ -76,7 +90,9 @@ export const projects = [
 		link: null,
 		github: 'https://github.com/Kirkr101/mini_malloc',
 		description: 'A minimal memory allocator written in C as a learning exercise.',
-		tech: ['C']
+		shortDescription: 'Minimal memory allocator',
+		tech: ['C'],
+		firstCommit: '23 Jun 2026'
 	},
 	{
 		id: 'open-gallery',
@@ -85,7 +101,9 @@ export const projects = [
 		github: 'https://github.com/KIRKR101/open-gallery',
 		description:
 			"Browse the National Gallery's collection with full historical metadata, search, and filtering.",
-		tech: ['Go', 'SQLite']
+		shortDescription: 'National Gallery collection browser',
+		tech: ['Go', 'SQLite'],
+		firstCommit: '12 Oct 2025'
 	},
 	{
 		id: 'rmt-debrid',
@@ -94,6 +112,8 @@ export const projects = [
 		github: 'https://github.com/Kirkr101/RMT-Debrid',
 		description:
 			'Manage torrent downloads through Real-Debrid from a web dashboard, with real-time progress over WebSockets.',
-		tech: ['Python', 'FastAPI', 'WebSocket']
+		shortDescription: 'Real-Debrid torrent dashboard',
+		tech: ['Python', 'FastAPI', 'WebSocket'],
+		firstCommit: '24 Apr 2025'
 	}
 ];

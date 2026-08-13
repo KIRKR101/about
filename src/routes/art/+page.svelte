@@ -5,6 +5,7 @@
 	import { createRafObserver } from '$lib/raf-observer';
 	import { tick } from 'svelte';
 	import { SvelteMap } from 'svelte/reactivity';
+	import Footer from '$lib/components/Footer.svelte';
 
 	interface ArtEntry {
 		id: string;
@@ -133,26 +134,26 @@
 	<link rel="preconnect" href="https://upload.wikimedia.org" crossorigin="anonymous" />
 </svelte:head>
 
-<div class="flex min-h-screen flex-col items-center px-6 py-6 font-mono md:py-16">
+<div class="flex min-h-screen flex-col items-center px-6 py-6 md:py-16">
 	<main class="w-full max-w-5xl">
 		<div class="py-4">
-			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-white">
-				<span class="opacity-90">Art</span><span class="opacity-20">.</span>
+			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
+				<span class="opacity-90">Art</span><span class="opacity-40">.</span>
 			</h1>
 		</div>
 
 		<div class="mb-8 h-px bg-bd"></div>
 
-		<div bind:this={gridContainer} class="mb-12 columns-1 gap-12 py-2 sm:columns-2 lg:columns-3">
+		<div bind:this={gridContainer} class="columns-1 gap-12 pt-2 sm:columns-2 lg:columns-3">
 			{#each entriesWithMeta as entry (entry.id)}
 				<button
 					use:cardAction={entry.id}
-					class="group mb-12 flex w-full break-inside-avoid flex-col text-left focus-visible:ring-1 focus-visible:ring-white/40"
+					class="group mb-12 flex w-full break-inside-avoid flex-col text-left"
 					onclick={() => openLightbox(entry.id)}
 					onkeydown={(e) => handleKeydown(e, entry.id)}
 				>
 					<div
-						class="mb-6 w-full overflow-hidden border border-bd bg-neutral-900 shadow-2xl"
+						class="mb-6 w-full overflow-hidden border border-bd bg-card-bg shadow-2xl"
 						style:aspect-ratio={entry.artwork.aspectRatio || 'auto'}
 					>
 						<img
@@ -167,18 +168,18 @@
 					</div>
 
 					<span
-						class="font-serif text-xl leading-tight text-white/90 transition-colors group-hover:text-white"
+						class="font-serif text-xl leading-tight text-ink-90 transition-colors group-hover:text-ink"
 					>
 						{entry.artwork.title}
 					</span>
 
 					<div class="mt-2 flex items-center gap-2">
-						<span class="font-mono text-[11px] tracking-wider text-white/55">
+						<span class="font-sans text-[11px] tracking-wider text-ink-50">
 							{entry.artist}
 						</span>
 						{#if entry.year}
-							<span class="text-[10px] text-white/20">·</span>
-							<span class="font-mono text-[11px] tracking-wider text-white/35">
+							<span class="text-[10px] text-ink-20">·</span>
+							<span class="font-sans text-[11px] tracking-wider text-ink-40">
 								{entry.year}
 							</span>
 						{/if}
@@ -186,6 +187,8 @@
 				</button>
 			{/each}
 		</div>
+
+		<Footer />
 	</main>
 </div>
 

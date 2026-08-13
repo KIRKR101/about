@@ -88,18 +88,13 @@
 	});
 </script>
 
-<nav
-	aria-label="Main navigation"
-	class="relative z-50 h-16 shrink-0 bg-[#0a0a0b]/80 backdrop-blur-sm"
->
+<nav aria-label="Main navigation" class="relative z-50 h-16 shrink-0 bg-bg/80 backdrop-blur-sm">
 	<div class="mx-auto h-full max-w-[1200px] px-4 md:px-6">
 		<div class="flex h-full items-center justify-between">
 			<div class="flex items-center">
 				<a href="/" class="group focus:outline-none">
-					<span
-						class="font-serif text-[24px] leading-none tracking-[-1px] text-white md:text-[28px]"
-					>
-						<span class="opacity-90">kirkr</span><span class="opacity-20">.xyz</span>
+					<span class="font-serif text-[24px] leading-none tracking-[-1px] text-ink md:text-[28px]">
+						<span class="opacity-90">kirkr</span><span class="opacity-40">.xyz</span>
 					</span>
 				</a>
 			</div>
@@ -124,8 +119,8 @@
 								}}
 								aria-expanded={openDropdown === item.name}
 								aria-haspopup="menu"
-								class="flex items-center gap-1 font-sans text-[11px] tracking-[0.1em] uppercase transition-colors duration-75
-							{isChildActive(item) ? 'text-white/80' : 'text-muted hover:text-white/60'}"
+								class="flex cursor-pointer items-center gap-1 font-sans text-[11px] tracking-[0.1em] uppercase transition-colors duration-75
+							{isChildActive(item) ? 'text-ink-80' : 'text-ink-70 hover:text-ink'}"
 							>
 								{item.name}
 								<svg
@@ -146,7 +141,7 @@
 									transition:slide={{ duration: 150 }}
 									class="absolute top-full left-1/2 -translate-x-1/2 pt-2"
 								>
-									<div class="flex flex-col rounded-sm border border-bd bg-[#0a0a0b] shadow-xl">
+									<div class="flex flex-col rounded-sm border border-bd bg-bg shadow-xl">
 										{#each item.children as child, i (child.path)}
 											<a
 												href={child.path}
@@ -183,7 +178,7 @@
 													}
 												}}
 												class="block px-4 py-2 font-sans text-[11px] tracking-[0.1em] whitespace-nowrap uppercase transition-colors duration-75
-											{isActive(child.path) ? 'text-white/80' : 'text-muted hover:bg-white/5 hover:text-white/60'}"
+											{isActive(child.path) ? 'text-ink-80' : 'text-ink-70 hover:bg-ink/5 hover:text-ink'}"
 											>
 												{child.name}
 											</a>
@@ -196,7 +191,7 @@
 						<a
 							href={item.path}
 							class="font-sans text-[11px] tracking-[0.1em] uppercase transition-colors duration-75
-						{isActive(item.path) ? 'text-white/80' : 'text-muted hover:text-white/60'}"
+						{isActive(item.path) ? 'text-ink-80' : 'text-ink-70 hover:text-ink'}"
 						>
 							{item.name}
 						</a>
@@ -207,12 +202,12 @@
 			<div class="flex items-center md:hidden">
 				<button
 					onclick={toggleMenu}
-					class="flex h-10 w-10 items-center justify-center focus-visible:ring-1 focus-visible:ring-white/40"
+					class="flex h-10 w-10 items-center justify-center"
 					aria-label={menuOpen ? 'Close menu' : 'Open menu'}
 					aria-expanded={menuOpen}
 				>
 					<svg
-						class="h-6 w-6 text-white/70"
+						class="h-6 w-6 text-ink-70"
 						fill="none"
 						viewBox="0 0 24 24"
 						stroke="currentColor"
@@ -236,7 +231,7 @@
 	{#if menuOpen}
 		<div
 			transition:fly={{ y: -6, duration: 200 }}
-			class="absolute top-16 right-0 left-0 rounded-b-sm border-b border-bd bg-[#0a0a0b] shadow-xl md:hidden"
+			class="absolute top-16 right-0 left-0 rounded-b-sm border-b border-bd bg-bg shadow-xl md:hidden"
 		>
 			<div class="flex flex-col">
 				{#each navItems as item (item.name)}
@@ -247,7 +242,7 @@
 								aria-expanded={openDropdown === item.name}
 								aria-haspopup="menu"
 								class="flex w-full items-center justify-between border-b border-bd/50 px-6 py-3 font-sans text-[11px] tracking-[0.1em] uppercase transition-colors duration-75
-							{isChildActive(item) ? 'text-white/80' : 'text-muted hover:bg-white/5 hover:text-white/60'}"
+							{isChildActive(item) ? 'text-ink-80' : 'text-ink-70 hover:bg-ink/5 hover:text-ink'}"
 							>
 								{item.name}
 								<svg
@@ -270,7 +265,7 @@
 											role="menuitem"
 											onclick={closeMenu}
 											class="block border-b border-bd/50 py-2.5 pr-6 pl-10 font-sans text-[11px] tracking-[0.1em] uppercase transition-colors duration-75
-										{isActive(child.path) ? 'text-white/80' : 'text-muted hover:bg-white/5 hover:text-white/60'}"
+										{isActive(child.path) ? 'text-ink-80' : 'text-ink-70 hover:bg-ink/5 hover:text-ink'}"
 										>
 											{child.name}
 										</a>
@@ -283,9 +278,7 @@
 							href={item.path}
 							onclick={closeMenu}
 							class="block border-b border-bd/50 px-6 py-3 font-sans text-[11px] tracking-[0.1em] uppercase transition-colors duration-75
-						{isActive(item.path)
-								? 'bg-white/5 text-white/80'
-								: 'text-muted hover:bg-white/5 hover:text-white/60'}"
+						{isActive(item.path) ? 'bg-ink/5 text-ink-80' : 'text-ink-70 hover:bg-ink/5 hover:text-ink'}"
 						>
 							{item.name}
 						</a>

@@ -14,15 +14,9 @@
 
 <svelte:head>
 	<title>kirkr.xyz</title>
-	<meta
-		name="description"
-		content="Writing on computer engineering, and other interests."
-	/>
+	<meta name="description" content="Writing on computer engineering, and other interests." />
 	<meta property="og:title" content="kirkr.xyz" />
-	<meta
-		property="og:description"
-		content="Writing on computer engineering, and other interests."
-	/>
+	<meta property="og:description" content="Writing on computer engineering, and other interests." />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://kirkr.xyz" />
 	<meta name="twitter:card" content="summary" />
@@ -35,12 +29,12 @@
 
 <a
 	href="#main-content"
-	class="fixed top-2 left-2 z-[999] -translate-y-20 rounded bg-white px-4 py-2 font-sans text-[14px] text-black no-underline transition-transform duration-200 focus:translate-y-0"
+	class="fixed top-2 left-2 z-[999] -translate-y-20 rounded bg-ink px-4 py-2 font-sans text-[14px] text-bg no-underline transition-transform duration-200 focus:translate-y-0"
 >
 	Skip to content
 </a>
 
-<div class="flex h-screen h-dvh flex-col overflow-hidden bg-[#0a0a0b] text-white antialiased">
+<div class="flex h-dvh h-screen flex-col overflow-hidden bg-bg text-ink antialiased">
 	<Navbar />
 	<main
 		bind:this={mainEl}

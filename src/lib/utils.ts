@@ -21,11 +21,11 @@ export function getMetaValue(
 }
 
 export function getContributionColor(count: number) {
-	if (count === 0) return '#1a1a1c';
-	if (count < 5) return '#0e4429';
-	if (count < 10) return '#006d32';
-	if (count < 20) return '#26a641';
-	return '#39d353';
+	if (count === 0) return 'var(--contribution-0)';
+	if (count < 5) return 'var(--contribution-1)';
+	if (count < 10) return 'var(--contribution-2)';
+	if (count < 20) return 'var(--contribution-3)';
+	return 'var(--contribution-4)';
 }
 
 const IIIF_WIDTHS: readonly number[] = [500, 800, 1200, 1600];

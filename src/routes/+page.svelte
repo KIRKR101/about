@@ -2,13 +2,20 @@
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import { formatDate, getHardcoverSrcset } from '$lib/utils';
+	import Footer from '$lib/components/Footer.svelte';
 
 	let {
 		data
 	}: {
 		data: {
 			allWritings: { title: string; date: string; file: string; snippet: string | null }[];
-			allProjects: { id: string; title: string; description: string; github: string }[];
+			allProjects: {
+				id: string;
+				title: string;
+				shortDescription: string;
+				github: string;
+				firstCommit: string;
+			}[];
 		};
 	} = $props();
 
@@ -324,69 +331,60 @@
 	<link rel="preconnect" href="https://i.scdn.co" />
 </svelte:head>
 
-<div class="flex min-h-[calc(100dvh-4rem)] items-center justify-center px-6 py-10 lg:py-16">
+<div class="flex min-h-[calc(100dvh-4rem)] items-center justify-center px-6 py-6 md:py-16">
 	<main class="w-full max-w-[34rem]">
 		<section class="pb-6">
-			<div class="space-y-4 font-sans text-[15px] leading-[1.75] text-white/70">
-				<p>
-					My main academic interest is in computer engineering, particularly architecture. I'm a fan
-					of C, Zig, and TypeScript, and web technologies in general; this site is built on Svelte.
-				</p>
-				<p>
-					I also have an interest in politics, philosophy, and economics, as well as art, with a
-					strong inclination towards the Dutch Golden Age, especially the Delft and Hague Schools.
-				</p>
-				<p>
-				    Email me
-					<a
-						href="mailto:theo@kirkr.xyz"
-						class="underline decoration-white/55 underline-offset-2 transition-colors duration-75 hover:text-white hover:decoration-white"
-						>here</a
-					>, or take a look at my
-					<a
-						href="https://github.com/KIRKR101"
-						class="underline decoration-white/55 underline-offset-2 transition-colors duration-75 hover:text-white hover:decoration-white"
-						>github</a
-					>.
-				</p>
+			<div class="flex items-start gap-6">
+				<div class="min-w-0">
+					<p class="font-sans text-[15px] leading-[1.75] text-ink-70 sm:pt-2">
+						I'm a first year CompE student @ Warwick. I enjoy C and TypeScript, and web technologies
+						more generally; this site is built on Svelte. I'm also interested in politics,
+						philosophy, economics, and art - particularly Dutch.
+					</p>
 
-				<button
-					type="button"
-					class="inline-flex cursor-pointer items-center gap-1.5 self-start font-mono text-[11px] tracking-wider text-muted/60 uppercase transition-colors duration-150 hover:text-white/85"
-					onclick={() => (activityOpen = !activityOpen)}
-				>
-					<span>See current activity</span>
-					<svg
-						width="10"
-						height="10"
-						viewBox="0 0 12 12"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="1.5"
-						class="transition-transform duration-150"
-						class:rotate-180={activityOpen}
+					<button
+						type="button"
+						class="mt-4 inline-flex cursor-pointer items-center gap-1.5 font-mono text-[11px] tracking-wider text-ink-70 uppercase transition-colors duration-150 hover:text-ink"
+						onclick={() => (activityOpen = !activityOpen)}
 					>
-						<path d="M2.5 4.5L6 8L9.5 4.5" />
-					</svg>
-				</button>
+						<span class="decoration-ink/20 underline-offset-2 hover:underline"
+							>See current activity</span
+						>
+						<span>{activityOpen ? '[-]' : '[+]'}</span>
+					</button>
+				</div>
+
+				<div class="hidden aspect-7/8 w-45 shrink-0 rounded-sm bg-ink/5 sm:block">
+					<img
+						src="/hero_light.webp"
+						alt="The Onsen Range Seen from Amakusa by Kawase Hasui"
+						class="aspect-7/8 w-45 rounded-sm object-cover dark:hidden"
+						loading="lazy"
+					/>
+					<img
+						src="/hero_dark.webp"
+						alt="Yana River at Koshu by Kawase Hasui"
+						class="hidden aspect-7/8 w-45 rounded-sm object-cover dark:block"
+						loading="lazy"
+					/>
+				</div>
 			</div>
 		</section>
 
 		{#if activityOpen}
 			<div transition:slide={{ duration: 200 }} class="space-y-6 pb-6">
 				<section class="w-full">
-					<div class="mb-3 font-sans text-[11px] font-light tracking-[0.14em] text-muted uppercase">
+					<div class="mb-6 h-px bg-bd"></div>
+
+					<div class="mb-4 font-sans text-[11px] tracking-[0.1em] text-ink-70 uppercase">
 						{#if currentTrack}
-							{currentTrack.isPlaying ? 'Now playing' : 'Last played'} · {currentTrack.source}
+							{currentTrack.isPlaying ? 'Now playing' : 'Last listen'}
 						{:else}
 							Initialising
 						{/if}
 					</div>
-
-					<div class="mb-6 h-px bg-bd"></div>
-
 					<div class="flex items-start gap-4">
-						<div class="h-16 w-16 shrink-0 overflow-hidden rounded-[2px] bg-art-bg">
+						<div class="h-16 w-16 shrink-0 overflow-hidden rounded-sm bg-art-bg">
 							{#if currentTrack}
 								{#if currentTrack.url}
 									<a href={currentTrack.url} target="_blank" rel="noopener noreferrer">
@@ -413,14 +411,14 @@
 						</div>
 
 						<div class="min-w-0 flex-1">
-							<div class="truncate font-serif text-[15px] leading-tight text-white/90">
+							<div class="truncate font-serif text-[15px] leading-tight text-ink-90">
 								{#if currentTrack}
 									{#if currentTrack.url}
 										<a
 											href={currentTrack.url}
 											target="_blank"
 											rel="noopener noreferrer"
-											class="text-inherit no-underline transition-colors duration-75 hover:text-white/80"
+											class="text-inherit no-underline transition-colors duration-75 hover:text-ink-80"
 										>
 											{currentTrack.title}
 										</a>
@@ -431,14 +429,14 @@
 									Loading
 								{/if}
 							</div>
-							<div class="mt-1 truncate font-sans text-[11px] tracking-wide text-muted">
+							<div class="mt-1 truncate font-sans text-[11px] tracking-wide text-ink-70">
 								{#if currentTrack}
 									{#if currentTrack.artistUrl}
 										<a
 											href={currentTrack.artistUrl}
 											target="_blank"
 											rel="noopener noreferrer"
-											class="text-inherit no-underline transition-colors hover:text-white/78"
+											class="text-inherit no-underline transition-colors hover:text-ink-70"
 										>
 											{currentTrack.artist}
 										</a>
@@ -457,11 +455,11 @@
 									aria-label={`${Math.round(progressPercentage)}% played`}
 								>
 									<div
-										class="absolute inset-y-0 left-0 h-full bg-prog"
+										class="absolute inset-y-0 left-0 h-full bg-ink/30"
 										style="width: {progressPercentage}%"
 									></div>
 								</div>
-								<div class="mt-1.5 flex justify-between font-mono text-[9px] text-muted">
+								<div class="mt-1.5 flex justify-between font-mono text-[9px] text-ink-70">
 									<span>{formatTime(currentTrack.progress)}</span>
 									<span>{formatTime(currentTrack.duration)}</span>
 								</div>
@@ -472,9 +470,7 @@
 
 				{#if currentlyReading.length > 0}
 					<section class="w-full">
-						<div
-							class="mb-4 font-sans text-[11px] font-light tracking-[0.14em] text-muted uppercase"
-						>
+						<div class="mb-4 font-sans text-[11px] tracking-[0.1em] text-ink-70 uppercase">
 							Currently Reading
 						</div>
 						<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -484,7 +480,7 @@
 										href="https://hardcover.app/books/{item.book.slug}?referrer_id=120657"
 										target="_blank"
 										rel="noopener noreferrer"
-										class="relative flex h-20 w-14 shrink-0 items-center justify-center overflow-hidden rounded-sm border border-bd bg-[#141416] text-white/20"
+										class="relative flex h-20 w-14 shrink-0 items-center justify-center overflow-hidden rounded-sm border border-bd bg-card-bg text-ink-20"
 									>
 										<span
 											class="-rotate-[315deg] text-center font-serif text-[9px] leading-tight tracking-wide select-none"
@@ -503,21 +499,21 @@
 										/>
 									</a>
 									<div class="flex min-w-0 flex-1 flex-col justify-center">
-										<div class="truncate font-serif text-[15px] leading-tight text-white/90">
+										<div class="truncate font-serif text-[15px] leading-tight text-ink-90">
 											<a
 												href="https://hardcover.app/books/{item.book.slug}?referrer_id=120657"
 												target="_blank"
 												rel="noopener noreferrer"
-												class="text-inherit no-underline transition-colors duration-75 hover:text-white/80"
+												class="text-inherit no-underline transition-colors duration-75 hover:text-ink-80"
 											>
 												{item.book.title}
 											</a>
 										</div>
-										<div class="mt-0.5 truncate font-mono text-[10px] tracking-wider text-muted">
+										<div class="mt-0.5 truncate font-mono text-[10px] tracking-wider text-ink-70">
 											{item.book.authors[0] ?? 'Unknown author'}
 										</div>
 										{#if item.progress}
-											<div class="mt-1.5 font-mono text-[10px] tracking-wider text-muted">
+											<div class="mt-1.5 font-mono text-[10px] tracking-wider text-ink-70">
 												{Math.round(item.progress.percentage)}% · {item.progress.pages_read}/{item
 													.progress.total_pages}
 											</div>
@@ -533,7 +529,12 @@
 
 		<section class="cv-auto py-6">
 			<div class="mb-4 flex items-baseline justify-between">
-				<div class="font-serif text-[24px] text-white/85 italic">Writings</div>
+				<div class="font-serif text-[24px] text-ink-90 italic">Writings</div>
+				<a
+					href="/writings"
+					class="group mt-4 inline-flex cursor-pointer items-center gap-1.5 self-start font-mono text-[11px] tracking-wider text-ink-70 uppercase transition-colors duration-150 hover:text-ink"
+					>[+]</a
+				>
 			</div>
 
 			<div class="mb-4 h-px bg-bd"></div>
@@ -546,33 +547,32 @@
 					>
 						<div class="flex w-full items-baseline justify-between">
 							<span
-								class="font-sans text-[14px] text-white/70 transition-colors duration-100 group-hover:text-white hover:underline hover:decoration-white/70 hover:underline-offset-2"
+								class="font-sans text-[14px] text-ink-70 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2"
 							>
 								{writing.title}
 							</span>
-							<span class="shrink-0 font-mono text-[11px] tracking-wider text-muted/60">
+							<span class="shrink-0 font-mono text-[11px] tracking-wider text-ink-70 uppercase">
 								{formatDate(writing.date)}
 							</span>
 						</div>
 						{#if writing.snippet}
-							<span class="mt-1 line-clamp-2 font-sans text-[12px] leading-relaxed text-white/40">
+							<span class="mt-1 line-clamp-2 font-sans text-[12px] leading-relaxed text-ink-70">
 								{writing.snippet}
 							</span>
 						{/if}
 					</a>
 				{/each}
-				<a
-					href="/writings"
-					class="mt-4 inline-flex cursor-pointer items-center gap-1.5 self-start font-mono text-[11px] tracking-wider text-muted/60 uppercase no-underline transition-colors duration-150 hover:text-white/85"
-				>
-					View all
-				</a>
 			</div>
 		</section>
 
-		<section class="cv-auto py-6">
+		<section class="cv-auto pt-6">
 			<div class="mb-4 flex items-baseline justify-between">
-				<div class="font-serif text-[24px] text-white/85 italic">Projects</div>
+				<div class="font-serif text-[24px] text-ink-90 italic">Projects</div>
+				<a
+					href="/projects"
+					class="group mt-4 inline-flex cursor-pointer items-center gap-1.5 self-start font-mono text-[11px] tracking-wider text-ink-70 uppercase transition-colors duration-150 hover:text-ink"
+					>[+]</a
+				>
 			</div>
 
 			<div class="mb-4 h-px bg-bd"></div>
@@ -585,23 +585,24 @@
 					>
 						<div class="flex w-full items-baseline justify-between">
 							<span
-								class="font-sans text-[14px] text-white/70 transition-colors duration-100 group-hover:text-white hover:underline hover:decoration-white/70 hover:underline-offset-2"
+								class="font-sans text-[14px] text-ink-70 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2"
 							>
 								{project.title}
 							</span>
+							<span class="shrink-0 font-mono text-[11px] tracking-wider text-ink-70 uppercase">
+								{project.firstCommit}
+							</span>
 						</div>
-						<span class="mt-2 line-clamp-2 font-sans text-[12px] leading-relaxed text-white/40">
-							{project.description}
-						</span>
+						{#if project.shortDescription}
+							<span class="mt-2 line-clamp-2 font-sans text-[12px] leading-relaxed text-ink-70">
+								{project.shortDescription}
+							</span>
+						{/if}
 					</a>
 				{/each}
-				<button
-					type="button"
-					class="group mt-4 inline-flex cursor-pointer items-center gap-1.5 self-start font-mono text-[11px] tracking-wider text-muted/60 uppercase transition-colors duration-150 hover:text-white/85"
-				>
-					<a href="/projects">View all</a>
-				</button>
 			</div>
 		</section>
+
+		<Footer />
 	</main>
 </div>

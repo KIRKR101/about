@@ -47,9 +47,9 @@
 
 {#if images.length > 0}
 	<figure class="my-10">
-		<div class="relative w-full overflow-hidden rounded-sm border border-bd bg-[#0d0d0e] {height}">
+		<div class="relative w-full overflow-hidden rounded-sm border border-bd bg-frame {height}">
 			<button
-				class="group block h-full w-full cursor-zoom-in focus-visible:ring-1 focus-visible:ring-white/40"
+				class="group block h-full w-full cursor-zoom-in"
 				onclick={openLightbox}
 				aria-label={`View image ${activeIndex + 1} in lightbox: ${currentCaption}`}
 			>
@@ -66,7 +66,7 @@
 
 			{#if images.length > 1}
 				<button
-					class="absolute top-1/2 left-3 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-lg text-white transition-all duration-200 hover:bg-white/10 disabled:cursor-default disabled:opacity-40 md:h-11 md:w-11"
+					class="absolute top-1/2 left-3 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 disabled:cursor-default disabled:opacity-40 md:h-11 md:w-11"
 					onclick={goToPrevious}
 					aria-label="Previous image"
 				>
@@ -82,7 +82,7 @@
 				</button>
 
 				<button
-					class="absolute top-1/2 right-3 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-lg text-white transition-all duration-200 hover:bg-white/10 disabled:cursor-default disabled:opacity-40 md:h-11 md:w-11"
+					class="absolute top-1/2 right-3 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 disabled:cursor-default disabled:opacity-40 md:h-11 md:w-11"
 					onclick={goToNext}
 					aria-label="Next image"
 				>
@@ -106,9 +106,7 @@
 		</div>
 
 		{#if currentCaption}
-			<figcaption
-				class="mt-3 text-center font-mono text-[11px] leading-relaxed tracking-[0.02em] text-muted"
-			>
+			<figcaption class="mt-3 text-center font-mono text-[11px] leading-relaxed text-ink-70">
 				{currentCaption}
 			</figcaption>
 		{/if}

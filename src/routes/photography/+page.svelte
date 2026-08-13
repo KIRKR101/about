@@ -6,6 +6,7 @@
 	import { NavigationMenu } from 'bits-ui';
 	import { tick } from 'svelte';
 	import { SvelteMap } from 'svelte/reactivity';
+	import Footer from '$lib/components/Footer.svelte';
 
 	let lightboxActive = $state(false);
 	let currentImageId = $state<string | null>(null);
@@ -57,7 +58,7 @@
 					}
 				}
 			},
-			{ rootMargin: '-64px 0px -55% 0px' }
+			{ rootMargin: '-150px 0px -55% 0px' }
 		);
 		for (const el of sectionEls.values()) observer.observe(el);
 		return () => observer.disconnect();
@@ -203,37 +204,45 @@
 	<link rel="preconnect" href="https://res.cloudinary.com" crossorigin="anonymous" />
 </svelte:head>
 
-<div class="flex min-h-full flex-col items-center px-6 pb-6 font-mono md:pb-16">
-	<div class="w-full max-w-7xl">
-		<div class="pt-6 pb-4 md:pt-16">
-			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-white">
-				<span class="opacity-90">Photography</span><span class="opacity-20">.</span>
+<div class="flex min-h-screen flex-col items-center px-6 py-6 md:py-16">
+	<div class="w-full max-w-5xl">
+		<div class="py-4">
+			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
+				<span class="opacity-90">Photography</span><span class="opacity-40">.</span>
 			</h1>
 		</div>
 
-		<div class="h-px bg-bd"></div>
+		<nav class="sticky top-0 z-30 bg-bg">
+			<div class="h-px bg-bd"></div>
 
-		<div class="sticky top-0 z-30 bg-[#0a0a0b] backdrop-blur-sm">
 			<NavigationMenu.Root aria-label="Photography sections" class="w-full">
-				<NavigationMenu.List class="flex h-12 items-center pl-2 gap-6 overflow-x-auto">
+				<NavigationMenu.List class="flex h-12 items-center gap-6 overflow-x-auto pl-2">
 					{#each cities as city (city)}
 						<NavigationMenu.Item value={city} class="h-full shrink-0">
 							<NavigationMenu.Link
 								href={`#${slugify(city)}`}
 								active={activeCity === city}
 								onclick={(e: MouseEvent) => scrollToCity(city, e)}
-								class="flex h-full items-center font-sans text-[11px] tracking-[0.1em] whitespace-nowrap uppercase transition-colors duration-75 {activeCity ===
+								class="relative flex h-full items-center font-sans text-[11px] tracking-[0.1em] whitespace-nowrap uppercase transition-colors duration-75 {activeCity ===
 								city
-									? 'text-white/80'
-									: 'text-muted hover:text-white/60'}"
+									? 'text-ink-80'
+									: 'text-ink-70 hover:text-ink'}"
 							>
-								{city}
+								<span class="relative">
+									{city}
+									<span
+										class="absolute inset-x-0 -bottom-0.5 h-px bg-ink-80 transition-opacity duration-150 {activeCity ===
+										city
+											? 'opacity-100'
+											: 'opacity-0'}"
+									></span>
+								</span>
 							</NavigationMenu.Link>
 						</NavigationMenu.Item>
 					{/each}
 				</NavigationMenu.List>
 			</NavigationMenu.Root>
-		</div>
+		</nav>
 
 		<main class="min-w-0 flex-1 pt-8">
 			<div bind:this={gridContainer}>
@@ -241,16 +250,16 @@
 					<section
 						id={slugify(city)}
 						use:sectionAction={city}
-						class="cv-auto mb-16 scroll-mt-14 last:mb-0"
+						class="cv-auto mb-16 scroll-mt-[150px] last:mb-0 md:scroll-mt-[190px]"
 					>
 						<div class="mb-6 py-2">
-							<h2 class="mb-1 font-serif text-[32px] leading-none text-white/80">{city}</h2>
+							<h2 class="mb-1 font-serif text-[32px] leading-none text-ink-80">{city}</h2>
 						</div>
 
 						<div class="columns-1 gap-4 sm:columns-2">
 							{#each images as image (image.id)}
 								<button
-									class="group mb-4 w-full cursor-pointer break-inside-avoid overflow-hidden rounded-sm border border-bd bg-transparent p-0 text-left transition-all duration-75 focus-visible:ring-1 focus-visible:ring-white/40"
+									class="group mb-4 w-full cursor-pointer break-inside-avoid overflow-hidden rounded-sm border border-bd bg-transparent p-0 text-left transition-all duration-75"
 									use:cardAction={image.id}
 									onclick={() => openLightbox(image.id)}
 									aria-label={`View photo from ${city}`}
@@ -273,6 +282,8 @@
 				{/each}
 			</div>
 		</main>
+
+		<Footer />
 	</div>
 </div>
 

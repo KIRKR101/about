@@ -2,7 +2,7 @@
 title: 'Distillation'
 longTitle: 'Distillation: Ethics and Politics of AI Model Distillation'
 date: '2026-07-19'
-snippet: 'The politics of model distillation - a critique of closed frontier labs'
+snippet: 'The politics of distillation'
 ---
 
 Given the recent and growing hubris of the American AI labs, it is quite refreshing to see China doing so well in the AI space race.

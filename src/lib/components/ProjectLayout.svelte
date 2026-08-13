@@ -24,23 +24,23 @@
 		<div class="py-4">
 			<a
 				href="/projects"
-				class="font-sans text-[11px] tracking-[0.1em] text-muted uppercase no-underline hover:text-white/60"
+				class="font-sans text-[11px] tracking-[0.1em] text-ink-70 uppercase no-underline hover:text-ink"
 			>
 				← all projects
 			</a>
 		</div>
 
 		<div class="py-4">
-			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-white/90">
+			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
 				{title}
 			</h1>
 
 			<div
-				class="mt-3 flex items-center font-mono text-[11px] tracking-[0.1em] text-muted uppercase"
+				class="mt-3 flex items-center font-mono text-[11px] tracking-[0.1em] text-ink-70 uppercase"
 			>
 				<a
 					href={github}
-					class="inline-flex items-center gap-2 text-muted underline decoration-white/55 underline-offset-2 transition-colors duration-75 hover:text-white hover:decoration-white"
+					class="inline-flex items-center gap-2 text-ink-70 underline decoration-ink/55 underline-offset-2 transition-colors duration-75 hover:text-ink hover:decoration-ink"
 				>
 					<svg
 						role="img"
@@ -69,7 +69,7 @@
 		<article
 			use:externalLinks
 			use:footnoteBackref
-			class="prose prose-invert prose-sm sm:prose-base max-w-none font-sans text-[#c0c0c0]"
+			class="prose prose-invert prose-sm sm:prose-base max-w-none font-sans text-ink-70"
 		>
 			<p>TL;DR: {description}</p>
 			{@render children()}

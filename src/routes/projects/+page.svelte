@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { projects } from '$lib/projects-data';
 	import { getContributionColor } from '$lib/utils';
+	import Footer from '$lib/components/Footer.svelte';
 
 	interface ContributionDay {
 		date: string;
@@ -213,44 +214,24 @@
 	<link rel="preconnect" href="https://github.kirkr.xyz" crossorigin="anonymous" />
 </svelte:head>
 
-<div class="flex min-h-screen flex-col items-center px-6 py-6 font-mono md:py-16">
-	<div class="w-full max-w-[850px]">
+<div class="flex min-h-screen flex-col items-center px-6 py-6 md:py-16">
+	<div class="w-full max-w-[600px]">
 		<div class="py-4">
-			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-white">
-				<span class="opacity-90">Projects</span><span class="opacity-20">.</span>
+			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
+				<span class="opacity-90">Projects</span><span class="opacity-40">.</span>
 			</h1>
 		</div>
 	</div>
 
-	<div class="h-px w-full max-w-[850px] bg-bd"></div>
+	<div class="h-px w-full max-w-[600px] bg-bd"></div>
 
-	<div class="w-full max-w-[850px] py-7">
-		<div class="mb-4 flex items-center justify-between">
-			<div class="flex items-center gap-3">
-				<svg viewBox="0 0 16 16" class="h-4 w-4 fill-muted">
-					<path
-						fill-rule="evenodd"
-						d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
-					/>
-				</svg>
-				<span class="font-sans text-[11px] tracking-[0.1em] text-muted uppercase">Github</span>
-			</div>
-			<a
-				href="https://github.com/Kirkr101"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="font-sans text-[10px] tracking-[0.15em] text-muted uppercase no-underline hover:text-white/60"
-			>
-				Kirkr101 ↗
-			</a>
-		</div>
-
+	<div class="w-full max-w-[600px] py-7">
 		<div class="mb-3 flex min-h-[16px] items-center justify-between">
 			<div class="flex items-center">
 				{#if loading}
-					<div class="h-3 w-48 animate-pulse rounded-sm bg-white/5"></div>
+					<div class="h-3 w-48 animate-pulse rounded-sm bg-ink/5"></div>
 				{:else}
-					<div class="font-sans text-[11px] tracking-[0.04em] text-muted">
+					<div class="font-sans text-[11px] tracking-wide text-ink-70">
 						{totalContributions.toLocaleString()} contributions in {selectedYear}
 					</div>
 				{/if}
@@ -258,7 +239,7 @@
 
 			<div class="flex items-center p-0.5">
 				<button
-					class="flex h-5 w-5 cursor-pointer items-center justify-center rounded-[4px] text-muted transition-colors hover:bg-white/10 hover:text-white disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-muted"
+					class="flex h-5 w-5 cursor-pointer items-center justify-center rounded-sm text-ink-70 transition-colors hover:bg-ink/10 hover:text-ink disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink-70"
 					disabled={selectedYear <= 2024}
 					onclick={() => selectedYear--}
 					aria-label="Previous year"
@@ -275,11 +256,11 @@
 						stroke-linejoin="round"><path d="m15 18-6-6 6-6" /></svg
 					>
 				</button>
-				<span class="w-10 text-center font-sans text-[11px] font-medium text-muted"
+				<span class="w-10 text-center font-sans text-[11px] font-medium text-ink-70"
 					>{selectedYear}</span
 				>
 				<button
-					class="flex h-5 w-5 cursor-pointer items-center justify-center rounded-[4px] text-muted transition-colors hover:bg-white/10 hover:text-white disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-muted"
+					class="flex h-5 w-5 cursor-pointer items-center justify-center rounded-sm text-ink-70 transition-colors hover:bg-ink/10 hover:text-ink disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink-70"
 					disabled={selectedYear >= currentYear}
 					onclick={() => selectedYear++}
 					aria-label="Next year"
@@ -311,24 +292,14 @@
 					style="left: {tooltip.x}px; top: {tooltip.y}px;"
 				>
 					<div
-						class="rounded-[4px] border border-muted/25 bg-[#1a1a1c] px-1.5 py-1.5 text-[11px] whitespace-nowrap shadow-xl ring-1 ring-black/40"
+						class="rounded-sm bg-tooltip-bg px-1 py-1 text-[9px] whitespace-nowrap shadow-xl ring-1 ring-ink/20"
 					>
-						<span class="font-semibold text-white/90"
+						<span
 							>{tooltip.count === 0
 								? 'No contributions'
 								: `${tooltip.count} contribution${tooltip.count !== 1 ? 's' : ''}`}</span
 						>
-						<span class="text-white/45">on {tooltip.date}</span>
-					</div>
-					<div class="absolute top-full left-1/2 -translate-x-1/2">
-						<div
-							class="absolute -top-px left-1/2 h-0 w-0 -translate-x-1/2"
-							style="border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #30363d;"
-						></div>
-						<div
-							class="absolute top-0 left-1/2 h-0 w-0 -translate-x-1/2"
-							style="border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 4px solid #0d1117;"
-						></div>
+						<span>on {tooltip.date}</span>
 					</div>
 				</div>
 			{/if}
@@ -350,7 +321,7 @@
 					{#each [...Array(53).keys()] as wi (wi)}
 						<div class="grid grid-rows-7 gap-[3px]">
 							{#each [...Array(7).keys()] as di (di)}
-								<div class="aspect-square w-full animate-pulse rounded-[2px] bg-white/5"></div>
+								<div class="aspect-square w-full animate-pulse rounded-sm bg-ink/5"></div>
 							{/each}
 						</div>
 					{/each}
@@ -371,57 +342,37 @@
 					{/each}
 				{/if}
 			</div>
-
-			<div class="mt-3 flex items-center justify-end gap-[3px]">
-				<span class="mr-1 font-sans text-[10px] text-muted">Less</span>
-				{#each [0, 3, 8, 15, 25] as count (count)}
-					{#if loading}
-						<div
-							class="h-[10px] w-[10px] flex-shrink-0 animate-pulse rounded-[2px] bg-white/5"
-						></div>
-					{:else}
-						<div
-							class="h-[10px] w-[10px] flex-shrink-0 rounded-[2px]"
-							style="background-color: {getContributionColor(count)}"
-						></div>
-					{/if}
-				{/each}
-				<span class="ml-1 font-sans text-[10px] text-muted">More</span>
-			</div>
 		</div>
 	</div>
 
-	<div class="h-px w-full max-w-[850px] bg-bd"></div>
+	<div class="h-px w-full max-w-[600px] bg-bd"></div>
 
-	<main class="w-full max-w-[850px] py-7">
+	<main class="w-full max-w-[600px] pt-7">
 		<div class="flex flex-col">
 			{#each projects as project (project.title)}
-				<div class="group flex w-full flex-col border-b border-bd/30 py-4 last:border-0">
-					<div class="flex w-full gap-6">
-						<div class="min-w-0 flex-1">
-							<a
-								href={`/project/${project.id}`}
-								class="font-sans text-[17px] text-white/70 transition-colors duration-100 group-hover:text-white hover:underline hover:decoration-white/70 hover:underline-offset-2"
-							>
-								{project.title}
-							</a>
-							{#if project.description}
-								<p class="mt-1.5 line-clamp-2 font-sans text-[14px] leading-relaxed text-white/40">
-									{project.description}
-								</p>
-							{/if}
-						</div>
-						<a
-							href={project.link ?? project.github}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="shrink-0 font-mono text-[12px] tracking-wider text-muted/60 transition-colors duration-100 hover:text-white/85"
+				<a
+					href={`/project/${project.id}`}
+					class="group flex w-full flex-col border-b border-bd/30 py-3 no-underline last:border-0"
+				>
+					<div class="flex w-full items-baseline justify-between">
+						<span
+							class="font-sans text-[14px] text-ink-70 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2"
 						>
-							{project.link ? project.link.replace('https://', '') : 'github'} ↗
-						</a>
+							{project.title}
+						</span>
+						<span class="shrink-0 font-mono text-[11px] tracking-wider text-ink-70 uppercase">
+							{project.firstCommit}
+						</span>
 					</div>
-				</div>
+					{#if project.shortDescription}
+						<span class="mt-2 line-clamp-2 font-sans text-[12px] leading-relaxed text-ink-70">
+							{project.shortDescription}
+						</span>
+					{/if}
+				</a>
 			{/each}
 		</div>
+
+		<Footer />
 	</main>
 </div>

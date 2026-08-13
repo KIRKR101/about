@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Self-hosted fonts */
 @font-face {
 	font-family: 'Geist';
@@ -33,25 +35,96 @@
 	font-display: swap;
 }
 
-@theme {
+:root {
+	color-scheme: light;
+
+	--bg: #fafafa;
+	--ink: #0a0a0b;
+
+	--bd: rgba(0, 0, 0, 0.1);
+	--prog: rgba(10, 10, 11, 0.65);
+	--rail: rgba(0, 0, 0, 0.07);
+
+	--ink-20: rgba(10, 10, 11, 0.45);
+	--ink-30: rgba(10, 10, 11, 0.55);
+	--ink-40: rgba(10, 10, 11, 0.65);
+	--ink-50: rgba(10, 10, 11, 0.75);
+	--ink-70: rgba(10, 10, 11, 0.88);
+	--ink-80: rgba(10, 10, 11, 0.92);
+	--ink-90: rgba(10, 10, 11, 0.97);
+
+	--art-bg: #ececee;
+	--card-bg: #e4e4e6;
+	--frame-bg: #ececee;
+	--tooltip-bg: #ffffff;
+	--code-bg: rgba(0, 0, 0, 0.05);
+	--focus: rgba(0, 0, 0, 0.4);
+	--contribution-0: #e4e4e6;
+	--contribution-1: #9be9a8;
+	--contribution-2: #40c463;
+	--contribution-3: #30a14e;
+	--contribution-4: #216e39;
+}
+
+.dark {
+	color-scheme: dark;
+
+	--bg: #0a0a0b;
+	--ink: #ffffff;
+
+	--bd: rgba(255, 255, 255, 0.08);
+	--prog: rgba(255, 255, 255, 0.55);
+	--rail: rgba(255, 255, 255, 0.07);
+
+	--ink-20: rgba(255, 255, 255, 0.3);
+	--ink-30: rgba(255, 255, 255, 0.4);
+	--ink-40: rgba(255, 255, 255, 0.5);
+	--ink-50: rgba(255, 255, 255, 0.6);
+	--ink-70: rgba(255, 255, 255, 0.78);
+	--ink-80: rgba(255, 255, 255, 0.85);
+	--ink-90: rgba(255, 255, 255, 0.94);
+
+	--art-bg: #1a1a1c;
+	--card-bg: #141416;
+	--frame-bg: #0d0d0e;
+	--tooltip-bg: #1a1a1c;
+	--code-bg: rgba(255, 255, 255, 0.06);
+	--focus: rgba(255, 255, 255, 0.4);
+	--contribution-0: #1a1a1c;
+	--contribution-1: #0e4429;
+	--contribution-2: #006d32;
+	--contribution-3: #26a641;
+	--contribution-4: #39d353;
+}
+
+@theme inline {
 	--font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
 	--font-mono: 'Geist Mono', ui-monospace, monospace;
 	--font-display: 'Instrument Serif', serif;
 	--font-serif: 'Instrument Serif', Georgia, serif;
 
-	--color-bd: rgba(255, 255, 255, 0.08);
-	--color-muted: rgba(255, 255, 255, 0.45);
-	--color-entry: rgba(255, 255, 255, 0.45);
-	--color-entry-h: rgba(255, 255, 255, 0.85);
-	--color-prog: rgba(255, 255, 255, 0.45);
-	--color-rail: rgba(255, 255, 255, 0.07);
-	--color-sep: rgba(255, 255, 255, 0.08);
-	--color-art-bg: #1a1a1c;
+	--color-bg: var(--bg);
+	--color-ink: var(--ink);
+	--color-ink-20: var(--ink-20);
+	--color-ink-30: var(--ink-30);
+	--color-ink-40: var(--ink-40);
+	--color-ink-50: var(--ink-50);
+	--color-ink-70: var(--ink-70);
+	--color-ink-80: var(--ink-80);
+	--color-ink-90: var(--ink-90);
+	--color-bd: var(--bd);
+	--color-prog: var(--prog);
+	--color-rail: var(--rail);
+	--color-art-bg: var(--art-bg);
+	--color-card-bg: var(--card-bg);
+	--color-frame: var(--frame-bg);
+	--color-tooltip-bg: var(--tooltip-bg);
 }
 
 html {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	background-color: var(--bg);
 }
 
 :focus-visible {
@@ -66,7 +139,7 @@ textarea:focus-visible,
 select:focus-visible,
 [tabindex]:focus-visible,
 summary:focus-visible {
-	outline: 1px solid rgba(255, 255, 255, 0.4);
+	outline: 1px solid var(--focus);
 	outline-offset: 2px;
 }
 
@@ -76,8 +149,8 @@ body {
 }
 
 body {
-	background-color: #0a0a0b;
-	color: white;
+	background-color: var(--bg);
+	color: var(--ink);
 	margin: 0;
 }
 
@@ -99,7 +172,7 @@ body {
 	transition: background 0.15s ease;
 }
 ::-webkit-scrollbar-thumb:hover {
-	background: rgba(255, 255, 255, 0.12);
+	background: color-mix(in srgb, var(--ink) 12%, transparent);
 }
 ::-webkit-scrollbar-button {
 	display: none;
@@ -111,7 +184,7 @@ body {
 /* Markdown Content Styling */
 @layer components {
 	.prose {
-		color: var(--color-muted);
+		color: var(--color-ink-70);
 		font-size: 1em;
 		line-height: 1.75;
 	}
@@ -123,7 +196,7 @@ body {
 	.prose h1,
 	.prose h2,
 	.prose h3 {
-		color: white;
+		color: var(--ink);
 		font-family: var(--font-serif);
 		margin-top: 3.5rem;
 		margin-bottom: 1.25rem;
@@ -145,13 +218,13 @@ body {
 		color: inherit;
 		text-decoration: underline;
 		text-underline-offset: 3px;
-		text-decoration-color: var(--color-muted);
+		text-decoration-color: var(--color-ink-70);
 		transition: all 0.1s ease;
 	}
 
 	.prose a:hover {
-		color: white;
-		text-decoration-color: white;
+		color: var(--ink);
+		text-decoration-color: var(--ink);
 	}
 
 	.prose a[target='_blank']::after {
@@ -160,25 +233,25 @@ body {
 	}
 
 	.prose blockquote {
-		border-left: 1px solid var(--color-muted);
+		border-left: 1px solid var(--color-ink-70);
 		padding-left: 1.75rem;
 		margin: 3rem 0;
 		font-size: 1.3em;
 		font-style: italic;
-		color: rgba(255, 255, 255, 0.7);
+		color: color-mix(in srgb, var(--ink) 80%, transparent);
 	}
 
 	.prose code {
-		background: rgba(255, 255, 255, 0.06);
+		background: var(--code-bg);
 		padding: 0.15rem 0.35rem;
 		border-radius: 4px;
 		font-size: 0.85em;
 		font-family: var(--font-mono);
-		color: rgba(255, 255, 255, 0.85);
+		color: color-mix(in srgb, var(--ink) 92%, transparent);
 	}
 
 	.prose pre {
-		background: #0d0d0e;
+		background: var(--frame-bg);
 		padding: 1.5rem;
 		border-radius: 6px;
 		border: 1px solid var(--color-bd);
@@ -219,7 +292,7 @@ body {
 		display: block;
 		text-align: center;
 		font-size: 0.8em;
-		color: var(--color-muted);
+		color: var(--color-ink-70);
 		margin-top: -0.5rem;
 		margin-bottom: 2.5rem;
 		font-style: normal;
@@ -230,7 +303,7 @@ body {
 
 	.prose hr {
 		border: 0;
-		border-top: 1px solid var(--color-sep);
+		border-top: 1px solid var(--color-bd);
 		margin: 2rem 0;
 	}
 
@@ -241,7 +314,7 @@ body {
 		padding-top: 2rem;
 		border-top: 1px solid var(--color-bd);
 		font-size: 0.85em;
-		color: var(--color-muted);
+		color: var(--color-ink-70);
 	}
 
 	.prose .footnotes hr,
@@ -265,7 +338,7 @@ body {
 
 	.prose .footnotes li::marker,
 	.prose section[data-footnotes] li::marker {
-		color: var(--color-muted);
+		color: var(--color-ink-70);
 		font-family: var(--font-mono);
 		font-size: 0.85em;
 	}
@@ -277,14 +350,14 @@ body {
 	}
 
 	.prose .footnotes a {
-		color: rgba(255, 255, 255, 0.6);
+		color: color-mix(in srgb, var(--ink) 72%, transparent);
 		text-decoration: underline;
-		text-decoration-color: rgba(255, 255, 255, 0.15);
+		text-decoration-color: color-mix(in srgb, var(--ink) 25%, transparent);
 	}
 
 	.prose .footnotes a:hover {
-		color: white;
-		text-decoration-color: var(--color-muted);
+		color: var(--ink);
+		text-decoration-color: var(--color-ink-70);
 	}
 
 	.prose .footnote-backref,
@@ -292,7 +365,7 @@ body {
 		display: inline-block;
 		margin-left: 0.5rem;
 		text-decoration: none !important;
-		color: var(--color-muted);
+		color: var(--color-ink-70);
 		font-family: var(--font-sans);
 		transition: color 0.15s ease;
 		vertical-align: baseline;
@@ -301,7 +374,7 @@ body {
 
 	.prose .footnote-backref:hover,
 	.prose .data-footnote-backref:hover {
-		color: white;
+		color: var(--ink);
 		opacity: 1;
 	}
 
@@ -318,23 +391,23 @@ body {
 
 	.prose sup a {
 		text-decoration: none !important;
-		color: rgba(255, 255, 255, 0.7);
+		color: color-mix(in srgb, var(--ink) 80%, transparent);
 		padding: 0 2px;
 		transition: color 0.15s ease;
 	}
 
 	.prose sup a::before {
 		content: '[';
-		color: rgba(255, 255, 255, 0.15);
+		color: color-mix(in srgb, var(--ink) 28%, transparent);
 	}
 
 	.prose sup a::after {
 		content: ']';
-		color: rgba(255, 255, 255, 0.15);
+		color: color-mix(in srgb, var(--ink) 28%, transparent);
 	}
 
 	.prose sup a:hover {
-		color: white;
+		color: var(--ink);
 	}
 
 	.prose sup[id^='fnref-'] {
@@ -347,8 +420,8 @@ body {
 
 	@keyframes fn-flash {
 		0% {
-			background-color: rgba(255, 255, 255, 0.12);
-			box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+			background-color: color-mix(in srgb, var(--ink) 12%, transparent);
+			box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 8%, transparent);
 			border-radius: 2px;
 		}
 		100% {
@@ -359,8 +432,8 @@ body {
 
 	@keyframes fnref-flash {
 		0% {
-			background-color: rgba(255, 255, 255, 0.22);
-			box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.14);
+			background-color: color-mix(in srgb, var(--ink) 22%, transparent);
+			box-shadow: 0 0 0 4px color-mix(in srgb, var(--ink) 14%, transparent);
 			border-radius: 2px;
 		}
 		100% {

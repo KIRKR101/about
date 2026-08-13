@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Footer from '$lib/components/Footer.svelte';
+
 	interface FilmItem {
 		title: string;
 		year: string;
@@ -145,11 +147,11 @@
 	<link rel="preconnect" href="https://letterboxd.kirkr.xyz" crossorigin="anonymous" />
 </svelte:head>
 
-<div class="flex min-h-screen flex-col items-center px-6 py-6 font-mono md:py-16">
+<div class="flex min-h-screen flex-col items-center px-6 py-6 md:py-16">
 	<main class="w-full max-w-[600px]">
 		<div class="py-4">
-			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-white">
-				<span class="opacity-90">Films</span><span class="opacity-20">.</span>
+			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
+				<span class="opacity-90">Films</span><span class="opacity-40">.</span>
 			</h1>
 		</div>
 
@@ -157,22 +159,22 @@
 
 		{#if loading}
 			<div class="py-8 text-center">
-				<div class="font-mono text-[12px] tracking-[0.1em] text-muted uppercase">
+				<div class="font-mono text-[11px] tracking-[0.1em] text-ink-70 uppercase">
 					Loading films...
 				</div>
 			</div>
 		{:else if error}
-			<div class="rounded-sm border border-red-500/20 bg-red-500/5 py-8 text-center">
-				<div class="font-mono text-[12px] tracking-[0.1em] text-red-400 uppercase">
+			<div class="rounded-sm border border-bd bg-ink/5 py-8 text-center">
+				<div class="font-mono text-[11px] tracking-[0.1em] text-ink-70 uppercase">
 					Failed to load films
 				</div>
 			</div>
 		{:else}
 			<div class="mb-12 space-y-6">
 				{#each films as film (film.link)}
-					<div class="flex gap-4 border-b border-sep pb-6 last:border-0">
+					<div class="flex gap-4 border-b border-bd pb-6 last:border-0">
 						<div
-							class="relative flex h-48 w-32 flex-shrink-0 items-center justify-center overflow-hidden rounded-sm border border-bd bg-[#141416] text-white/20"
+							class="relative flex h-48 w-32 flex-shrink-0 items-center justify-center overflow-hidden rounded-sm border border-bd bg-card-bg text-ink-20"
 						>
 							<span
 								class="-rotate-[315deg] text-center font-serif text-[13px] leading-tight tracking-wide select-none"
@@ -189,27 +191,27 @@
 							/>
 						</div>
 						<div class="flex flex-col justify-center">
-							<div class="font-serif text-[20px] leading-tight text-white/90">
+							<div class="font-serif text-[20px] leading-tight text-ink-90">
 								<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 								<a
 									href={film.link}
 									target="_blank"
 									rel="noopener noreferrer"
-									class="text-inherit no-underline transition-colors duration-75 hover:text-white/80"
+									class="text-inherit no-underline transition-colors duration-75 hover:text-ink-80"
 								>
 									{film.title}
 								</a>
 							</div>
-							<div class="mt-1 font-mono text-[11px] tracking-wider text-muted">{film.year}</div>
+							<div class="mt-1 font-mono text-[11px] tracking-wider text-ink-70">{film.year}</div>
 							{#if film.rating}
-								<div class="mt-1 text-[15px] text-white/50">
+								<div class="mt-1 text-[15px] text-ink-50">
 									{createStarRating(film.rating)}
 								</div>
 							{/if}
-							<div class="mt-2 font-mono text-[11px] tracking-wider text-muted">
+							<div class="mt-2 font-mono text-[11px] tracking-wider text-ink-70">
 								Watched: {film.watchedDate}
 								{#if film.rewatch}
-									<span class="ml-2 text-white/35">↻ Rewatch</span>
+									<span class="ml-2 text-ink-40">↻ Rewatch</span>
 								{/if}
 							</div>
 						</div>
@@ -217,5 +219,7 @@
 				{/each}
 			</div>
 		{/if}
+
+		<Footer />
 	</main>
 </div>

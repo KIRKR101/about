@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { getHardcoverSrcset } from '$lib/utils';
+	import Footer from '$lib/components/Footer.svelte';
 
 	interface Book {
 		id: number;
@@ -180,11 +181,11 @@
 	<link rel="preconnect" href="https://hardcover.kirkr.xyz" crossorigin="anonymous" />
 </svelte:head>
 
-<div class="flex min-h-screen flex-col items-center px-6 py-6 font-mono md:py-16">
+<div class="flex min-h-screen flex-col items-center px-6 py-6 md:py-16">
 	<main class="w-full max-w-[600px]">
 		<div class="py-4">
-			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-white">
-				<span class="opacity-90">Books</span><span class="opacity-20">.</span>
+			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
+				<span class="opacity-90">Books</span><span class="opacity-40">.</span>
 			</h1>
 		</div>
 
@@ -192,27 +193,27 @@
 
 		{#if loading}
 			<div class="py-8 text-center">
-				<div class="font-mono text-[12px] tracking-[0.1em] text-muted uppercase">
+				<div class="font-mono text-[11px] tracking-[0.1em] text-ink-70 uppercase">
 					Loading books...
 				</div>
 			</div>
 		{:else if error}
-			<div class="rounded-sm border border-red-500/20 bg-red-500/5 py-8 text-center">
-				<div class="font-mono text-[12px] tracking-[0.1em] text-red-400 uppercase">
+			<div class="rounded-sm border border-bd bg-ink/5 py-8 text-center">
+				<div class="font-mono text-[11px] tracking-[0.1em] text-ink-70 uppercase">
 					Failed to load books
 				</div>
 			</div>
 		{:else}
 			{#if currentlyReading.length > 0}
 				<div class="mb-6">
-					<div class="mb-6 font-sans text-[11px] tracking-[0.15em] text-muted uppercase">
+					<div class="mb-6 font-sans text-[11px] tracking-[0.1em] text-ink-70 uppercase">
 						Currently Reading
 					</div>
 					<div class="space-y-6">
 						{#each currentlyReading as item (item.book.id)}
-							<div class="flex gap-4 border-b border-sep pb-6">
+							<div class="flex gap-4 border-b border-bd pb-6">
 								<div
-									class="relative flex h-48 w-32 flex-shrink-0 items-center justify-center overflow-hidden rounded-sm border border-bd bg-[#141416] text-white/20"
+									class="relative flex h-48 w-32 flex-shrink-0 items-center justify-center overflow-hidden rounded-sm border border-bd bg-card-bg text-ink-20"
 								>
 									<span
 										class="-rotate-[315deg] text-center font-serif text-[13px] leading-tight tracking-wide select-none"
@@ -231,33 +232,35 @@
 									/>
 								</div>
 								<div class="flex flex-1 flex-col justify-center">
-									<div class="font-serif text-[20px] leading-tight text-white/90">
+									<div class="font-serif text-[20px] leading-tight text-ink-90">
 										<a
 											href="https://hardcover.app/books/{item.book.slug}?referrer_id=120657"
 											target="_blank"
 											rel="noopener noreferrer"
-											class="text-inherit no-underline transition-colors duration-75 hover:text-white/80"
+											class="text-inherit no-underline transition-colors duration-75 hover:text-ink-80"
 										>
 											{item.book.title}
 										</a>
 									</div>
-									<div class="mt-1 font-mono text-[11px] tracking-wider text-muted">
+									<div class="mt-1 font-mono text-[11px] tracking-wider text-ink-70">
 										by {item.book.authors[0] ?? 'Unknown author'}, {item.book.release_year}
 									</div>
 									{#if item.progress}
 										<div class="mt-3">
-											<div class="h-[3px] w-full overflow-hidden rounded-full bg-bd">
+											<div class="h-[3px] w-full overflow-hidden rounded-full bg-rail">
 												<div
-													class="h-full rounded-full bg-white/30 transition-all duration-300"
+													class="h-full rounded-full bg-prog transition-all duration-300"
 													style="width: {item.progress.percentage}%"
 												></div>
 											</div>
-											<div class="mt-3 flex items-center gap-1.5 font-mono text-[11px] tracking-wider text-muted">
+											<div
+												class="mt-3 flex items-center gap-1.5 font-mono text-[11px] tracking-wider text-ink-70"
+											>
 												<span>{item.progress.pages_read} / {item.progress.total_pages} pages</span>
 											</div>
 										</div>
 									{/if}
-									<div class="mt-2 font-mono text-[11px] tracking-wider text-muted">
+									<div class="mt-2 font-mono text-[11px] tracking-wider text-ink-70">
 										Started: {formatDate(item.user_book.started_reading)}
 										{#if item.last_read_event}
 											&middot; Last read: {formatDateTime(item.last_read_event.action_at)}
@@ -272,14 +275,14 @@
 
 			{#if previouslyRead.length > 0}
 				<div class="mb-6">
-					<div class="mb-6 font-sans text-[11px] tracking-[0.15em] text-muted uppercase">
+					<div class="mb-6 font-sans text-[11px] tracking-[0.1em] text-ink-70 uppercase">
 						Previously Read
 					</div>
 					<div class="space-y-6">
 						{#each previouslyRead as item (item.book.id)}
-							<div class="flex gap-4 border-b border-sep pb-6 last:border-0">
+							<div class="flex gap-4 border-b border-bd pb-6 last:border-0">
 								<div
-									class="relative flex h-48 w-32 flex-shrink-0 items-center justify-center overflow-hidden rounded-sm border border-bd bg-[#141416] text-white/20"
+									class="relative flex h-48 w-32 flex-shrink-0 items-center justify-center overflow-hidden rounded-sm border border-bd bg-card-bg text-ink-20"
 								>
 									<span
 										class="-rotate-[315deg] text-center font-serif text-[13px] leading-tight tracking-wide select-none"
@@ -298,22 +301,22 @@
 									/>
 								</div>
 								<div class="flex flex-col justify-center">
-									<div class="font-serif text-[20px] leading-tight text-white/90">
+									<div class="font-serif text-[20px] leading-tight text-ink-90">
 										<a
 											href="https://hardcover.app/books/{item.book.slug}?referrer_id=120657"
 											target="_blank"
 											rel="noopener noreferrer"
-											class="text-inherit no-underline transition-colors duration-75 hover:text-white/80"
+											class="text-inherit no-underline transition-colors duration-75 hover:text-ink-80"
 										>
 											{item.book.title}
 										</a>
 									</div>
-									<div class="mt-1 font-mono text-[11px] tracking-wider text-muted">
+									<div class="mt-1 font-mono text-[11px] tracking-wider text-ink-70">
 										by {item.book.authors[0] ?? 'Unknown author'} &middot; {item.book.release_year}
 									</div>
-									<div class="mt-2 font-mono text-[11px] tracking-wider text-muted">
+									<div class="mt-2 font-mono text-[11px] tracking-wider text-ink-70">
 										{#if item.user_book.rating}
-											<span class="text-white/50"
+											<span class="text-[15px] text-ink-50"
 												>{createStarRating(item.user_book.rating)}</span
 											>
 											<span class="text-bd">&middot;</span>
@@ -327,7 +330,9 @@
 				</div>
 			{/if}
 
-			<div class="mt-8 font-mono text-[11px] text-muted">data since 25/06/2026</div>
+			<div class="mt-8 font-mono text-[11px] text-ink-70">data since 25/06/2026</div>
 		{/if}
+
+		<Footer />
 	</main>
 </div>
