@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import { formatDate, getHardcoverSrcset } from '$lib/utils';
 	import Footer from '$lib/components/Footer.svelte';
@@ -314,7 +313,8 @@
 			: 0
 	);
 
-	onMount(() => {
+	$effect(() => {
+		if (!activityOpen) return;
 		fetchSpotifyTrack();
 		fetchCurrentlyReading();
 		intervalId = setInterval(fetchCurrentTrack, 30000);
