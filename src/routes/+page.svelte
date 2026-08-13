@@ -14,14 +14,9 @@
 
 	let allProjects = $derived(data.allProjects);
 	let allWritings = $derived(data.allWritings);
-
-	let showAllWritings = $state(false);
-	let showAllProjects = $state(false);
 	let activityOpen = $state(false);
-
-	let visibleProjects = $derived(showAllProjects ? allProjects : allProjects.slice(0, 5));
-
-	let visibleWritings = $derived(showAllWritings ? allWritings : allWritings.slice(0, 5));
+	let visibleProjects = $derived(allProjects.slice(0, 5));
+	let visibleWritings = $derived(allWritings.slice(0, 5));
 
 	const SPOTIFY_API_URL = 'https://spotify.kirkr.xyz/api/now-playing';
 	const LASTFM_API_URL = 'https://lastfm.kirkr.xyz/api/lastfm-track';
@@ -331,8 +326,8 @@
 
 <div class="flex min-h-[calc(100dvh-4rem)] items-center justify-center px-6 py-10 lg:py-16">
 	<main class="w-full max-w-[34rem]">
-		<section class="pb-10">
-			<div class="space-y-4 font-sans text-[16px] leading-[1.75] text-white/70">
+		<section class="pb-6">
+			<div class="space-y-4 font-sans text-[15px] leading-[1.75] text-white/70">
 				<p>
 					My main academic interest is in computer engineering, particularly architecture. I'm a fan
 					of C, Zig, and TypeScript, and web technologies in general; this site is built on Svelte.
@@ -342,21 +337,7 @@
 					strong inclination towards the Dutch Golden Age, especially the Delft and Hague Schools.
 				</p>
 				<p>
-					See my <a
-						href="/projects"
-						class="underline decoration-white/55 underline-offset-2 transition-colors duration-75 hover:text-white hover:decoration-white"
-						>projects</a
-					>,
-					<a
-						href="/writings"
-						class="underline decoration-white/55 underline-offset-2 transition-colors duration-75 hover:text-white hover:decoration-white"
-						>writings</a
-					>, or
-					<a
-						href="/photography"
-						class="underline decoration-white/55 underline-offset-2 transition-colors duration-75 hover:text-white hover:decoration-white"
-						>photography</a
-					>. Email me
+				    Email me
 					<a
 						href="mailto:theo@kirkr.xyz"
 						class="underline decoration-white/55 underline-offset-2 transition-colors duration-75 hover:text-white hover:decoration-white"
@@ -392,17 +373,17 @@
 		</section>
 
 		{#if activityOpen}
-			<div transition:slide={{ duration: 200 }} class="space-y-8 pb-10">
-				<div class="h-px bg-bd"></div>
-
+			<div transition:slide={{ duration: 200 }} class="space-y-6 pb-6">
 				<section class="w-full">
-					<div class="mb-4 font-sans text-[11px] font-light tracking-[0.14em] text-muted uppercase">
+					<div class="mb-3 font-sans text-[11px] font-light tracking-[0.14em] text-muted uppercase">
 						{#if currentTrack}
 							{currentTrack.isPlaying ? 'Now playing' : 'Last played'} · {currentTrack.source}
 						{:else}
 							Initialising
 						{/if}
 					</div>
+
+					<div class="mb-6 h-px bg-bd"></div>
 
 					<div class="flex items-start gap-4">
 						<div class="h-16 w-16 shrink-0 overflow-hidden rounded-[2px] bg-art-bg">
@@ -550,12 +531,12 @@
 			</div>
 		{/if}
 
-		<div class="h-px bg-bd"></div>
-
-		<section class="cv-auto py-10">
-			<div class="mb-6 flex items-baseline justify-between">
+		<section class="cv-auto py-6">
+			<div class="mb-4 flex items-baseline justify-between">
 				<div class="font-serif text-[24px] text-white/85 italic">Writings</div>
 			</div>
+
+			<div class="mb-4 h-px bg-bd"></div>
 
 			<div class="flex flex-col">
 				{#each visibleWritings as writing (writing.file)}
@@ -580,34 +561,21 @@
 						{/if}
 					</a>
 				{/each}
-				<button
-					type="button"
-					class="group mt-4 inline-flex cursor-pointer items-center gap-1.5 self-start font-mono text-[11px] tracking-wider text-muted/60 uppercase transition-colors duration-150 hover:text-white/85"
-					onclick={() => (showAllWritings = !showAllWritings)}
+				<a
+					href="/writings"
+					class="mt-4 inline-flex cursor-pointer items-center gap-1.5 self-start font-mono text-[11px] tracking-wider text-muted/60 uppercase no-underline transition-colors duration-150 hover:text-white/85"
 				>
-					<span>{showAllWritings ? 'View less' : `View ${allWritings.length - 5} more`}</span>
-					<svg
-						width="10"
-						height="10"
-						viewBox="0 0 12 12"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="1.5"
-						class="transition-transform duration-150"
-						class:rotate-180={showAllWritings}
-					>
-						<path d="M2.5 4.5L6 8L9.5 4.5" />
-					</svg>
-				</button>
+					View all
+				</a>
 			</div>
 		</section>
 
-		<div class="h-px bg-bd"></div>
-
-		<section class="cv-auto py-10">
-			<div class="mb-6 flex items-baseline justify-between">
+		<section class="cv-auto py-6">
+			<div class="mb-4 flex items-baseline justify-between">
 				<div class="font-serif text-[24px] text-white/85 italic">Projects</div>
 			</div>
+
+			<div class="mb-4 h-px bg-bd"></div>
 
 			<div class="flex flex-col">
 				{#each visibleProjects as project (project.title)}
@@ -630,21 +598,8 @@
 				<button
 					type="button"
 					class="group mt-4 inline-flex cursor-pointer items-center gap-1.5 self-start font-mono text-[11px] tracking-wider text-muted/60 uppercase transition-colors duration-150 hover:text-white/85"
-					onclick={() => (showAllProjects = !showAllProjects)}
 				>
-					<span>{showAllProjects ? 'View less' : `View ${allProjects.length - 5} more`}</span>
-					<svg
-						width="10"
-						height="10"
-						viewBox="0 0 12 12"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="1.5"
-						class="transition-transform duration-150"
-						class:rotate-180={showAllProjects}
-					>
-						<path d="M2.5 4.5L6 8L9.5 4.5" />
-					</svg>
+					<a href="/projects">View all</a>
 				</button>
 			</div>
 		</section>

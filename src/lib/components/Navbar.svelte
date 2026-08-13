@@ -90,7 +90,7 @@
 
 <nav
 	aria-label="Main navigation"
-	class="relative z-50 h-16 shrink-0 border-b border-bd bg-[#0a0a0b]/80 backdrop-blur-sm"
+	class="relative z-50 h-16 shrink-0 bg-[#0a0a0b]/80 backdrop-blur-sm"
 >
 	<div class="mx-auto h-full max-w-[1200px] px-4 md:px-6">
 		<div class="flex h-full items-center justify-between">
