@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import { formatDate, getHardcoverSrcset } from '$lib/utils';
 	import Footer from '$lib/components/Footer.svelte';
@@ -116,33 +117,42 @@
 	async function fetchSpotifyTrack() {
 		if (isFetching) return;
 		isFetching = true;
+
 		try {
 			const response = await fetch(SPOTIFY_API_URL);
-			if (!response.ok) throw new Error(`Spotify API status ${response.status}`);
+
+			if (!response.ok) {
+				throw new Error(`Spotify API status ${response.status}`);
+			}
+
 			const data = await response.json();
 
 			if (data.isPlaying === false && !data.title) {
-				isFetching = false;
 				if (retryTimeoutId) clearTimeout(retryTimeoutId);
-				retryTimeoutId = setTimeout(fetchSpotifyTrack, 30000);
+				retryTimeoutId = setTimeout(fetchSpotifyTrack, 30_000);
 				return;
 			}
 
-			if (data.isPlaying !== undefined) {
-				spotifyData = data;
-				localProgress = data.progress ?? 0;
-				lastFetchTime = Date.now();
-				dataSource = 'spotify';
-				setupProgressUpdate();
-				isFetching = false;
-				return;
+			if (data.isPlaying === undefined) {
+				throw new Error('Invalid Spotify response');
 			}
 
-			throw new Error('Invalid Spotify response');
+			if (retryTimeoutId) {
+				clearTimeout(retryTimeoutId);
+				retryTimeoutId = undefined;
+			}
+
+			spotifyData = data;
+			localProgress = data.progress ?? 0;
+			lastFetchTime = Date.now();
+			dataSource = 'spotify';
+
+			setupProgressUpdate();
 		} catch {
-			isFetching = false;
 			dataSource = 'lastfm';
-			fetchLastFmTrack();
+			await fetchLastFmTrack();
+		} finally {
+			isFetching = false;
 		}
 	}
 
@@ -315,9 +325,11 @@
 
 	$effect(() => {
 		if (!activityOpen) return;
-		fetchSpotifyTrack();
-		fetchCurrentlyReading();
-		intervalId = setInterval(fetchCurrentTrack, 30000);
+		untrack(() => {
+			fetchSpotifyTrack();
+			fetchCurrentlyReading();
+			intervalId = setInterval(fetchCurrentTrack, 30000);
+		});
 		return () => {
 			if (intervalId) clearInterval(intervalId);
 			if (progressRafId) cancelAnimationFrame(progressRafId);
