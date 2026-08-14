@@ -344,11 +344,11 @@
 </svelte:head>
 
 <div class="flex min-h-[calc(100dvh-4rem)] items-center justify-center px-6 py-6 md:py-16">
-	<main class="w-full max-w-[34rem]">
+	<main class="w-full max-w-[600px]">
 		<section class="pb-6">
 			<div class="flex items-start gap-6">
 				<div class="min-w-0">
-					<p class="font-sans text-[15px] leading-[1.75] text-ink-70 sm:pt-2">
+					<p class="font-sans text-[14px] leading-[1.75] text-ink-70 sm:pt-2">
 						I'm a first year CompE student @ Warwick. I enjoy C and TypeScript, and web technologies
 						more generally; this site is built on Svelte. I'm also interested in politics,
 						philosophy, economics, and art - particularly Dutch.
@@ -366,17 +366,11 @@
 					</button>
 				</div>
 
-				<div class="hidden aspect-7/8 w-45 shrink-0 rounded-sm bg-ink/5 sm:block">
+				<div class="hidden w-64 shrink-0 rounded-sm sm:block">
 					<img
-						src="/hero_light.webp"
+						src="/hero.webp"
 						alt="The Onsen Range Seen from Amakusa by Kawase Hasui"
-						class="aspect-7/8 w-45 rounded-sm object-cover dark:hidden"
-						loading="lazy"
-					/>
-					<img
-						src="/hero_dark.webp"
-						alt="Yana River at Koshu by Kawase Hasui"
-						class="hidden aspect-7/8 w-45 rounded-sm object-cover dark:block"
+						class="w-64 rounded-sm object-cover dark:invert"
 						loading="lazy"
 					/>
 				</div>
