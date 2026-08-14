@@ -127,6 +127,11 @@ html {
 	background-color: var(--bg);
 }
 
+.theme-transition-off,
+.theme-transition-off * {
+	transition: none !important;
+}
+
 :focus-visible {
 	outline: none;
 }
