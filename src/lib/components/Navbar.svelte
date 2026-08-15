@@ -88,7 +88,7 @@
 	});
 </script>
 
-<nav aria-label="Main navigation" class="relative z-50 h-16 shrink-0 bg-bg/80 backdrop-blur-sm">
+<nav aria-label="Main navigation" class="sticky top-0 z-50 h-16 shrink-0 bg-bg/80 backdrop-blur-sm">
 	<div class="mx-auto h-full max-w-[1200px] px-4 md:px-6">
 		<div class="flex h-full items-center justify-between">
 			<div class="flex items-center">

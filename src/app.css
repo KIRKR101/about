@@ -148,11 +148,6 @@ summary:focus-visible {
 	outline-offset: 2px;
 }
 
-html,
-body {
-	overflow: hidden;
-}
-
 body {
 	background-color: var(--bg);
 	color: var(--ink);

@@ -22,18 +22,14 @@ export function footnoteBackref(node: HTMLElement) {
 		if (!href?.startsWith('#')) return;
 		const target = document.getElementById(href.slice(1));
 		if (!target) return;
-		const container = document.getElementById('main-content');
-		if (!container) return;
 
 		e.preventDefault();
 
-		const cr = container.getBoundingClientRect();
 		const tr = target.getBoundingClientRect();
-		const isVisible = tr.top >= cr.top && tr.bottom <= cr.bottom;
+		const isVisible = tr.top >= 0 && tr.bottom <= window.innerHeight;
 
 		if (!isVisible) {
-			const targetTop = tr.top - cr.top + container.scrollTop;
-			container.scrollTo({ top: targetTop - 80, behavior: 'instant' });
+			window.scrollTo({ top: window.scrollY + tr.top - 80, behavior: 'instant' });
 		}
 
 		history.replaceState(history.state, '', '#' + href.slice(1));

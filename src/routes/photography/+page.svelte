@@ -204,7 +204,7 @@
 	<link rel="preconnect" href="https://res.cloudinary.com" crossorigin="anonymous" />
 </svelte:head>
 
-<div class="flex min-h-screen flex-col items-center px-6 py-6 md:py-16">
+<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
 	<div class="w-full max-w-5xl">
 		<div class="py-4">
 			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
@@ -212,7 +212,7 @@
 			</h1>
 		</div>
 
-		<nav class="sticky top-0 z-30 bg-bg">
+		<nav class="sticky top-16 z-30 bg-bg">
 			<div class="h-px bg-bd"></div>
 
 			<NavigationMenu.Root aria-label="Photography sections" class="w-full">

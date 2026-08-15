@@ -5,10 +5,8 @@
 
 	let { children } = $props();
 
-	let mainEl = $state<HTMLElement | null>(null);
-
 	afterNavigate(() => {
-		mainEl?.scrollTo(0, 0);
+		window.scrollTo(0, 0);
 	});
 </script>
 
@@ -35,13 +33,9 @@
 	Skip to content
 </a>
 
-<div class="flex h-dvh flex-col overflow-hidden bg-bg text-ink antialiased">
+<div class="flex min-h-dvh flex-col bg-bg text-ink antialiased">
 	<Navbar />
-	<main
-		bind:this={mainEl}
-		id="main-content"
-		class="min-h-0 flex-1 overflow-y-auto overscroll-y-contain"
-	>
+	<main id="main-content">
 		{@render children()}
 	</main>
 </div>

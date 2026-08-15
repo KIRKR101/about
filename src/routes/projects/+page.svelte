@@ -214,7 +214,7 @@
 	<link rel="preconnect" href="https://github.kirkr.xyz" crossorigin="anonymous" />
 </svelte:head>
 
-<div class="flex min-h-screen flex-col items-center px-6 py-6 md:py-16">
+<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
 	<div class="w-full max-w-[600px]">
 		<div class="py-4">
 			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
