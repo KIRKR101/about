@@ -328,7 +328,6 @@
 	);
 
 	$effect(() => {
-		if (!activityOpen) return;
 		untrack(() => {
 			fetchSpotifyTrack();
 			fetchCurrentlyReading();
@@ -362,12 +361,12 @@
 
 					<button
 						type="button"
-						class="mt-4 inline-flex cursor-pointer items-center gap-1.5 font-mono text-[11px] tracking-wider text-ink-70 uppercase transition-colors duration-150 hover:text-ink"
+						class="mt-3.5 inline-flex cursor-pointer items-center gap-1.5 font-mono text-[11px] tracking-wider text-ink-70 uppercase transition-colors duration-100 hover:text-ink"
 						onclick={() => (activityOpen = !activityOpen)}
 						aria-expanded={activityOpen}
 						aria-controls="activity-drawer"
 					>
-						<span class="decoration-ink/20 underline-offset-2 hover:underline"
+						<span class="decoration-ink-70 underline-offset-2 hover:underline"
 							>See current activity</span
 						>
 						<span>{activityOpen ? '[-]' : '[+]'}</span>
@@ -394,13 +393,13 @@
 				}}
 			>
 				<div
-					transition:fade={{ duration: 250 }}
-					class="pointer-events-none absolute inset-0 bg-ink/8 backdrop-blur-[2px]"
+					transition:fade={{ duration: 125 }}
+					class="pointer-events-none absolute inset-0 backdrop-blur-[2px]"
 				></div>
 				<div
 					id="activity-drawer"
-					transition:fly={{ y: 16, duration: 200 }}
-					class="relative z-10 max-h-[min(42rem,calc(100dvh-1.5rem))] w-full max-w-lg overflow-y-auto rounded-sm border border-ink/15 bg-white p-5 shadow-2xl shadow-ink/15 sm:max-h-[calc(100dvh-3rem)] sm:p-6 dark:bg-[#1c1a16]"
+					transition:fly={{ y: 16, duration: 100 }}
+					class="relative z-10 max-h-[min(42rem,calc(100dvh-1.5rem))] w-full max-w-lg overflow-y-auto scrollbar-gutter-stable rounded-sm border border-ink/15 bg-bg p-5 shadow-2xl shadow-ink/5 sm:max-h-[calc(100dvh-3rem)] sm:p-6"
 					role="dialog"
 					aria-modal="true"
 					aria-label="Current activity"
@@ -429,19 +428,26 @@
 								{/if}
 							</div>
 							<div class="flex items-start gap-4">
-								<div class="h-16 w-16 shrink-0 overflow-hidden rounded-sm bg-art-bg">
+								<div class="h-16 w-16 aspect-square shrink-0 overflow-hidden rounded-sm bg-art-bg">
 									{#if currentTrack}
 										{#if currentTrack.url}
-											<a href={currentTrack.url} target="_blank" rel="noopener noreferrer">
-												<img
-													srcset={currentTrack.imageSrcset}
-													sizes="64px"
-													src={currentTrack.imageUrl}
-													alt={currentTrack.title}
-													class="h-full w-full object-cover"
-													fetchpriority="high"
-												/>
-											</a>
+											<a
+												href={currentTrack.url}
+												target="_blank"
+												rel="noopener noreferrer"
+												class="block h-full w-full"
+											>
+											<img
+												srcset={currentTrack.imageSrcset}
+												sizes="64px"
+												src={currentTrack.imageUrl}
+												alt={currentTrack.title}
+												class="h-full w-full object-cover"
+												width="64"
+												height="64"
+												fetchpriority="high"
+											/>
+										</a>
 										{:else}
 											<img
 												srcset={currentTrack.imageSrcset}
@@ -449,6 +455,8 @@
 												src={currentTrack.imageUrl}
 												alt={currentTrack.title}
 												class="h-full w-full object-cover"
+												width="64"
+												height="64"
 												fetchpriority="high"
 											/>
 										{/if}
@@ -456,7 +464,7 @@
 								</div>
 
 								<div class="min-w-0 flex-1">
-									<div class="font-serif text-[18px] leading-snug text-ink-90">
+									<div class="font-serif text-[18px] -mt-0.5 leading-snug text-ink-90">
 										{#if currentTrack}
 											{#if currentTrack.url}
 												<a
@@ -495,18 +503,22 @@
 									</div>
 
 									{#if currentTrack?.showProgress}
-										<div
-											class="relative mt-3 h-px bg-rail"
-											aria-label={`${Math.round(progressPercentage)}% played`}
-										>
+										<div class="mt-1 flex items-center gap-2">
+											<span class="shrink-0 font-mono text-[10px] text-ink-70">
+												{formatTime(currentTrack.progress)}
+											</span>
 											<div
-												class="absolute inset-y-0 left-0 h-full bg-ink/30"
-												style="width: {progressPercentage}%"
-											></div>
-										</div>
-										<div class="mt-1.5 flex justify-between font-mono text-[10px] text-ink-70">
-											<span>{formatTime(currentTrack.progress)}</span>
-											<span>{formatTime(currentTrack.duration)}</span>
+												class="relative h-0.5 flex-1 bg-rail"
+												aria-label={`${Math.round(progressPercentage)}% played`}
+											>
+												<div
+													class="absolute inset-y-0 left-0 h-full bg-ink/40"
+													style="width: {progressPercentage}%"
+												></div>
+											</div>
+											<span class="shrink-0 font-mono text-[10px] text-ink-70">
+												{formatTime(currentTrack.duration)}
+											</span>
 										</div>
 									{/if}
 								</div>
