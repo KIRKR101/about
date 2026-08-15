@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
-	import { slide } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 	import { formatDate, getHardcoverSrcset } from '$lib/utils';
 	import Footer from '$lib/components/Footer.svelte';
 
@@ -229,6 +229,10 @@
 		return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 	}
 
+	function handleKeydown(event: KeyboardEvent) {
+		if (activityOpen && event.key === 'Escape') activityOpen = false;
+	}
+
 	function loadCachedBooks(): CurrentlyReading[] | null {
 		try {
 			const stored = localStorage.getItem('books-cache');
@@ -343,21 +347,25 @@
 	<link rel="preconnect" href="https://i.scdn.co" />
 </svelte:head>
 
+<svelte:window onkeydown={handleKeydown} />
+
 <div class="flex min-h-[calc(100dvh-4rem)] items-center justify-center px-6 py-6 md:py-16">
 	<main class="w-full max-w-[600px]">
 		<section class="pb-6">
 			<div class="flex items-start gap-6">
 				<div class="min-w-0">
 					<p class="-mt-[0.15em] font-sans text-[15.5px] leading-[1.75] text-ink-70">
-						I'm a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech
-						more generally; this site is built on Svelte. I'm also interested in politics,
-						philosophy, economics and art - particularly Dutch.
+						I'm a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech more
+						generally; this site is built on Svelte. I'm also interested in politics, philosophy,
+						economics and art - particularly Dutch.
 					</p>
 
 					<button
 						type="button"
 						class="mt-4 inline-flex cursor-pointer items-center gap-1.5 font-mono text-[11px] tracking-wider text-ink-70 uppercase transition-colors duration-150 hover:text-ink"
 						onclick={() => (activityOpen = !activityOpen)}
+						aria-expanded={activityOpen}
+						aria-controls="activity-drawer"
 					>
 						<span class="decoration-ink/20 underline-offset-2 hover:underline"
 							>See current activity</span
@@ -378,158 +386,193 @@
 		</section>
 
 		{#if activityOpen}
-			<div transition:slide={{ duration: 200 }} class="space-y-6 pb-6">
-				<section class="w-full">
-					<div class="mb-6 h-px bg-bd"></div>
-
-					<div class="mb-4 font-sans text-[11px] tracking-[0.1em] text-ink-70 uppercase">
-						{#if currentTrack}
-							{currentTrack.isPlaying ? 'Now playing' : 'Last listen'}
-						{:else}
-							Initialising
-						{/if}
-					</div>
-					<div class="flex items-start gap-4">
-						<div class="h-16 w-16 shrink-0 overflow-hidden rounded-sm bg-art-bg">
-							{#if currentTrack}
-								{#if currentTrack.url}
-									<a href={currentTrack.url} target="_blank" rel="noopener noreferrer">
-										<img
-											srcset={currentTrack.imageSrcset}
-											sizes="64px"
-											src={currentTrack.imageUrl}
-											alt={currentTrack.title}
-											class="h-full w-full object-cover"
-											fetchpriority="high"
-										/>
-									</a>
-								{:else}
-									<img
-										srcset={currentTrack.imageSrcset}
-										sizes="64px"
-										src={currentTrack.imageUrl}
-										alt={currentTrack.title}
-										class="h-full w-full object-cover"
-										fetchpriority="high"
-									/>
-								{/if}
-							{/if}
+			<div
+				class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6"
+				role="presentation"
+				onclick={(event) => {
+					if (event.target === event.currentTarget) activityOpen = false;
+				}}
+			>
+				<div
+					transition:fade={{ duration: 250 }}
+					class="pointer-events-none absolute inset-0 bg-ink/8 backdrop-blur-[2px]"
+				></div>
+				<div
+					id="activity-drawer"
+					transition:fly={{ y: 16, duration: 200 }}
+					class="relative z-10 max-h-[min(42rem,calc(100dvh-1.5rem))] w-full max-w-lg overflow-y-auto rounded-sm border border-ink/15 bg-white p-5 shadow-2xl shadow-ink/15 sm:max-h-[calc(100dvh-3rem)] sm:p-6 dark:bg-[#1c1a16]"
+					role="dialog"
+					aria-modal="true"
+					aria-label="Current activity"
+				>
+					<div class="mb-6 flex items-center justify-between border-b border-bd pb-4">
+						<div>
+							<div class="font-serif text-[28px] text-ink-90 italic">Right now</div>
 						</div>
+						<button
+							type="button"
+							class="group cursor-pointer font-mono text-[12px] tracking-wider text-ink-70 uppercase transition-colors hover:text-ink"
+							onclick={() => (activityOpen = false)}
+							aria-label="Close current activity"
+						>
+							<span class="group-hover:underline">Close</span> [x]
+						</button>
+					</div>
 
-						<div class="min-w-0 flex-1">
-							<div class="truncate font-serif text-[15px] leading-tight text-ink-90">
+					<div class="space-y-6">
+						<section class="w-full">
+							<div class="mb-4 font-sans text-[12px] tracking-[0.1em] text-ink-70 uppercase">
 								{#if currentTrack}
-									{#if currentTrack.url}
-										<a
-											href={currentTrack.url}
-											target="_blank"
-											rel="noopener noreferrer"
-											class="text-inherit no-underline transition-colors duration-75 hover:text-ink-80"
-										>
-											{currentTrack.title}
-										</a>
-									{:else}
-										{currentTrack.title}
-									{/if}
+									{currentTrack.isPlaying ? 'Now playing' : 'Last listen'}
 								{:else}
-									Loading
+									Initialising
 								{/if}
 							</div>
-							<div class="mt-1 truncate font-sans text-[11px] tracking-wide text-ink-70">
-								{#if currentTrack}
-									{#if currentTrack.artistUrl}
-										<a
-											href={currentTrack.artistUrl}
-											target="_blank"
-											rel="noopener noreferrer"
-											class="text-inherit no-underline transition-colors hover:text-ink-70"
+							<div class="flex items-start gap-4">
+								<div class="h-16 w-16 shrink-0 overflow-hidden rounded-sm bg-art-bg">
+									{#if currentTrack}
+										{#if currentTrack.url}
+											<a href={currentTrack.url} target="_blank" rel="noopener noreferrer">
+												<img
+													srcset={currentTrack.imageSrcset}
+													sizes="64px"
+													src={currentTrack.imageUrl}
+													alt={currentTrack.title}
+													class="h-full w-full object-cover"
+													fetchpriority="high"
+												/>
+											</a>
+										{:else}
+											<img
+												srcset={currentTrack.imageSrcset}
+												sizes="64px"
+												src={currentTrack.imageUrl}
+												alt={currentTrack.title}
+												class="h-full w-full object-cover"
+												fetchpriority="high"
+											/>
+										{/if}
+									{/if}
+								</div>
+
+								<div class="min-w-0 flex-1">
+									<div class="font-serif text-[18px] leading-snug text-ink-90">
+										{#if currentTrack}
+											{#if currentTrack.url}
+												<a
+													href={currentTrack.url}
+													target="_blank"
+													rel="noopener noreferrer"
+													class="text-inherit no-underline transition-colors duration-75 hover:text-ink-80"
+												>
+													{currentTrack.title}
+												</a>
+											{:else}
+												{currentTrack.title}
+											{/if}
+										{:else}
+											Loading
+										{/if}
+									</div>
+									<div class="mt-1 font-sans text-[12px] leading-relaxed tracking-wide text-ink-70">
+										{#if currentTrack}
+											{#if currentTrack.artistUrl}
+												<a
+													href={currentTrack.artistUrl}
+													target="_blank"
+													rel="noopener noreferrer"
+													class="text-inherit no-underline transition-colors hover:text-ink-70"
+												>
+													{currentTrack.artist}
+												</a>
+											{:else}
+												{currentTrack.artist}
+											{/if}
+											{#if currentTrack.album}
+												{' · ' + currentTrack.album}
+											{/if}
+										{/if}
+									</div>
+
+									{#if currentTrack?.showProgress}
+										<div
+											class="relative mt-3 h-px bg-rail"
+											aria-label={`${Math.round(progressPercentage)}% played`}
 										>
-											{currentTrack.artist}
-										</a>
-									{:else}
-										{currentTrack.artist}
+											<div
+												class="absolute inset-y-0 left-0 h-full bg-ink/30"
+												style="width: {progressPercentage}%"
+											></div>
+										</div>
+										<div class="mt-1.5 flex justify-between font-mono text-[10px] text-ink-70">
+											<span>{formatTime(currentTrack.progress)}</span>
+											<span>{formatTime(currentTrack.duration)}</span>
+										</div>
 									{/if}
-									{#if currentTrack.album}
-										{' · ' + currentTrack.album}
-									{/if}
-								{/if}
+								</div>
 							</div>
+						</section>
 
-							{#if currentTrack?.showProgress}
-								<div
-									class="relative mt-3 h-px bg-rail"
-									aria-label={`${Math.round(progressPercentage)}% played`}
-								>
-									<div
-										class="absolute inset-y-0 left-0 h-full bg-ink/30"
-										style="width: {progressPercentage}%"
-									></div>
+						{#if currentlyReading.length > 0}
+							<section class="w-full border-t border-bd pt-6">
+								<div class="mb-4 font-sans text-[12px] tracking-[0.1em] text-ink-70 uppercase">
+									Currently Reading
 								</div>
-								<div class="mt-1.5 flex justify-between font-mono text-[9px] text-ink-70">
-									<span>{formatTime(currentTrack.progress)}</span>
-									<span>{formatTime(currentTrack.duration)}</span>
-								</div>
-							{/if}
-						</div>
-					</div>
-				</section>
-
-				{#if currentlyReading.length > 0}
-					<section class="w-full">
-						<div class="mb-4 font-sans text-[11px] tracking-[0.1em] text-ink-70 uppercase">
-							Currently Reading
-						</div>
-						<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-							{#each currentlyReading as item (item.book.id)}
-								<div class="flex gap-3">
-									<a
-										href="https://hardcover.app/books/{item.book.slug}?referrer_id=120657"
-										target="_blank"
-										rel="noopener noreferrer"
-										class="relative flex h-20 w-14 shrink-0 items-center justify-center overflow-hidden rounded-sm border border-bd bg-card-bg text-ink-20"
-									>
-										<span
-											class="-rotate-[315deg] text-center font-serif text-[9px] leading-tight tracking-wide select-none"
-											aria-hidden="true"
-										>
-											{item.book.title}
-										</span>
-										<img
-											src={item.book.cover_url}
-											srcset={getHardcoverSrcset(item.book.cover_url)}
-											sizes="56px"
-											alt={item.book.title}
-											class="absolute inset-0 h-full w-full rounded-sm object-cover"
-											loading="lazy"
-											onerror={(e) => ((e.target as HTMLElement).style.opacity = '0')}
-										/>
-									</a>
-									<div class="flex min-w-0 flex-1 flex-col justify-center">
-										<div class="truncate font-serif text-[15px] leading-tight text-ink-90">
+								<div class="flex flex-col gap-4">
+									{#each currentlyReading as item (item.book.id)}
+										<div class="flex items-start gap-4">
 											<a
 												href="https://hardcover.app/books/{item.book.slug}?referrer_id=120657"
 												target="_blank"
 												rel="noopener noreferrer"
-												class="text-inherit no-underline transition-colors duration-75 hover:text-ink-80"
+												class="relative flex h-[5.75rem] w-16 shrink-0 items-center justify-center overflow-hidden rounded-sm border border-bd bg-card-bg text-ink-20"
 											>
-												{item.book.title}
+												<span
+													class="-rotate-[315deg] text-center font-serif text-[9px] leading-tight tracking-wide select-none"
+													aria-hidden="true"
+												>
+													{item.book.title}
+												</span>
+												<img
+													src={item.book.cover_url}
+													srcset={getHardcoverSrcset(item.book.cover_url)}
+													sizes="64px"
+													alt={item.book.title}
+													class="absolute inset-0 h-full w-full rounded-sm object-cover"
+													loading="lazy"
+													onerror={(e) => ((e.target as HTMLElement).style.opacity = '0')}
+												/>
 											</a>
-										</div>
-										<div class="mt-0.5 truncate font-mono text-[10px] tracking-wider text-ink-70">
-											{item.book.authors[0] ?? 'Unknown author'}
-										</div>
-										{#if item.progress}
-											<div class="mt-1.5 font-mono text-[10px] tracking-wider text-ink-70">
-												{Math.round(item.progress.percentage)}% · {item.progress.pages_read}/{item
-													.progress.total_pages}
+											<div class="flex min-w-0 flex-1 flex-col">
+												<div class="font-serif text-[18px] leading-snug text-ink-90">
+													<a
+														href="https://hardcover.app/books/{item.book.slug}?referrer_id=120657"
+														target="_blank"
+														rel="noopener noreferrer"
+														class="text-inherit no-underline transition-colors duration-75 hover:text-ink-80"
+													>
+														{item.book.title}
+													</a>
+												</div>
+												<div
+													class="mt-1 font-mono text-[12px] leading-relaxed tracking-wider text-ink-70"
+												>
+													{item.book.authors[0] ?? 'Unknown author'}
+												</div>
+												{#if item.progress}
+													<div class="mt-2 font-mono text-[12px] tracking-wider text-ink-70">
+														{Math.round(item.progress.percentage)}% · {item.progress
+															.pages_read}/{item.progress.total_pages}
+													</div>
+												{/if}
 											</div>
-										{/if}
-									</div>
+										</div>
+									{/each}
 								</div>
-							{/each}
-						</div>
-					</section>
-				{/if}
+							</section>
+						{/if}
+					</div>
+				</div>
 			</div>
 		{/if}
 
