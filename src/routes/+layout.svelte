@@ -35,7 +35,7 @@
 	Skip to content
 </a>
 
-<div class="flex h-dvh h-screen flex-col overflow-hidden bg-bg text-ink antialiased">
+<div class="flex h-dvh flex-col overflow-hidden bg-bg text-ink antialiased">
 	<Navbar />
 	<main
 		bind:this={mainEl}
