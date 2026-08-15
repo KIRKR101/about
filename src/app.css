@@ -456,4 +456,13 @@ body {
 		content-visibility: auto;
 		contain-intrinsic-size: 0 600px;
 	}
+
+	.no-scrollbar {
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
 }

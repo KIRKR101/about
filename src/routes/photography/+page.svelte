@@ -11,6 +11,7 @@
 	let lightboxActive = $state(false);
 	let currentImageId = $state<string | null>(null);
 	let gridContainer = $state<HTMLElement | null>(null);
+	let navListEl = $state<HTMLElement | null>(null);
 
 	const allImages = Object.entries(photographyData).flatMap(([city, images]) =>
 		images.map((img) => ({ ...img, city }))
@@ -52,7 +53,10 @@
 				if (best) {
 					for (const [city, el] of sectionEls) {
 						if (el === best) {
-							activeCity = city;
+							if (city !== activeCity) {
+								activeCity = city;
+								scrollNavToCity(city);
+							}
 							break;
 						}
 					}
@@ -63,6 +67,27 @@
 		for (const el of sectionEls.values()) observer.observe(el);
 		return () => observer.disconnect();
 	});
+
+	function scrollNavToCity(city: string) {
+		const list = navListEl;
+		if (!list) return;
+		const label = list.querySelector<HTMLElement>(`[href="#${slugify(city)}"]`);
+		if (!label) return;
+		const listRect = list.getBoundingClientRect();
+		const labelRect = label.getBoundingClientRect();
+		const inset = 8;
+		if (labelRect.left < listRect.left + inset) {
+			list.scrollTo({
+				left: list.scrollLeft + (labelRect.left - listRect.left) - inset,
+				behavior: 'smooth'
+			});
+		} else if (labelRect.right > listRect.right - inset) {
+			list.scrollTo({
+				left: list.scrollLeft + (labelRect.right - listRect.right) + inset,
+				behavior: 'smooth'
+			});
+		}
+	}
 
 	function scrollToCity(city: string, e: MouseEvent) {
 		e.preventDefault();
@@ -206,17 +231,16 @@
 
 <div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
 	<div class="w-full max-w-5xl">
-		<div class="py-4">
+		<div class="pt-4">
 			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
 				<span class="opacity-90">Photography</span><span class="opacity-40">.</span>
 			</h1>
+			<div class="h-px bg-bd mt-4"></div>
 		</div>
 
-		<nav class="sticky top-16 z-30 bg-bg">
-			<div class="h-px bg-bd"></div>
-
+		<nav class="sticky top-16 z-30 bg-bg/80 backdrop-blur-sm">
 			<NavigationMenu.Root aria-label="Photography sections" class="w-full">
-				<NavigationMenu.List class="flex h-12 items-center gap-6 overflow-x-auto pl-2">
+				<NavigationMenu.List bind:ref={navListEl} class="no-scrollbar flex h-12 items-center gap-6 overflow-x-auto px-2">
 					{#each cities as city (city)}
 						<NavigationMenu.Item value={city} class="h-full shrink-0">
 							<NavigationMenu.Link
