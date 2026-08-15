@@ -592,7 +592,7 @@
 				{#each visibleWritings as writing (writing.file)}
 					<a
 						href={`/writing/${writing.file}`}
-						class="group flex w-full flex-col rounded-sm border-b border-bd/30 sm:px-1.5 py-3 no-underline last:border-0 transition-colors duration-100 ease-out hover:bg-ink/2 hover:duration-0"
+						class="group flex w-full flex-col rounded-sm border-b border-bd/30 py-3 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
 					>
 						<div class="flex w-full items-baseline justify-between">
 							<span
@@ -630,7 +630,7 @@
 				{#each visibleProjects as project (project.title)}
 					<a
 						href={`/project/${project.id}`}
-						class="group flex w-full flex-col rounded-sm border-b border-bd/30 sm:px-1.5 py-3 no-underline last:border-0 transition-colors duration-100 ease-out hover:bg-ink/2 hover:duration-0"
+						class="group flex w-full flex-col rounded-sm border-b border-bd/30 py-3 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
 					>
 						<div class="flex w-full items-baseline justify-between">
 							<span

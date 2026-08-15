@@ -71,4 +71,6 @@ out += `\n## Projects\n\n`;
 for (const p of projects) out += render(p, 'Project');
 
 writeFileSync(join(ROOT, 'static', 'llms-full.txt'), out);
-console.log(`Wrote static/llms-full.txt (${Buffer.byteLength(out, 'utf8').toLocaleString()} bytes, ${writings.length} writings, ${projects.length} projects)`);
+console.log(
+	`Wrote static/llms-full.txt (${Buffer.byteLength(out, 'utf8').toLocaleString()} bytes, ${writings.length} writings, ${projects.length} projects)`
+);
