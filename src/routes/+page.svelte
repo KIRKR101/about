@@ -577,7 +577,7 @@
 		{/if}
 
 		<section class="cv-auto py-6">
-			<div class="mb-4 flex items-baseline justify-between">
+			<div class="mb-4 flex items-baseline justify-between sm:px-1.5">
 				<div class="font-serif text-[24px] text-ink-90 italic">Writings</div>
 				<a
 					href="/writings"
@@ -592,7 +592,7 @@
 				{#each visibleWritings as writing (writing.file)}
 					<a
 						href={`/writing/${writing.file}`}
-						class="group flex w-full flex-col border-b border-bd/30 py-3 no-underline last:border-0"
+						class="group flex w-full flex-col rounded-sm border-b border-bd/30 sm:px-1.5 py-3 no-underline last:border-0 transition-colors duration-100 ease-out hover:bg-ink/2 hover:duration-0"
 					>
 						<div class="flex w-full items-baseline justify-between">
 							<span
@@ -615,7 +615,7 @@
 		</section>
 
 		<section class="cv-auto pt-6">
-			<div class="mb-4 flex items-baseline justify-between">
+			<div class="mb-4 flex items-baseline justify-between sm:px-1.5">
 				<div class="font-serif text-[24px] text-ink-90 italic">Projects</div>
 				<a
 					href="/projects"
@@ -630,7 +630,7 @@
 				{#each visibleProjects as project (project.title)}
 					<a
 						href={`/project/${project.id}`}
-						class="group flex w-full flex-col border-b border-bd/30 py-3 no-underline last:border-0"
+						class="group flex w-full flex-col rounded-sm border-b border-bd/30 sm:px-1.5 py-3 no-underline last:border-0 transition-colors duration-100 ease-out hover:bg-ink/2 hover:duration-0"
 					>
 						<div class="flex w-full items-baseline justify-between">
 							<span

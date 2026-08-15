@@ -53,13 +53,13 @@
 			<div class="flex flex-col gap-10">
 				{#each groupedWritings as group (group.year)}
 					<div class="flex flex-col">
-						<h2 class="mb-3 font-mono text-[14px] text-ink-40 uppercase">{group.year}</h2>
+						<h2 class="mb-3 sm:px-1.5 font-mono text-[14px] text-ink-40 uppercase">{group.year}</h2>
 
 						<div class="flex flex-col">
 							{#each group.writings as writing (writing.file)}
 								<a
 									href={`/writing/${writing.file}`}
-									class="group flex w-full flex-col border-b border-bd/30 py-3 no-underline last:border-0"
+									class="group flex w-full flex-col rounded-sm border-b border-bd/30 sm:px-1.5 py-3 no-underline last:border-0 transition-colors duration-100 ease-out hover:bg-ink/2 hover:duration-0"
 								>
 									<div class="flex w-full items-baseline justify-between">
 										<span
