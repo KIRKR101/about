@@ -348,10 +348,10 @@
 		<section class="pb-6">
 			<div class="flex items-start gap-6">
 				<div class="min-w-0">
-					<p class="font-sans text-[14px] leading-[1.75] text-ink-70 sm:pt-2">
-						I'm a first year CompE student @ Warwick. I enjoy C and TypeScript, and web technologies
+					<p class="-mt-[0.15em] font-sans text-[15.5px] leading-[1.75] text-ink-70">
+						I'm a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech
 						more generally; this site is built on Svelte. I'm also interested in politics,
-						philosophy, economics, and art - particularly Dutch.
+						philosophy, economics and art - particularly Dutch.
 					</p>
 
 					<button
@@ -366,11 +366,11 @@
 					</button>
 				</div>
 
-				<div class="hidden w-64 shrink-0 rounded-sm sm:block">
+				<div class="hidden w-66 shrink-0 rounded-sm sm:block">
 					<img
 						src="/hero.webp"
-						alt="The Onsen Range Seen from Amakusa by Kawase Hasui"
-						class="w-64 rounded-sm object-cover dark:invert"
+						alt="Sketch of Landscape with Person on a Path by Anton Mauve"
+						class="w-66 rounded-sm object-cover dark:invert"
 						loading="lazy"
 					/>
 				</div>
