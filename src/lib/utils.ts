@@ -57,28 +57,71 @@ export function getHardcoverSrcset(coverUrl: string): string {
 	}).join(', ');
 }
 
+interface LastCommitRepo {
+	name: string;
+	url: string;
+	lastCommitDate: string | null;
+}
+
+const LAST_COMMIT_CACHE_KEY = 'gh-last-commit-cache';
+const LAST_COMMIT_CACHE_TTL = 12 * 60 * 60 * 1000;
+
+function loadCachedRepos(): LastCommitRepo[] | null {
+	if (typeof window === 'undefined') return null;
+	try {
+		const stored = localStorage.getItem(LAST_COMMIT_CACHE_KEY);
+		if (!stored) return null;
+		const parsed = JSON.parse(stored);
+		if (parsed && Array.isArray(parsed.repositories) && typeof parsed.timestamp === 'number') {
+			if (Date.now() - parsed.timestamp > LAST_COMMIT_CACHE_TTL) {
+				localStorage.removeItem(LAST_COMMIT_CACHE_KEY);
+				return null;
+			}
+			return parsed.repositories;
+		}
+		return null;
+	} catch {
+		return null;
+	}
+}
+
+function saveCachedRepos(repositories: LastCommitRepo[]) {
+	if (typeof window === 'undefined') return;
+	try {
+		localStorage.setItem(
+			LAST_COMMIT_CACHE_KEY,
+			JSON.stringify({ repositories, timestamp: Date.now() })
+		);
+	} catch {
+		// localStorage not available
+	}
+}
+
+function findRepo(repositories: LastCommitRepo[], repoUrl: string) {
+	const normalise = (url: string) =>
+		url
+			.replace(/^https?:\/\//, '')
+			.replace(/\/+$/, '')
+			.replace(/\.git$/, '')
+			.toLowerCase();
+	const target = normalise(repoUrl);
+	const repo = repositories.find((r) => normalise(r.url) === target);
+	return repo?.lastCommitDate ?? null;
+}
+
 export async function getLastCommitDate(repoUrl: string): Promise<string | null> {
+	const cached = loadCachedRepos();
+	if (cached) return findRepo(cached, repoUrl);
+
 	try {
 		const res = await fetch('https://github.kirkr.xyz/api/last-commit');
 		if (!res.ok) return null;
 
-		const data: {
-			repositories: { name: string; url: string; lastCommitDate: string | null }[] | null;
-		} = await res.json();
-
+		const data: { repositories: LastCommitRepo[] | null } = await res.json();
 		if (!data.repositories) return null;
 
-		const normalise = (url: string) =>
-			url
-				.replace(/^https?:\/\//, '')
-				.replace(/\/+$/, '')
-				.replace(/\.git$/, '')
-				.toLowerCase();
-		const target = normalise(repoUrl);
-
-		const repo = data.repositories.find((r) => normalise(r.url) === target);
-
-		return repo?.lastCommitDate ?? null;
+		saveCachedRepos(data.repositories);
+		return findRepo(data.repositories, repoUrl);
 	} catch {
 		return null;
 	}
