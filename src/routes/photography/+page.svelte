@@ -230,17 +230,20 @@
 </svelte:head>
 
 <div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
-	<div class="w-full max-w-5xl">
+	<main class="w-full max-w-5xl">
 		<div class="pt-4">
 			<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
 				<span class="opacity-90">Photography</span><span class="opacity-40">.</span>
 			</h1>
-			<div class="h-px bg-bd mt-4"></div>
+			<div class="mt-4 h-px bg-bd"></div>
 		</div>
 
 		<nav class="sticky top-16 z-30 bg-bg/80 backdrop-blur-sm">
 			<NavigationMenu.Root aria-label="Photography sections" class="w-full">
-				<NavigationMenu.List bind:ref={navListEl} class="no-scrollbar flex h-12 items-center gap-6 overflow-x-auto px-2">
+				<NavigationMenu.List
+					bind:ref={navListEl}
+					class="no-scrollbar flex h-12 items-center gap-6 overflow-x-auto px-2"
+				>
 					{#each cities as city (city)}
 						<NavigationMenu.Item value={city} class="h-full shrink-0">
 							<NavigationMenu.Link
@@ -268,7 +271,7 @@
 			</NavigationMenu.Root>
 		</nav>
 
-		<main class="min-w-0 flex-1 pt-8">
+		<div class="min-w-0 flex-1 pt-8">
 			<div bind:this={gridContainer}>
 				{#each Object.entries(photographyData) as [city, images] (city)}
 					<section
@@ -305,10 +308,10 @@
 					</section>
 				{/each}
 			</div>
-		</main>
+		</div>
 
 		<Footer />
-	</div>
+	</main>
 </div>
 
 {#if lightboxActive && currentItem}

@@ -56,16 +56,16 @@
 
 	$effect(() => {
 		if (!menuOpen) {
-			document.body.style.overflow = '';
+			document.documentElement.style.overflow = '';
 			return;
 		}
-		document.body.style.overflow = 'hidden';
+		document.documentElement.style.overflow = 'hidden';
 		function handleKeydown(e: KeyboardEvent) {
 			if (e.key === 'Escape') closeMenu();
 		}
 		window.addEventListener('keydown', handleKeydown);
 		return () => {
-			document.body.style.overflow = '';
+			document.documentElement.style.overflow = '';
 			window.removeEventListener('keydown', handleKeydown);
 		};
 	});
