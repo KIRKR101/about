@@ -349,11 +349,11 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <div class="flex min-h-[calc(100dvh-4rem)] items-center justify-center px-6 py-6 md:py-16">
-	<main class="w-full max-w-[600px]">
-		<section class="pb-6">
+	<main class="w-full max-w-[700px]">
+		<section class="pb-4">
 			<div class="flex items-start gap-6">
 				<div class="min-w-0">
-					<p class="-mt-[0.15em] font-sans text-[15.5px] leading-[1.75] text-ink-70">
+					<p class="mt-3 font-sans text-[16px] leading-[1.75] text-ink-80">
 						I'm a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech more
 						generally; this site is built on Svelte. I'm also interested in politics, philosophy,
 						economics and art - particularly Dutch.
@@ -373,12 +373,12 @@
 					</button>
 				</div>
 
-				<div class="hidden w-66 shrink-0 rounded-sm sm:block">
+				<div class="hidden w-74 shrink-0 rounded-sm sm:block">
 					<img
 						src="/hero.webp"
 						alt="Sketch of Landscape with Person on a Path by Anton Mauve"
-						class="w-66 rounded-sm object-cover dark:invert"
-						loading="lazy"
+						class="w-74 rounded-sm object-cover dark:invert"
+						fetchpriority="high"
 					/>
 				</div>
 			</div>
@@ -589,7 +589,7 @@
 		{/if}
 
 		<section class="cv-auto py-6">
-			<div class="mb-4 flex items-baseline justify-between sm:px-1.5">
+			<div class="mb-2 flex items-baseline justify-between sm:px-1.5">
 				<div class="font-serif text-[24px] text-ink-90 italic">Writings</div>
 				<a
 					href="/writings"
@@ -598,17 +598,17 @@
 				>
 			</div>
 
-			<div class="mb-4 h-px bg-bd"></div>
+			<div class="mb-2 h-px bg-bd"></div>
 
 			<div class="flex flex-col">
 				{#each visibleWritings as writing (writing.file)}
 					<a
 						href={`/writing/${writing.file}`}
-						class="group flex w-full flex-col rounded-sm border-b border-bd/30 py-3 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
+						class="group flex w-full flex-col rounded-sm border-b border-bd/40 py-2.5 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
 					>
 						<div class="flex w-full items-baseline justify-between">
 							<span
-								class="font-sans text-[14px] text-ink-70 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2"
+								class="font-sans text-[14px] text-ink-80 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2"
 							>
 								{writing.title}
 							</span>
@@ -627,7 +627,7 @@
 		</section>
 
 		<section class="cv-auto pt-6">
-			<div class="mb-4 flex items-baseline justify-between sm:px-1.5">
+			<div class="mb-2 flex items-baseline justify-between sm:px-1.5">
 				<div class="font-serif text-[24px] text-ink-90 italic">Projects</div>
 				<a
 					href="/projects"
@@ -636,17 +636,17 @@
 				>
 			</div>
 
-			<div class="mb-4 h-px bg-bd"></div>
+			<div class="mb-2 h-px bg-bd"></div>
 
 			<div class="flex flex-col">
 				{#each visibleProjects as project (project.title)}
 					<a
 						href={`/project/${project.id}`}
-						class="group flex w-full flex-col rounded-sm border-b border-bd/30 py-3 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
+						class="group flex w-full flex-col rounded-sm border-b border-bd/40 py-2.5 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
 					>
 						<div class="flex w-full items-baseline justify-between">
 							<span
-								class="font-sans text-[14px] text-ink-70 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2"
+								class="font-sans text-[14px] text-ink-80 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2"
 							>
 								{project.title}
 							</span>
