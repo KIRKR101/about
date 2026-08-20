@@ -16,6 +16,17 @@ export const projects = [
 		]
 	},
 	{
+		id: 'lanx',
+		title: 'Lanx',
+		link: null,
+		github: 'https://github.com/Kirkr101/lanx',
+		description:
+			'Transfer files and directories between machines over a local network.',
+		shortDescription: 'LAN file transfer',
+		tech: ['Rust', 'Tokio'],
+		firstCommit: '19 Aug 2026',
+	},
+	{
 		id: 'audioshare',
 		title: 'Audioshare',
 		link: null,
