@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="robots" content="noindex" />
+		<title>404 | kirkr.xyz</title>
+		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+		<link rel="preload" href="/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
+		<link
+			rel="preload"
+			href="/fonts/instrument-serif/instrument-serif-latin-regular.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin
+		/>
+		<link
+			rel="preload"
+			href="/fonts/instrument-serif/instrument-serif-latin-italic.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin
+		/>
+		<style>
+			:root {
+				color-scheme: light dark;
+			}
+			body {
+				margin: 0;
+				padding: 20vh 1.5rem 3rem;
+				font-family: 'Geist', system-ui, sans-serif;
+				line-height: 1.7;
+				background: #faf9f5;
+				color: #1c1c1a;
+			}
+			@media (prefers-color-scheme: dark) {
+				body {
+					background: #131311;
+					color: #e8e6df;
+				}
+			}
+			main {
+				max-width: 600px;
+			}
+			.label {
+				font-size: 11px;
+				letter-spacing: 0.1em;
+				text-transform: uppercase;
+				opacity: 0.7;
+			}
+			h1 {
+				font-family: 'Instrument Serif', Georgia, serif;
+				font-style: italic;
+				font-weight: 400;
+				font-size: 26px;
+				line-height: 1.2;
+				margin: 0.75rem 0 0;
+			}
+			p {
+				font-size: 14px;
+				margin: 1rem 0 0;
+				opacity: 0.85;
+			}
+			a {
+				color: inherit;
+			}
+			ul {
+				font-size: 14px;
+				margin: 1rem 0 0;
+				padding-left: 1.25rem;
+				opacity: 0.85;
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<div class="label">Error 404</div>
+			<h1>Page not found</h1>
+			<p>The page you're looking for doesn't exist or has been moved.</p>
+			<p>Useful entry points instead:</p>
+			<ul>
+				<li><a href="/llms.txt">/llms.txt</a> &mdash; site index for agents</li>
+				<li><a href="/llms-full.txt">/llms-full.txt</a> &mdash; full text of every page in one file</li>
+				<li><a href="/sitemap.xml">/sitemap.xml</a> &mdash; machine-readable list of all pages</li>
+				<li><a href="/">/</a> &mdash; home</li>
+			</ul>
+		</main>
+	</body>
+</html>

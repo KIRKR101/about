@@ -20,6 +20,15 @@
 		<div class="mt-4 font-sans text-[14px] leading-[1.7] text-ink-70">
 			The page you're looking for doesn't exist or has been moved.
 		</div>
+		<div class="mt-4 font-sans text-[14px] leading-[1.7] text-ink-70">
+			Browse the site index at
+			<a href="/llms.txt" class="underline transition-colors hover:text-ink">/llms.txt</a>
+			or the full page list at
+			<a href="/sitemap.xml" class="underline transition-colors hover:text-ink">/sitemap.xml</a>.
+			The text of every page is also available as
+			<a href="/llms-full.txt" class="underline transition-colors hover:text-ink">/llms-full.txt</a
+			>.
+		</div>
 		<div class="mt-6">
 			<a
 				href="/"
