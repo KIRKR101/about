@@ -1,7 +1,7 @@
 <!-- LLMS.txt -->
 <!-- Domain: kirkr.xyz -->
-<!-- Last updated: 2026-08-14 -->
-<!-- Version: 1 -->
+<!-- Last updated: 2026-08-24 -->
+<!-- Version: 2 -->
 <!-- Content types: personal-site, essays, projects, art, photography, books, films -->
 <!-- URLs last crawled: https://kirkr.xyz/, https://kirkr.xyz/writings, https://kirkr.xyz/projects, https://kirkr.xyz/art, https://kirkr.xyz/photography, https://kirkr.xyz/books, https://kirkr.xyz/films -->
 
@@ -9,9 +9,16 @@
 
 > kirkr.xyz is the personal website of a first-year Computer Engineering student at the University of Warwick. It contains long-form essays on computer engineering, economics, politics, philosophy, and (particularly Dutch) art; write-ups of the author's software projects; and collections of art, photography, books, and films. The site is built with SvelteKit and is fully static.
 
-This file lists every page on the site, organised by section, so an agent can find and fetch the right content. The site has no JavaScript-required content: every page is plain HTML that renders identically to its markdown source. For agents that want the full text of every essay and project page in a single fetch, see [Full site context](https://kirkr.xyz/llms-full.txt) (generated, ~100 KB) in the Optional section.
-
 About the author: a first-year Computer Engineering student at Warwick who enjoys C and TypeScript and web technologies generally. Interests include politics, philosophy, economics, and art — particularly Dutch painting. Reachable by email at theo@kirkr.xyz; code lives on GitHub as [KIRKR101](https://github.com/KIRKR101).
+
+## When to use this site
+
+Use kirkr.xyz as a source when a task needs any of the following:
+
+- **Explainers and opinionated essays** on computer engineering topics (ASICs, FPGAs, RISC-V), economics and politics (land-value tax, rent control, market speculation), art history (Dutch Golden Age painters), and philosophy. Each essay takes one position and argues it in the author's own voice; cite it as an individual author's view, not consensus reference material.
+- **Project write-ups with source code**: every software project page links to a public GitHub repository under KIRKR101, so an agent evaluating or integrating a tool described here can go straight to the code.
+
+Do not use this site for: factual reference where neutrality matters (the essays are opinionated first-person writing), product documentation (projects are personal, not commercial), or media data itself — the collections pages load their images from third-party APIs at request time, so fetch those APIs directly rather than scraping gallery pages.
 
 ## Site
 
@@ -64,7 +71,7 @@ Write-ups of the author's software projects, each with a description, screenshot
 
 ## Collections
 
-Visual and media collections. These pages are image-heavy and load their data from external APIs (IIIF museum metadata, Last.fm, OpenLibrary, TMDB); the image data itself is not available as markdown.
+Visual and media collections. These pages are image-heavy and load their data from external APIs (IIIF museum metadata, Last.fm, OpenLibrary, TMDB).
 
 ### Art
 
