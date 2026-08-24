@@ -16,6 +16,61 @@
 		<priority>0.8</priority>
 	</url>
 	<url>
+		<loc>https://kirkr.xyz/project/wasmagick</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	<url>
+		<loc>https://kirkr.xyz/project/lanx</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	<url>
+		<loc>https://kirkr.xyz/project/audioshare</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	<url>
+		<loc>https://kirkr.xyz/project/dezoomify-rs-jxl</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	<url>
+		<loc>https://kirkr.xyz/project/voxor</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	<url>
+		<loc>https://kirkr.xyz/project/cpusim</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	<url>
+		<loc>https://kirkr.xyz/project/streamline</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	<url>
+		<loc>https://kirkr.xyz/project/linux-keylogger</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	<url>
+		<loc>https://kirkr.xyz/project/mini_malloc</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	<url>
+		<loc>https://kirkr.xyz/project/open-gallery</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	<url>
+		<loc>https://kirkr.xyz/project/rmt-debrid</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	<url>
 		<loc>https://kirkr.xyz/films</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.8</priority>
@@ -27,6 +82,11 @@
 	</url>
 	<url>
 		<loc>https://kirkr.xyz/photography</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>https://kirkr.xyz/books</loc>
 		<changefreq>monthly</changefreq>
 		<priority>0.8</priority>
 	</url>
@@ -71,12 +131,22 @@
 		<priority>0.7</priority>
 	</url>
 	<url>
+		<loc>https://kirkr.xyz/writing/distillation</loc>
+		<changefreq>yearly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
 		<loc>https://kirkr.xyz/writing/history-of-palestine</loc>
 		<changefreq>yearly</changefreq>
 		<priority>0.7</priority>
 	</url>
 	<url>
 		<loc>https://kirkr.xyz/writing/rent-control</loc>
+		<changefreq>yearly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://kirkr.xyz/writing/philosophical-credo</loc>
 		<changefreq>yearly</changefreq>
 		<priority>0.7</priority>
 	</url>
