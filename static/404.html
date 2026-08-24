@@ -21,69 +21,352 @@
 			type="font/woff2"
 			crossorigin
 		/>
+		<script>
+			(function () {
+				var isDark = false;
+				try {
+					var theme = localStorage.getItem('theme');
+					isDark = theme === 'dark';
+					if (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+						isDark = true;
+					}
+				} catch {
+					if (window.matchMedia('(prefers-color-scheme: dark)').matches) isDark = true;
+				}
+				if (isDark) document.documentElement.classList.add('dark');
+			})();
+		</script>
 		<style>
+			@font-face {
+				font-family: 'Geist';
+				src: url('/fonts/geist/geist-latin.woff2') format('woff2');
+				font-weight: 300 600;
+				font-style: normal;
+				font-display: swap;
+			}
+			@font-face {
+				font-family: 'Instrument Serif';
+				src: url('/fonts/instrument-serif/instrument-serif-latin-regular.woff2') format('woff2');
+				font-weight: 400;
+				font-style: normal;
+				font-display: swap;
+			}
+			@font-face {
+				font-family: 'Instrument Serif';
+				src: url('/fonts/instrument-serif/instrument-serif-latin-italic.woff2') format('woff2');
+				font-weight: 400;
+				font-style: italic;
+				font-display: swap;
+			}
+
 			:root {
-				color-scheme: light dark;
+				color-scheme: light;
+				--bg: #fafafa;
+				--ink: #0a0a0b;
+				--bd: rgba(0, 0, 0, 0.1);
+				--ink-30: rgba(10, 10, 11, 0.55);
+				--ink-70: rgba(10, 10, 11, 0.88);
+				--ink-90: rgba(10, 10, 11, 0.97);
+				--focus: rgba(0, 0, 0, 0.4);
+			}
+			.dark {
+				color-scheme: dark;
+				--bg: #0a0a0b;
+				--ink: #ffffff;
+				--bd: rgba(255, 255, 255, 0.08);
+				--ink-30: rgba(255, 255, 255, 0.4);
+				--ink-70: rgba(255, 255, 255, 0.78);
+				--ink-90: rgba(255, 255, 255, 0.94);
+				--focus: rgba(255, 255, 255, 0.4);
+			}
+
+			html {
+				background-color: var(--bg);
+				overflow-y: scroll;
+				scrollbar-gutter: stable both-edges;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
 			}
 			body {
+				background-color: var(--bg);
+				color: var(--ink);
 				margin: 0;
-				padding: 20vh 1.5rem 3rem;
-				font-family: 'Geist', system-ui, sans-serif;
-				line-height: 1.7;
-				background: #faf9f5;
-				color: #1c1c1a;
+				font-family: 'Geist', ui-sans-serif, system-ui, sans-serif;
 			}
-			@media (prefers-color-scheme: dark) {
-				body {
-					background: #131311;
-					color: #e8e6df;
+			a:focus-visible,
+			button:focus-visible {
+				outline: none;
+			}
+			a:focus-visible,
+			button:focus-visible {
+				outline: 1px solid var(--focus);
+				outline-offset: 2px;
+			}
+
+			/* = flex min-h-full flex-col items-center justify-start px-6 pt-[20vh] pb-6 lg:pt-[24vh] lg:pb-16 */
+			.error-shell {
+				display: flex;
+				min-height: 100dvh;
+				flex-direction: column;
+				align-items: center;
+				justify-content: flex-start;
+				padding: 20vh 1.5rem 1.5rem;
+			}
+			@media (min-width: 1024px) {
+				.error-shell {
+					padding-top: 24vh;
+					padding-bottom: 4rem;
 				}
 			}
+
+			/* = w-full max-w-[600px] pl-6 md:pl-10 */
 			main {
+				width: 100%;
 				max-width: 600px;
+				padding-left: 1.5rem;
 			}
-			.label {
+			@media (min-width: 768px) {
+				main {
+					padding-left: 2.5rem;
+				}
+			}
+
+			/* = font-sans text-[11px] tracking-[0.1em] text-ink-70 uppercase */
+			.label,
+			.home-link {
 				font-size: 11px;
 				letter-spacing: 0.1em;
 				text-transform: uppercase;
-				opacity: 0.7;
+				color: var(--ink-70);
 			}
-			h1 {
+
+			/* = mt-3 font-serif text-[26px] leading-tight text-ink-90 italic */
+			.title {
+				margin-top: 0.75rem;
 				font-family: 'Instrument Serif', Georgia, serif;
 				font-style: italic;
 				font-weight: 400;
 				font-size: 26px;
-				line-height: 1.2;
-				margin: 0.75rem 0 0;
+				line-height: 1.25;
+				color: var(--ink-90);
 			}
-			p {
+
+			/* = mt-4 font-sans text-[14px] leading-[1.7] text-ink-70 */
+			.body-text {
+				margin-top: 1rem;
 				font-size: 14px;
-				margin: 1rem 0 0;
-				opacity: 0.85;
+				line-height: 1.7;
+				color: var(--ink-70);
 			}
-			a {
+
+			/* = underline transition-colors hover:text-ink */
+			.body-text a {
 				color: inherit;
+				text-decoration: underline;
+				text-underline-offset: auto;
+				transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 			}
-			ul {
-				font-size: 14px;
-				margin: 1rem 0 0;
-				padding-left: 1.25rem;
-				opacity: 0.85;
+			.body-text a:hover {
+				color: var(--ink);
+			}
+
+			/* = mt-6 ... no-underline hover:text-ink */
+			.home-link {
+				display: inline-block;
+				margin-top: 1.5rem;
+				text-decoration: none;
+				transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+			}
+			.home-link:hover {
+				color: var(--ink);
+			}
+
+			/* Footer: pt-8 / mb-4 h-px bg-bd / flex items-center gap-5 text-[11px] */
+			footer {
+				padding-top: 2rem;
+			}
+			.footer-rule {
+				height: 1px;
+				margin-bottom: 1rem;
+				background-color: var(--bd);
+			}
+			.footer-row {
+				display: flex;
+				align-items: center;
+				gap: 1.25rem;
+				font-size: 11px;
+			}
+			/* group inline-flex items-center gap-1 text-ink underline decoration-ink/20 underline-offset-2 hover:decoration-ink */
+			.footer-link {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.25rem;
+				color: var(--ink);
+				text-decoration: underline;
+				text-decoration-color: color-mix(in srgb, var(--ink) 20%, transparent);
+				text-underline-offset: 2px;
+				transition: text-decoration-color 0.1s ease;
+			}
+			.footer-link:hover {
+				text-decoration-color: var(--ink);
+			}
+			.footer-link svg {
+				color: var(--ink-30);
+				transition: color 0.1s ease;
+			}
+			.footer-link:hover svg {
+				color: var(--ink-70);
+			}
+			/* group ml-auto ... theme toggle */
+			.theme-toggle {
+				margin-left: auto;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.375rem;
+				padding: 0;
+				border: 0;
+				background: none;
+				cursor: pointer;
+				color: var(--ink);
+				font: inherit;
+				transition: color 0.1s ease;
+			}
+			.theme-toggle:hover {
+				color: var(--ink-70);
+			}
+			.theme-toggle svg {
+				color: var(--ink-30);
+				transition: color 0.1s ease;
+			}
+			.theme-toggle:hover svg {
+				color: var(--ink-70);
+			}
+			.theme-toggle .icon-sun {
+				display: none;
+			}
+			.dark .theme-toggle .icon-moon {
+				display: none;
+			}
+			.dark .theme-toggle .icon-sun {
+				display: block;
 			}
 		</style>
 	</head>
 	<body>
-		<main>
-			<div class="label">Error 404</div>
-			<h1>Page not found</h1>
-			<p>The page you're looking for doesn't exist or has been moved.</p>
-			<p>Useful entry points instead:</p>
-			<ul>
-				<li><a href="/llms.txt">/llms.txt</a> &mdash; site index for agents</li>
-				<li><a href="/llms-full.txt">/llms-full.txt</a> &mdash; full text of every page in one file</li>
-				<li><a href="/sitemap.xml">/sitemap.xml</a> &mdash; machine-readable list of all pages</li>
-				<li><a href="/">/</a> &mdash; home</li>
-			</ul>
-		</main>
+		<div class="error-shell">
+			<main>
+				<div class="label">Error 404</div>
+				<div class="title">Page not found</div>
+				<div class="body-text">
+					The page you're looking for doesn't exist or has been moved.
+				</div>
+				<div class="body-text">
+					Browse the site index at
+					<a href="/llms.txt">/llms.txt</a>
+					or the full page list at
+					<a href="/sitemap.xml">/sitemap.xml</a>.
+					The text of every page is also available as
+					<a href="/llms-full.txt">/llms-full.txt</a>.
+				</div>
+				<div class="home-link-wrap">
+					<a href="/" class="home-link">Return home</a>
+				</div>
+
+				<footer>
+					<div class="footer-rule"></div>
+					<div class="footer-row">
+						<a href="mailto:theo@kirkr.xyz" class="footer-link"
+							>Email<svg
+								width="14"
+								height="14"
+								viewBox="0 0 16 16"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+								aria-hidden="true"
+							><path
+								d="M12 10V4m0 0H6m6 0l-7.833 7.833"
+								stroke="currentColor"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							></path></svg
+						></a>
+						<a
+							href="https://github.com/KIRKR101"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="footer-link"
+							>Github<svg
+								width="14"
+								height="14"
+								viewBox="0 0 16 16"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+								aria-hidden="true"
+								><path
+									d="M12 10V4m0 0H6m6 0l-7.833 7.833"
+									stroke="currentColor"
+									stroke-width="1.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								></path></svg
+						></a>
+						<button type="button" class="theme-toggle" aria-label="Toggle theme">
+							<svg
+								class="icon-moon"
+								width="15"
+								height="15"
+								viewBox="0 0 24 24"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+								aria-hidden="true"
+								><path
+									d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"
+									stroke="currentColor"
+									stroke-width="1.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								></path></svg
+							>
+							<svg
+								class="icon-sun"
+								width="15"
+								height="15"
+								viewBox="0 0 24 24"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+								aria-hidden="true"
+								><circle cx="12" cy="12" r="4" fill="currentColor"></circle><path
+									d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+									stroke="currentColor"
+									stroke-width="1.5"
+									stroke-linecap="round"
+								></path></svg
+							>
+						</button>
+					</div>
+				</footer>
+			</main>
+		</div>
+
+		<script>
+			document.querySelector('.theme-toggle').addEventListener('click', function () {
+				var root = document.documentElement;
+				var next = root.classList.contains('dark') ? 'light' : 'dark';
+				root.classList.add('theme-transition-off');
+				root.classList.toggle('dark', next === 'dark');
+				try {
+					localStorage.setItem('theme', next);
+				} catch {}
+				requestAnimationFrame(function () {
+					requestAnimationFrame(function () {
+						root.classList.remove('theme-transition-off');
+					});
+				});
+				setTimeout(function () {
+					root.classList.remove('theme-transition-off');
+				}, 100);
+			});
+		</script>
 	</body>
 </html>
