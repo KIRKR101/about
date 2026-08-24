@@ -17,12 +17,18 @@
 	<meta property="og:description" content="Writing on computer engineering, and other interests." />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://kirkr.xyz" />
-	<meta name="twitter:card" content="summary" />
+	<meta property="og:image" content="https://kirkr.xyz/hero.webp" />
+	<meta
+		property="og:image:alt"
+		content="Sketch of Landscape with Person on a Path by Anton Mauve"
+	/>
+	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content="kirkr.xyz" />
 	<meta
 		name="twitter:description"
 		content="Writing on computer engineering, and other interests."
 	/>
+	<meta name="twitter:image" content="https://kirkr.xyz/hero.webp" />
 	<link rel="describedby" type="text/plain" href="/llms.txt" />
 </svelte:head>
 
