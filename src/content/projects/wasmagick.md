@@ -63,7 +63,7 @@ height="h-[640px]"
 - Canvas Extent (W/H + gravity + background colour picker)
 - Border (size slider + colour picker)
 
-### 4. colour & Tone
+### 4. Colour & Tone
 
 - Adjust: Brightness, Saturation, Hue sliders (modulate) + Contrast (brightness-contrast)
 - Normalize, Auto Level, Auto Gamma toggles
