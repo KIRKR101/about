@@ -6,8 +6,8 @@ const projects = defineCollection({
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
-		github: z.string().optional(),
-	}),
+		github: z.string().optional()
+	})
 });
 
 const writings = defineCollection({
@@ -16,8 +16,8 @@ const writings = defineCollection({
 		title: z.string(),
 		longTitle: z.string().optional(),
 		date: z.string(),
-		snippet: z.string(),
-	}),
+		snippet: z.string()
+	})
 });
 
 export const collections = { projects, writings };

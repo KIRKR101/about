@@ -5,20 +5,21 @@ import { join } from 'path';
 
 const md = new MarkdownIt({ html: true, linkify: true, typographer: false }).use(footnote);
 
-export function preprocessMarkdown(content: string, fileName?: string): string {
+export function preprocessMarkdown(content: string, _fileName?: string): string {
+	void _fileName;
 	let transformed = content;
 
 	// Transforms Obsidian-style wiki image syntax to standard Markdown:
 	// ![[filename|alt]] → ![alt](/writing/filename)
 	transformed = transformed.replace(
 		/!\[\[([^|\]]+)(?:\|([^\]]+))?\]\]/g,
-		(_, file, alt) => `![${alt ?? ''}](/writing/${file})`,
+		(_, file, alt) => `![${alt ?? ''}](/writing/${file})`
 	);
 
 	// Transforms ```html code blocks into raw HTML:
 	transformed = transformed.replace(
 		/```html\r?\n([\s\S]*?)\r?\n```/g,
-		(_, html) => `<div class="html-block">${html}</div>`,
+		(_, html) => `<div class="html-block">${html}</div>`
 	);
 
 	// Inlines SVG files referenced in Markdown as embedded HTML elements.
@@ -34,33 +35,44 @@ export function preprocessMarkdown(content: string, fileName?: string): string {
 			} catch {
 				return match;
 			}
-		},
+		}
 	);
 
-		// Transform Svelte Carousel components to SSR HTML matching Carousel.svelte 1:1
+	// Transform Svelte Carousel components to SSR HTML matching Carousel.svelte 1:1
 	// <Carousel images={[...]} captions={[...]} height="..." />
 	function escapeHtmlAttr(s: string) {
-		return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		return s
+			.replace(/&/g, '&amp;')
+			.replace(/"/g, '&quot;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;');
 	}
 	function parseJsArrayLiteral(src: string): string[] {
 		// Try to evaluate as JS array literal (handles single quotes, trailing commas)
 		// This mirrors how Svelte parses the prop: it's a JS expression
 		try {
 			// Use Function to evaluate safely (markdown is trusted)
-			// eslint-disable-next-line no-new-func
 			const fn = new Function(`return (${src})`);
 			const val = fn();
 			if (Array.isArray(val)) return val.map(String);
-		} catch {}
+		} catch {
+			void 0;
+		}
 		// Fallback: naive parse
 		try {
 			const json = src.replace(/'/g, '"').replace(/,\s*]/g, ']');
 			const parsed = JSON.parse(json);
 			if (Array.isArray(parsed)) return parsed.map(String);
-		} catch {}
+		} catch {
+			void 0;
+		}
 		return [];
 	}
-	function buildCarouselHtml(imagesSrc: string, captionsSrc: string | undefined, height: string | undefined) {
+	function buildCarouselHtml(
+		imagesSrc: string,
+		captionsSrc: string | undefined,
+		height: string | undefined
+	) {
 		const images = parseJsArrayLiteral(imagesSrc);
 		const captions = captionsSrc ? parseJsArrayLiteral(captionsSrc) : [];
 		const h = height || 'h-[320px] md:h-[400px]';
@@ -91,15 +103,14 @@ export function preprocessMarkdown(content: string, fileName?: string): string {
 
 	transformed = transformed.replace(
 		/<Carousel\s+images=\{(\[[\s\S]*?\])\}\s*captions=\{(\[[\s\S]*?\])\}\s*height="([^"]*)"\s*\/>/g,
-		(_, images, captions, height) => buildCarouselHtml(images, captions, height),
+		(_, images, captions, height) => buildCarouselHtml(images, captions, height)
 	);
 	transformed = transformed.replace(
 		/<Carousel\s+images=\{(\[[\s\S]*?\])\}\s*captions=\{(\[[\s\S]*?\])\}\s*\/>/g,
-		(_, images, captions) => buildCarouselHtml(images, captions, undefined),
+		(_, images, captions) => buildCarouselHtml(images, captions, undefined)
 	);
-	transformed = transformed.replace(
-		/<Carousel\s+images=\{(\[[\s\S]*?\])\}\s*\/>/g,
-		(_, images) => buildCarouselHtml(images, undefined, undefined),
+	transformed = transformed.replace(/<Carousel\s+images=\{(\[[\s\S]*?\])\}\s*\/>/g, (_, images) =>
+		buildCarouselHtml(images, undefined, undefined)
 	);
 
 	// Remove Svelte script blocks
@@ -116,12 +127,12 @@ export function renderMarkdown(markdown: string): string {
 	// markdown-it:   <sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>
 	html = html.replace(
 		/<sup class="footnote-ref"><a href="#fn(\d+)" id="fnref(\d+)">\[(\d+)\]<\/a><\/sup>/g,
-		'<sup id="fnref-$1"><a href="#fn-$1" class="footnote-ref">$3</a></sup>',
+		'<sup id="fnref-$1"><a href="#fn-$1" class="footnote-ref">$3</a></sup>'
 	);
 	// Fallback for any other digit sequences (in case of non-numeric footnotes)
 	html = html.replace(
 		/<sup class="footnote-ref"><a href="#fn([^"]+)" id="fnref([^"]+)">\[([^\]]+)\]<\/a><\/sup>/g,
-		'<sup id="fnref-$2"><a href="#fn-$1" class="footnote-ref">$3</a></sup>',
+		'<sup id="fnref-$2"><a href="#fn-$1" class="footnote-ref">$3</a></sup>'
 	);
 
 	// Remove markdown-it's outer footnotes separator - on main there is only the
@@ -132,7 +143,7 @@ export function renderMarkdown(markdown: string): string {
 	// markdown-it: <section class="footnotes">\n<ol class="footnotes-list">\n<li id="fn1" class="footnote-item"><p>
 	html = html.replace(
 		/<section class="footnotes">\s*<ol class="footnotes-list">/g,
-		'<div class="footnotes"><hr> <ol>',
+		'<div class="footnotes"><hr> <ol>'
 	);
 	html = html.replace(/<\/ol>\s*<\/section>/g, '</ol></div>');
 
@@ -143,8 +154,14 @@ export function renderMarkdown(markdown: string): string {
 	html = html.replace(/<\/p>\s*<\/li>/g, '</li>');
 
 	// Fix backref href and text: href="#fnref1" class="footnote-backref">↩︎ -> href="#fnref-1" class="footnote-backref">↩
-	html = html.replace(/href="#fnref(\d+)" class="footnote-backref">↩︎/g, 'href="#fnref-$1" class="footnote-backref">↩');
-	html = html.replace(/href="#fnref([^"]+)" class="footnote-backref">↩︎/g, 'href="#fnref-$1" class="footnote-backref">↩');
+	html = html.replace(
+		/href="#fnref(\d+)" class="footnote-backref">↩︎/g,
+		'href="#fnref-$1" class="footnote-backref">↩'
+	);
+	html = html.replace(
+		/href="#fnref([^"]+)" class="footnote-backref">↩︎/g,
+		'href="#fnref-$1" class="footnote-backref">↩'
+	);
 	// Also handle without class order variance
 	html = html.replace(/>↩︎</g, '>↩<');
 
@@ -159,7 +176,7 @@ export function renderMarkdown(markdown: string): string {
 	// Remove extra whitespace between footnote content and backref to match main 1:1
 	// Main: <a href="...">...</a><a href="#fnref-1" class="footnote-backref">↩</a> (no space, margin provides gap)
 	// markdown-it: <a href="...">...</a> <a href="#fnref-1"...> (with space) -> extra gap
-	html = html.replace(/<div class="footnotes">([\s\S]*?)<\/div>/g, (match, inner) => {
+	html = html.replace(/<div class="footnotes">([\s\S]*?)<\/div>/g, (_match, inner) => {
 		const fixed = inner.replace(/\s+<a href="#fnref-/g, '<a href="#fnref-');
 		return `<div class="footnotes">${fixed}</div>`;
 	});
@@ -201,6 +218,7 @@ export function parseFrontmatter(mdContent: string): Record<string, string> {
 }
 
 export function getLastCommitDateSync(_github: string): string | null {
+	void _github;
 	// Last commit is fetched client-side via vanilla JS (see utils.ts:getLastCommitDate)
 	return null;
 }

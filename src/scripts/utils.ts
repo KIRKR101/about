@@ -1,7 +1,7 @@
 const dateFormatter = new Intl.DateTimeFormat('en-GB', {
 	day: '2-digit',
 	month: 'short',
-	year: 'numeric',
+	year: 'numeric'
 });
 const shortDateFormatter = new Intl.DateTimeFormat('en-GB', { month: 'short', day: '2-digit' });
 
@@ -15,7 +15,7 @@ export function formatShortDate(dateString: string) {
 
 export function getMetaValue(
 	data: Array<[string, string] | string[]>,
-	key: string,
+	key: string
 ): string | undefined {
 	return data.find(([k]) => k === key)?.[1];
 }
@@ -37,9 +37,9 @@ export function isIiifUrl(url: string): boolean {
 
 export function getIiifSrcset(url: string): string {
 	if (!isIiifUrl(url)) return '';
-	return IIIF_WIDTHS.map((w: number) => url.replace(/\/\d+,?\/0\/default/, `/${w},/0/default`)).join(
-		', ',
-	);
+	return IIIF_WIDTHS.map((w: number) =>
+		url.replace(/\/\d+,?\/0\/default/, `/${w},/0/default`)
+	).join(', ');
 }
 
 export function getHardcoverSrcset(coverUrl: string): string {
@@ -51,7 +51,7 @@ export function getHardcoverSrcset(coverUrl: string): string {
 			width: String(w),
 			height: String(h),
 			type: 'webp',
-			url: coverUrl,
+			url: coverUrl
 		});
 		return `${base}?${params} ${w}w`;
 	}).join(', ');
@@ -90,9 +90,11 @@ function saveCachedRepos(repositories: LastCommitRepo[]) {
 	try {
 		localStorage.setItem(
 			LAST_COMMIT_CACHE_KEY,
-			JSON.stringify({ repositories, timestamp: Date.now() }),
+			JSON.stringify({ repositories, timestamp: Date.now() })
 		);
-	} catch {}
+	} catch {
+		void 0;
+	}
 }
 
 function findRepo(repositories: LastCommitRepo[], repoUrl: string) {

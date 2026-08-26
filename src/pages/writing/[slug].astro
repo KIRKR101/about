@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { preprocessMarkdown, renderMarkdown } from '../../scripts/render-markdown';
 
 export async function getStaticPaths() {
@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 	}));
 }
 
-const { entry } = Astro.props as { entry: Awaited<ReturnType<typeof getCollection>>[number] };
+const { entry } = Astro.props as { entry: CollectionEntry<'writings'> };
 
 let title = entry.data.title;
 let longTitle: string | undefined = entry.data.longTitle;

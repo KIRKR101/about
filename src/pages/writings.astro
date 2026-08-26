@@ -4,6 +4,13 @@ import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { getCollection } from 'astro:content';
 
+interface Writing {
+	file: string;
+	title: string;
+	date: string;
+	snippet?: string;
+}
+
 const writingsCollection = await getCollection('writings');
 const allWritings = writingsCollection
 	.map((entry) => ({
