@@ -1,0 +1,401 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { projects } from '../lib/projects-data';
+---
+
+<Layout
+	title="Projects | kirkr.xyz"
+	description="Projects I've built."
+>
+	<Navbar slot="navbar" />
+	<link rel="preconnect" href="https://github.kirkr.xyz" crossorigin="anonymous" slot="head" />
+
+	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
+		<main class="w-full max-w-[600px]">
+			<div class="py-4">
+				<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
+					<span class="opacity-90">Projects</span><span class="opacity-40">.</span>
+				</h1>
+			</div>
+
+			<div class="mb-4 h-px bg-bd"></div>
+
+			<div class="pb-7">
+				<div class="mb-3 flex min-h-[16px] items-center justify-between">
+					<div class="flex items-center">
+						<div
+							data-contrib-loading
+							class="font-sans text-[11px] tracking-wide text-ink-70"
+						>
+							Loading contributions...
+						</div>
+						<div
+							data-contrib-summary
+							class="hidden font-sans text-[11px] tracking-wide text-ink-70"
+						>
+						</div>
+					</div>
+
+					<div class="flex items-center p-0.5">
+						<button
+							type="button"
+							data-year-prev
+							class="flex h-5 w-5 cursor-pointer items-center justify-center rounded-sm text-ink-70 transition-colors hover:bg-ink/10 hover:text-ink disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink-70"
+							aria-label="Previous year"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="12"
+								height="12"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg
+							>
+						</button>
+						<span
+							data-year-display
+							class="w-10 text-center font-sans text-[11px] font-medium text-ink-70"></span>
+						<button
+							type="button"
+							data-year-next
+							class="flex h-5 w-5 cursor-pointer items-center justify-center rounded-sm text-ink-70 transition-colors hover:bg-ink/10 hover:text-ink disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink-70"
+							aria-label="Next year"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="12"
+								height="12"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg
+							>
+						</button>
+					</div>
+				</div>
+
+				<div
+					class="contribution-graph relative min-w-0 [touch-action:pan-y]"
+					data-graph-container
+				>
+					<div
+						data-tooltip
+						class="pointer-events-none absolute z-20 hidden -translate-x-1/2 -translate-y-full"
+					>
+						<div
+							class="rounded-sm bg-tooltip-bg px-1 py-1 text-[9px] whitespace-nowrap shadow-xl ring-1 ring-ink/20"
+						>
+							<span data-tooltip-count></span>
+							<span>on </span><span data-tooltip-date></span>
+						</div>
+					</div>
+
+					<div
+						data-graph-grid
+						class="grid w-full gap-[3px]"
+						role="grid"
+						tabindex="-1"
+					>
+					</div>
+				</div>
+			</div>
+
+			<div class="h-px bg-bd"></div>
+
+			<div class="pt-7">
+				<div class="flex flex-col">
+					{
+						projects.map((project) => (
+							<a
+								href={`/project/${project.id}`}
+								class="group flex w-full flex-col rounded-sm border-b border-bd/30 py-3 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
+							>
+								<div class="flex w-full items-baseline justify-between">
+									<span class="font-sans text-[14px] text-ink-70 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2">
+										{project.title}
+									</span>
+									<span class="shrink-0 font-mono text-[11px] tracking-wider text-ink-70 uppercase">
+										{project.firstCommit}
+									</span>
+								</div>
+								{project.shortDescription && (
+									<span class="mt-2 line-clamp-2 font-sans text-[12px] leading-relaxed text-ink-70">
+										{project.shortDescription}
+									</span>
+								)}
+							</a>
+						))
+					}
+				</div>
+
+				<Footer />
+			</div>
+		</main>
+	</div>
+</Layout>
+
+<script>
+	const CACHE_TTL = 60 * 60 * 1000;
+	const currentYear = new Date().getFullYear();
+	let selectedYear = currentYear;
+	let isMobile = false;
+
+	function getContributionColor(count: number) {
+		if (count === 0) return 'var(--contribution-0)';
+		if (count < 5) return 'var(--contribution-1)';
+		if (count < 10) return 'var(--contribution-2)';
+		if (count < 20) return 'var(--contribution-3)';
+		return 'var(--contribution-4)';
+	}
+
+	function loadCache(): Record<number, any> {
+		try {
+			const stored = localStorage.getItem('gh-contributions-cache');
+			if (!stored) return {};
+			const parsed = JSON.parse(stored);
+			if (parsed && typeof parsed.timestamp === 'number' && typeof parsed.data === 'object') {
+				if (Date.now() - parsed.timestamp > CACHE_TTL) {
+					localStorage.removeItem('gh-contributions-cache');
+					return {};
+				}
+				return parsed.data as Record<number, any>;
+			}
+			return {};
+		} catch {
+			return {};
+		}
+	}
+
+	function saveCache(cache: Record<number, any>) {
+		try {
+			localStorage.setItem(
+				'gh-contributions-cache',
+				JSON.stringify({ data: cache, timestamp: Date.now() }),
+			);
+		} catch {}
+	}
+
+	const contributionsCache = loadCache();
+	let currentFetch: AbortController | null = null;
+
+	function formatContribDate(dateString: string) {
+		const date = new Date(dateString);
+		return date.toLocaleDateString('en-GB', {
+			weekday: 'short',
+			day: 'numeric',
+			month: 'short',
+			year: 'numeric',
+		});
+	}
+
+	function renderGraph(contributions: any, year: number) {
+		const grid = document.querySelector('[data-graph-grid]') as HTMLElement | null;
+		const summary = document.querySelector('[data-contrib-summary]') as HTMLElement | null;
+		const loading = document.querySelector('[data-contrib-loading]') as HTMLElement | null;
+		const display = document.querySelector('[data-year-display]') as HTMLElement | null;
+		const prevBtn = document.querySelector('[data-year-prev]') as HTMLButtonElement | null;
+		const nextBtn = document.querySelector('[data-year-next]') as HTMLButtonElement | null;
+
+		if (!grid || !summary || !loading) return;
+
+		if (display) display.textContent = String(year);
+		if (prevBtn) prevBtn.disabled = year <= 2024;
+		if (nextBtn) nextBtn.disabled = year >= currentYear;
+
+		if (!contributions) {
+			loading.classList.remove('hidden');
+			summary.classList.add('hidden');
+			grid.innerHTML = '';
+			grid.style.gridTemplateColumns = 'repeat(53, minmax(0, 1fr))';
+			for (let wi = 0; wi < 53; wi++) {
+				const col = document.createElement('div');
+				col.className = 'grid grid-rows-7 gap-[3px]';
+				for (let di = 0; di < 7; di++) {
+					const cell = document.createElement('div');
+					cell.className = 'aspect-square w-full animate-pulse rounded-sm bg-ink/5';
+					col.appendChild(cell);
+				}
+				grid.appendChild(col);
+			}
+			return;
+		}
+
+		loading.classList.add('hidden');
+		summary.classList.remove('hidden');
+		summary.textContent = `${(contributions.totalContributions ?? 0).toLocaleString()} contributions in ${year}`;
+
+		const weeks = contributions.weeks || [];
+		grid.innerHTML = '';
+		grid.style.gridTemplateColumns = `repeat(${weeks.length}, minmax(0, 1fr))`;
+
+		for (const week of weeks) {
+			const col = document.createElement('div');
+			col.className = 'grid grid-rows-7 gap-[3px]';
+			for (const day of week.contributionDays) {
+				const btn = document.createElement('button');
+				btn.className =
+					'relative aspect-square w-full cursor-default border-0 p-0 transition-all duration-75 sm:rounded-[3px] sm:hover:z-10 sm:hover:scale-110 sm:hover:brightness-125 sm:focus:z-10';
+				btn.style.backgroundColor = getContributionColor(day.contributionCount);
+				btn.setAttribute('data-day', day.date);
+				btn.setAttribute('data-count', String(day.contributionCount));
+				btn.setAttribute('aria-label', `${day.contributionCount} contributions on ${day.date}`);
+				btn.tabIndex = isMobile ? -1 : 0;
+				col.appendChild(btn);
+			}
+			grid.appendChild(col);
+		}
+	}
+
+	async function fetchContributions(year: number) {
+		if (contributionsCache[year]) {
+			renderGraph(contributionsCache[year], year);
+			return;
+		}
+
+		renderGraph(null, year);
+		currentFetch?.abort();
+		currentFetch = new AbortController();
+		const signal = currentFetch.signal;
+
+		try {
+			const url = year !== currentYear ? `https://github.kirkr.xyz/?year=${year}` : 'https://github.kirkr.xyz/';
+			const res = await fetch(url, { signal });
+			if (!res.ok) return;
+			const data = await res.json();
+			contributionsCache[year] = data.contributions;
+			saveCache(contributionsCache);
+			renderGraph(data.contributions, year);
+		} catch (e) {
+			if (e instanceof DOMException && e.name === 'AbortError') return;
+			console.error('Error fetching contributions:', e);
+		}
+	}
+
+	function initProjects() {
+		isMobile = window.matchMedia('(max-width: 768px)').matches;
+		window.addEventListener('resize', () => {
+			isMobile = window.matchMedia('(max-width: 768px)').matches;
+		});
+
+		const display = document.querySelector('[data-year-display]') as HTMLElement | null;
+		if (display) display.textContent = String(selectedYear);
+		const prevBtn = document.querySelector('[data-year-prev]') as HTMLButtonElement | null;
+		const nextBtn = document.querySelector('[data-year-next]') as HTMLButtonElement | null;
+		prevBtn?.addEventListener('click', () => {
+			if (selectedYear > 2024) {
+				selectedYear--;
+				fetchContributions(selectedYear);
+			}
+		});
+		nextBtn?.addEventListener('click', () => {
+			if (selectedYear < currentYear) {
+				selectedYear++;
+				fetchContributions(selectedYear);
+			}
+		});
+
+		// Tooltip
+		const graphContainer = document.querySelector('[data-graph-container]') as HTMLElement | null;
+		const tooltip = document.querySelector('[data-tooltip]') as HTMLElement | null;
+		const tooltipCount = document.querySelector('[data-tooltip-count]') as HTMLElement | null;
+		const tooltipDate = document.querySelector('[data-tooltip-date]') as HTMLElement | null;
+
+		function showTooltipFor(target: Element) {
+			if (!graphContainer || !tooltip || !tooltipCount || !tooltipDate) return;
+			const parentRect = graphContainer.getBoundingClientRect();
+			const rect = target.getBoundingClientRect();
+			const rawX = rect.left - parentRect.left + rect.width / 2;
+			const clampedX = Math.max(50, Math.min(rawX, parentRect.width - 50));
+			const day = target.getAttribute('data-day');
+			const count = Number(target.getAttribute('data-count') ?? 0);
+			if (!day) return;
+			tooltipCount.textContent =
+				count === 0 ? 'No contributions' : `${count} contribution${count !== 1 ? 's' : ''}`;
+			tooltipDate.textContent = formatContribDate(day);
+			tooltip.style.left = `${clampedX}px`;
+			tooltip.style.top = `${rect.top - parentRect.top - 6}px`;
+			tooltip.classList.remove('hidden');
+		}
+
+		function hideTooltip() {
+			tooltip?.classList.add('hidden');
+		}
+
+		const grid = document.querySelector('[data-graph-grid]') as HTMLElement | null;
+		if (grid) {
+			grid.addEventListener('mouseover', (e) => {
+				if (isMobile) return;
+				const target = (e.target as Element)?.closest?.('[data-day]');
+				if (target) showTooltipFor(target);
+			});
+			grid.addEventListener('mouseout', (e) => {
+				if (isMobile) return;
+				const related = (e as MouseEvent).relatedTarget as Element | null;
+				if (!related || !related.closest?.('[data-day]')) hideTooltip();
+			});
+			grid.addEventListener('focusin', (e) => {
+				if (isMobile) return;
+				const target = (e.target as Element)?.closest?.('[data-day]');
+				if (target) showTooltipFor(target);
+			});
+			grid.addEventListener('focusout', (e) => {
+				if (isMobile) return;
+				const related = (e as FocusEvent).relatedTarget as Element | null;
+				if (!related || !related.closest?.('[data-day]')) hideTooltip();
+			});
+		}
+
+		// Touch swipe for year switching
+		let touchStartX: number | null = null;
+		let touchStartY: number | null = null;
+		let touchStartTime = 0;
+		graphContainer?.addEventListener('touchstart', (e) => {
+			if (e.touches.length > 1) return;
+			const touch = e.touches[0];
+			if (!touch) return;
+			touchStartX = touch.clientX;
+			touchStartY = touch.clientY;
+			touchStartTime = Date.now();
+		});
+		graphContainer?.addEventListener('touchend', (e) => {
+			if (touchStartX === null || touchStartY === null) return;
+			const touch = e.changedTouches[0];
+			if (!touch) return;
+			const elapsed = Date.now() - touchStartTime;
+			if (elapsed > 300) {
+				touchStartX = null;
+				touchStartY = null;
+				return;
+			}
+			const diffX = touch.clientX - touchStartX;
+			const diffY = touch.clientY - touchStartY;
+			if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+				if (diffX > 0) {
+					if (selectedYear > 2024) {
+						selectedYear--;
+						fetchContributions(selectedYear);
+					}
+				} else {
+					if (selectedYear < currentYear) {
+						selectedYear++;
+						fetchContributions(selectedYear);
+					}
+				}
+			}
+			touchStartX = null;
+			touchStartY = null;
+		});
+
+		fetchContributions(selectedYear);
+	}
+
+	initProjects();
+	document.addEventListener('astro:after-swap', initProjects);
+</script>

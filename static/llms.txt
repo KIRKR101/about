@@ -7,7 +7,7 @@
 
 # kirkr.xyz
 
-> kirkr.xyz is the personal website of a first-year Computer Engineering student at the University of Warwick. It contains long-form essays on computer engineering, economics, politics, philosophy, and (particularly Dutch) art; write-ups of the author's software projects; and collections of art, photography, books, and films. The site is built with SvelteKit and is fully static.
+> kirkr.xyz is the personal website of a first-year Computer Engineering student at the University of Warwick. It contains long-form essays on computer engineering, economics, politics, philosophy, and (particularly Dutch) art; write-ups of the author's software projects; and collections of art, photography, books, and films. The site is built with Astro and is fully static.
 
 About the author: a first-year Computer Engineering student at Warwick who enjoys C and TypeScript and web technologies generally. Interests include politics, philosophy, economics, and art — particularly Dutch painting. Reachable by email at theo@kirkr.xyz; code lives on GitHub as [KIRKR101](https://github.com/KIRKR101).
 

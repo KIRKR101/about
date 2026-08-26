@@ -1,0 +1,485 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { artData } from '../lib/art-data';
+
+const entries = Object.entries(artData).map(([id, artwork]) => ({
+	id,
+	title: artwork.title,
+	thumbnail: artwork.thumbnail,
+	image: artwork.image,
+	description: artwork.description,
+	aspectRatio: artwork.aspectRatio,
+	data: artwork.data,
+}));
+
+function isIiifUrl(url: string): boolean {
+	return /\/\d+,?\/0\/default\.(webp|jpg)$/.test(url);
+}
+function getIiifSrcset(url: string): string {
+	if (!isIiifUrl(url)) return '';
+	const widths = [500, 800, 1200, 1600];
+	return widths.map((w) => url.replace(/\/\d+,?\/0\/default/, `/${w},/0/default`)).join(', ');
+}
+function getMetaValue(data: [string, string][], key: string): string | undefined {
+	return data.find(([k]) => k === key)?.[1];
+}
+---
+
+<Layout title="Art | kirkr.xyz" description="Artworks I like.">
+	<Navbar slot="navbar" />
+	<link rel="preconnect" href="https://iiif.micr.io" crossorigin="anonymous" slot="head" />
+	<link rel="preconnect" href="https://upload.wikimedia.org" crossorigin="anonymous" slot="head" />
+
+	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
+		<main class="w-full max-w-5xl">
+			<div class="py-4">
+				<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
+					<span class="opacity-90">Art</span><span class="opacity-40">.</span>
+				</h1>
+			</div>
+
+			<div class="mb-8 h-px bg-bd"></div>
+
+			<div data-grid-container class="columns-1 gap-12 pt-2 sm:columns-2 lg:columns-3">
+				{
+					entries.map((entry) => {
+						const artist = getMetaValue(entry.data as [string, string][], 'artist');
+						const year = getMetaValue(entry.data as [string, string][], 'year');
+						const srcset = getIiifSrcset(entry.thumbnail);
+						return (
+							<button
+								type="button"
+								data-art-card={entry.id}
+								data-art-data={JSON.stringify(entry)}
+								class="group mb-12 flex w-full break-inside-avoid flex-col text-left"
+								aria-label={`View ${entry.title}`}
+							>
+								<div
+									class="mb-6 w-full overflow-hidden border border-bd bg-card-bg shadow-2xl"
+									style={`aspect-ratio: ${entry.aspectRatio || 'auto'}`}
+								>
+									<img
+										src={entry.thumbnail}
+										srcset={srcset || undefined}
+										sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+										alt={entry.title}
+										class="h-full w-full object-cover transition-all duration-700 ease-out group-hover:scale-102 group-hover:cursor-zoom-in group-hover:brightness-105"
+										loading="lazy"
+										decoding="async"
+									/>
+								</div>
+
+								<span class="font-serif text-xl leading-tight text-ink-90 transition-colors group-hover:text-ink">
+									{entry.title}
+								</span>
+
+								<div class="mt-2 flex items-center gap-2">
+									<span class="font-sans text-[11px] tracking-wider text-ink-50">{artist}</span>
+									{year && (
+										<>
+											<span class="text-[10px] text-ink-20">·</span>
+											<span class="font-sans text-[11px] tracking-wider text-ink-40">{year}</span>
+										</>
+									)}
+								</div>
+							</button>
+						);
+					})
+				}
+			</div>
+
+			<Footer />
+		</main>
+	</div>
+
+	<!-- Lightbox -->
+	<div
+		data-lightbox
+		class="fixed inset-0 z-60 hidden bg-[#0b0b0b]/95 select-none"
+		role="dialog"
+		aria-modal="true"
+		tabindex="-1"
+	>
+		<div
+			class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.04),transparent_60%)]"
+		>
+		</div>
+
+		<button
+			type="button"
+			data-lightbox-close
+			class="absolute top-4 right-4 z-50 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 md:top-6 md:right-6 md:h-11 md:w-11"
+			aria-label="Close lightbox"
+		>
+			<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+				<path d="M18 6L6 18M6 6l12 12"></path>
+			</svg>
+		</button>
+
+		<button
+			type="button"
+			data-lightbox-prev
+			class="absolute top-1/2 left-3 z-50 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 md:left-6 md:h-14 md:w-14"
+			aria-label="Previous image"
+		>
+			<svg class="h-5 w-5 md:h-6 md:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<path d="M15 18l-6-6 6-6"></path>
+			</svg>
+		</button>
+
+		<button
+			type="button"
+			data-lightbox-next
+			class="absolute top-1/2 right-3 z-50 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 md:right-6 md:h-14 md:w-14"
+			aria-label="Next image"
+		>
+			<svg class="h-5 w-5 md:h-6 md:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+				<path d="M9 18l6-6-6-6"></path>
+			</svg>
+		</button>
+
+		<div
+			data-lightbox-media-wrap
+			class="absolute inset-x-1 top-2 bottom-2 flex [touch-action:pinch-zoom] items-center justify-center"
+			role="button"
+			tabindex="0"
+			aria-label="Toggle image details"
+		>
+			<div data-lightbox-loading class="absolute animate-pulse font-mono text-[10px] tracking-widest text-white/20 uppercase hidden">Loading</div>
+			<img
+				data-lightbox-image
+				src=""
+				alt=""
+				class="max-h-full max-w-full object-contain transition-all duration-300"
+				draggable="false"
+			/>
+		</div>
+
+		<div
+			data-lightbox-footer
+			class="pointer-events-none absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent px-4 pt-20 pb-6 transition-opacity duration-300 select-none md:px-6 md:pt-28 md:pb-8"
+		>
+			<div class="pointer-events-auto mx-auto w-full max-w-[780px] text-center">
+				<div data-lightbox-title class="font-serif text-[22px] leading-tight tracking-tight text-white/95 md:text-[30px]"></div>
+				<div data-lightbox-counter class="mt-2 font-mono text-[10px] tracking-[0.18em] text-white/40 uppercase md:mt-3"></div>
+				<p data-lightbox-desc class="mt-4 font-sans text-[13px] leading-relaxed text-white/60 md:mt-6 md:text-[14px]"></p>
+				<div data-lightbox-meta class="mt-5 flex flex-wrap justify-center gap-x-8 gap-y-3 md:mt-7"></div>
+			</div>
+		</div>
+	</div>
+</Layout>
+
+<script>
+	import { artData } from '../lib/art-data';
+
+	const entries: [string, any][] = Object.entries(artData);
+	// Shuffle for initial display (mirrors Svelte behavior)
+	let shuffledEntries = [...entries].sort(() => Math.random() - 0.5);
+	let visualOrder: string[] = entries.map(([id]) => id);
+	let currentIndex = 0;
+	let isAnimating = false;
+	let isClosing = false;
+	let footerVisible = true;
+	let swipeTimestamp = 0;
+	let touchStartX: number | null = null;
+	let touchStartY: number | null = null;
+
+	function computeVisualOrder(positions: { id: string; left: number; top: number }[], rowTolerance = 20): string[] {
+		if (positions.length === 0) return [];
+		const sorted = [...positions].sort((a, b) => a.top - b.top);
+		const rows: { id: string; left: number; top: number }[][] = [];
+		let currentRow: { id: string; left: number; top: number }[] = [];
+		let rowAnchorTop = sorted[0]!.top;
+		for (const pos of sorted) {
+			if (currentRow.length > 0 && Math.abs(pos.top - rowAnchorTop) > rowTolerance) {
+				rows.push(currentRow);
+				currentRow = [];
+				rowAnchorTop = pos.top;
+			}
+			currentRow.push(pos);
+		}
+		if (currentRow.length > 0) rows.push(currentRow);
+		const result: string[] = [];
+		for (const row of rows) {
+			row.sort((a, b) => a.left - b.left);
+			for (const item of row) result.push(item.id);
+		}
+		return result;
+	}
+
+	function createRafObserver(callback: () => void) {
+		let frame = 0;
+		let observer: ResizeObserver | null = null;
+		function schedule() {
+			if (frame) return;
+			frame = requestAnimationFrame(() => {
+				frame = 0;
+				callback();
+			});
+		}
+		function observe(target: Element) {
+			if (observer) observer.disconnect();
+			observer = new ResizeObserver(schedule);
+			observer.observe(target);
+		}
+		function destroy() {
+			if (observer) observer.disconnect();
+			observer = null;
+			if (frame) cancelAnimationFrame(frame);
+			frame = 0;
+		}
+		return { observe, destroy };
+	}
+
+	function updateVisualOrder() {
+		const cardEls = document.querySelectorAll('[data-art-card]');
+		if (cardEls.length === 0) return;
+		const positions: { id: string; left: number; top: number }[] = [];
+		cardEls.forEach((el) => {
+			const id = (el as HTMLElement).dataset.artCard!;
+			const rect = el.getBoundingClientRect();
+			positions.push({ id, left: rect.left, top: rect.top });
+		});
+		visualOrder = computeVisualOrder(positions);
+	}
+
+	function shuffleDOM() {
+		const container = document.querySelector('[data-grid-container]') as HTMLElement | null;
+		if (!container) return;
+		const cards = Array.from(container.querySelectorAll('[data-art-card]')) as HTMLElement[];
+		// Re-sort by shuffledEntries order
+		cards.sort((a, b) => {
+			const ai = shuffledEntries.findIndex(([id]) => id === a.dataset.artCard);
+			const bi = shuffledEntries.findIndex(([id]) => id === b.dataset.artCard);
+			return ai - bi;
+		});
+		cards.forEach((c) => container.appendChild(c));
+	}
+
+	function initArt() {
+		shuffledEntries = [...entries].sort(() => Math.random() - 0.5);
+		shuffleDOM();
+		requestAnimationFrame(() => updateVisualOrder());
+
+		const container = document.querySelector('[data-grid-container]') as HTMLElement | null;
+		if (container) {
+			const observer = createRafObserver(updateVisualOrder);
+			observer.observe(container);
+		}
+
+		// Lightbox
+		const lightbox = document.querySelector('[data-lightbox]') as HTMLElement | null;
+		const imgEl = document.querySelector('[data-lightbox-image]') as HTMLImageElement | null;
+		const titleEl = document.querySelector('[data-lightbox-title]') as HTMLElement | null;
+		const counterEl = document.querySelector('[data-lightbox-counter]') as HTMLElement | null;
+		const descEl = document.querySelector('[data-lightbox-desc]') as HTMLElement | null;
+		const metaEl = document.querySelector('[data-lightbox-meta]') as HTMLElement | null;
+		const loadingEl = document.querySelector('[data-lightbox-loading]') as HTMLElement | null;
+		const footerEl = document.querySelector('[data-lightbox-footer]') as HTMLElement | null;
+		const mediaWrap = document.querySelector('[data-lightbox-media-wrap]') as HTMLElement | null;
+		const closeBtn = document.querySelector('[data-lightbox-close]') as HTMLElement | null;
+		const prevBtn = document.querySelector('[data-lightbox-prev]') as HTMLElement | null;
+		const nextBtn = document.querySelector('[data-lightbox-next]') as HTMLElement | null;
+
+		let previousFocus: HTMLElement | null = null;
+		let mediaLoaded = false;
+
+		function showLightbox(index: number) {
+			currentIndex = index;
+			isClosing = false;
+			previousFocus = document.activeElement as HTMLElement | null;
+			if (lightbox) {
+				lightbox.classList.remove('hidden');
+				lightbox.classList.add('flex');
+				lightbox.focus();
+			}
+			const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+			if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
+			document.body.style.overflow = 'hidden';
+			renderLightbox();
+		}
+
+		function hideLightbox() {
+			if (isClosing) return;
+			isClosing = true;
+			if (lightbox) {
+				lightbox.classList.add('opacity-0');
+				setTimeout(() => {
+					lightbox.classList.add('hidden');
+					lightbox.classList.remove('flex', 'opacity-0');
+					document.body.style.overflow = '';
+					document.body.style.paddingRight = '';
+					previousFocus?.focus();
+					previousFocus = null;
+					isClosing = false;
+				}, 300);
+			}
+		}
+
+		function renderLightbox() {
+			const id = visualOrder[currentIndex];
+			if (!id) return;
+			const entry = (artData as any)[id];
+			if (!entry || !imgEl || !titleEl || !counterEl) return;
+
+			mediaLoaded = false;
+			if (loadingEl) loadingEl.classList.remove('hidden');
+			imgEl.classList.add('scale-[0.98]', 'opacity-0');
+			imgEl.classList.remove('scale-100', 'opacity-100');
+			imgEl.src = entry.image;
+			imgEl.alt = entry.title;
+			imgEl.onload = () => {
+				mediaLoaded = true;
+				if (loadingEl) loadingEl.classList.add('hidden');
+				imgEl.classList.remove('scale-[0.98]', 'opacity-0');
+				imgEl.classList.add('scale-100', 'opacity-100');
+			};
+			// Prefetch next/prev
+			const nextId = visualOrder[(currentIndex + 1) % visualOrder.length];
+			const prevId = visualOrder[(currentIndex - 1 + visualOrder.length) % visualOrder.length];
+			if (nextId) {
+				const link = document.createElement('link');
+				link.rel = 'preload';
+				link.as = 'image';
+				link.href = (artData as any)[nextId].image;
+				document.head.appendChild(link);
+				setTimeout(() => link.remove(), 5000);
+			}
+			if (prevId) {
+				const link2 = document.createElement('link');
+				link2.rel = 'preload';
+				link2.as = 'image';
+				link2.href = (artData as any)[prevId].image;
+				document.head.appendChild(link2);
+				setTimeout(() => link2.remove(), 5000);
+			}
+
+			titleEl.textContent = entry.title;
+			counterEl.textContent = `${currentIndex + 1} / ${visualOrder.length}`;
+			if (descEl) {
+				descEl.textContent = entry.description || '';
+				descEl.classList.toggle('hidden', !entry.description);
+			}
+			if (metaEl) {
+				metaEl.innerHTML = (entry.data || [])
+					.map(([k, v]: [string, string]) => `<div class="font-mono text-[10px] whitespace-nowrap text-white/25 md:text-[11px]">${k}: <span class="text-white/50">${v}</span></div>`)
+					.join('');
+			}
+			footerVisible = true;
+			if (footerEl) footerEl.style.opacity = '1';
+		}
+
+		function goNext() {
+			if (isAnimating || isClosing) return;
+			isAnimating = true;
+			currentIndex = (currentIndex + 1) % visualOrder.length;
+			renderLightbox();
+			setTimeout(() => (isAnimating = false), 250);
+		}
+
+		function goPrev() {
+			if (isAnimating || isClosing) return;
+			isAnimating = true;
+			currentIndex = (currentIndex - 1 + visualOrder.length) % visualOrder.length;
+			renderLightbox();
+			setTimeout(() => (isAnimating = false), 250);
+		}
+
+		function toggleFooter() {
+			if (Date.now() - swipeTimestamp < 300) return;
+			footerVisible = !footerVisible;
+			if (footerEl) footerEl.style.opacity = footerVisible ? '1' : '0';
+		}
+
+		document.querySelectorAll('[data-art-card]').forEach((el) => {
+			el.addEventListener('click', () => {
+				const id = (el as HTMLElement).dataset.artCard!;
+				const index = visualOrder.indexOf(id);
+				showLightbox(index >= 0 ? index : 0);
+			});
+			el.addEventListener('keydown', (e) => {
+				if (e.key === 'Enter' || e.key === ' ') {
+					e.preventDefault();
+					const id = (el as HTMLElement).dataset.artCard!;
+					const index = visualOrder.indexOf(id);
+					showLightbox(index >= 0 ? index : 0);
+				}
+			});
+		});
+
+		closeBtn?.addEventListener('click', hideLightbox);
+		nextBtn?.addEventListener('click', goNext);
+		prevBtn?.addEventListener('click', goPrev);
+		mediaWrap?.addEventListener('click', toggleFooter);
+		mediaWrap?.addEventListener('keydown', (e) => {
+			if (e.key === 'Enter' || e.key === ' ') {
+				e.preventDefault();
+				toggleFooter();
+			}
+		});
+
+		lightbox?.addEventListener('click', (e) => {
+			if (Date.now() - swipeTimestamp < 300) return;
+			if (!(e.target as Element).closest('img, button, [data-lightbox-footer]')) {
+				hideLightbox();
+			}
+		});
+
+		// Touch swipe
+		lightbox?.addEventListener('touchstart', (e) => {
+			const t = e.touches[0];
+			if (t) {
+				touchStartX = t.clientX;
+				touchStartY = t.clientY;
+			}
+		});
+		lightbox?.addEventListener('touchend', (e) => {
+			if (touchStartX === null || touchStartY === null) return;
+			const t = e.changedTouches[0];
+			if (!t) return;
+			const diffX = t.clientX - touchStartX;
+			const diffY = t.clientY - touchStartY;
+			if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+				swipeTimestamp = Date.now();
+				if (diffX > 0) goPrev();
+				else goNext();
+			}
+			touchStartX = null;
+			touchStartY = null;
+		});
+
+		document.addEventListener('keydown', (e) => {
+			if (!lightbox || lightbox.classList.contains('hidden')) return;
+			if (e.key === 'Escape') hideLightbox();
+			if (e.key === 'ArrowRight' && visualOrder.length > 1) goNext();
+			if (e.key === 'ArrowLeft' && visualOrder.length > 1) goPrev();
+			// Focus trap
+			if (e.key === 'Tab' && lightbox) {
+				const focusable = Array.from(
+					lightbox.querySelectorAll<HTMLElement>(
+						'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+					),
+				);
+				if (focusable.length === 0) return;
+				const first = focusable[0]!;
+				const last = focusable[focusable.length - 1]!;
+				if (e.shiftKey) {
+					if (document.activeElement === first || document.activeElement === lightbox) {
+						e.preventDefault();
+						last.focus();
+					}
+				} else {
+					if (document.activeElement === last) {
+						e.preventDefault();
+						first.focus();
+					}
+				}
+			}
+		});
+	}
+
+	initArt();
+	document.addEventListener('astro:after-swap', initArt);
+</script>

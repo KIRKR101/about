@@ -1,0 +1,197 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Films | kirkr.xyz" description="A log of recently watched films.">
+	<Navbar slot="navbar" />
+	<link rel="preconnect" href="https://letterboxd.kirkr.xyz" crossorigin="anonymous" slot="head" />
+
+	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
+		<main class="w-full max-w-[600px]">
+			<div class="py-4">
+				<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
+					<span class="opacity-90">Films</span><span class="opacity-40">.</span>
+				</h1>
+			</div>
+
+			<div class="mb-8 h-px bg-bd"></div>
+
+			<div data-films-loading class="py-8 text-center">
+				<div class="font-mono text-[11px] tracking-[0.1em] text-ink-70 uppercase">
+					Loading films...
+				</div>
+			</div>
+
+			<div data-films-error class="hidden rounded-sm border border-bd bg-ink/5 py-8 text-center">
+				<div class="font-mono text-[11px] tracking-[0.1em] text-ink-70 uppercase">
+					Failed to load films
+				</div>
+			</div>
+
+			<div data-films-list class="mb-12 hidden space-y-6"></div>
+
+			<Footer />
+		</main>
+	</div>
+</Layout>
+
+<script>
+	const CACHE_TTL = 60 * 60 * 1000;
+
+	function loadCachedFilms(): any[] | null {
+		try {
+			const stored = localStorage.getItem('films-cache');
+			if (!stored) return null;
+			const parsed = JSON.parse(stored);
+			if (parsed && typeof parsed.timestamp === 'number' && Array.isArray(parsed.data)) {
+				if (Date.now() - parsed.timestamp > CACHE_TTL) {
+					localStorage.removeItem('films-cache');
+					return null;
+				}
+				return parsed.data as any[];
+			}
+			return null;
+		} catch {
+			return null;
+		}
+	}
+
+	function saveCachedFilms(films: any[]) {
+		try {
+			localStorage.setItem('films-cache', JSON.stringify({ data: films, timestamp: Date.now() }));
+		} catch {}
+	}
+
+	function createStarRating(ratingStr: string) {
+		if (!ratingStr) return '';
+		const rating = parseFloat(ratingStr);
+		if (isNaN(rating)) return '';
+		const fullStars = Math.floor(rating);
+		const hasHalfStar = rating % 1 !== 0;
+		let starsHtml = '★'.repeat(fullStars);
+		if (hasHalfStar) starsHtml += '½';
+		return starsHtml;
+	}
+
+	function escapeHtml(str: string): string {
+		return str.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+	}
+
+	function renderFilms(films: any[]) {
+		const loading = document.querySelector('[data-films-loading]') as HTMLElement | null;
+		const error = document.querySelector('[data-films-error]') as HTMLElement | null;
+		const list = document.querySelector('[data-films-list]') as HTMLElement | null;
+		if (loading) loading.classList.add('hidden');
+		if (error) error.classList.add('hidden');
+		if (!list) return;
+		list.classList.remove('hidden');
+		list.innerHTML = films
+			.map(
+				(film: any) => `
+			<div class="flex gap-4 border-b border-bd pb-6 last:border-0">
+				<div class="relative flex h-48 w-32 flex-shrink-0 items-center justify-center overflow-hidden rounded-sm border border-bd bg-card-bg text-ink-20">
+					<span class="-rotate-[315deg] text-center font-serif text-[13px] leading-tight tracking-wide select-none" aria-hidden="true">
+						${escapeHtml(film.title)}
+					</span>
+					<img
+						src="${film.poster}"
+						alt="${escapeHtml(film.title)}"
+						class="absolute inset-0 h-full w-full rounded-sm object-cover"
+						loading="lazy"
+						onerror="this.style.opacity='0'"
+					/>
+				</div>
+				<div class="flex flex-col justify-center">
+					<div class="font-serif text-[20px] leading-tight text-ink-90">
+						<a
+							href="${film.link}"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-inherit no-underline transition-colors duration-75 hover:text-ink-80"
+						>
+							${escapeHtml(film.title)}
+						</a>
+					</div>
+					<div class="mt-1 font-mono text-[11px] tracking-wider text-ink-70">${escapeHtml(film.year)}</div>
+					${film.rating ? `<div class="mt-1 text-[15px] text-ink-50">${createStarRating(film.rating)}</div>` : ''}
+					<div class="mt-2 font-mono text-[11px] tracking-wider text-ink-70">
+						Watched: ${escapeHtml(film.watchedDate)}
+						${film.rewatch ? `<span class="ml-2 text-ink-40">↻ Rewatch</span>` : ''}
+					</div>
+				</div>
+			</div>
+		`,
+			)
+			.join('');
+	}
+
+	async function fetchFilms() {
+		const cached = loadCachedFilms();
+		if (cached) {
+			renderFilms(cached);
+			return;
+		}
+
+		try {
+			const rssFeedUrl = 'https://letterboxd.kirkr.xyz/kirkr101/rss/';
+			const response = await fetch(rssFeedUrl);
+			if (!response.ok) throw new Error(`Status ${response.status}`);
+			const xmlText = await response.text();
+			const parser = new DOMParser();
+			const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+			if (xmlDoc.querySelector('parsererror')) throw new Error('Parse Error');
+			const items = xmlDoc.querySelectorAll('item');
+			if (items.length === 0) {
+				const loading = document.querySelector('[data-films-loading]') as HTMLElement | null;
+				const error = document.querySelector('[data-films-error]') as HTMLElement | null;
+				if (loading) loading.classList.add('hidden');
+				if (error) error.classList.remove('hidden');
+				return;
+			}
+			const filmItems: any[] = [];
+			items.forEach((item) => {
+				const link = item.querySelector('link')?.textContent?.trim() || '#';
+				const filmTitle = item.querySelector('filmTitle')?.textContent || 'Unknown Film';
+				const filmYear = item.querySelector('filmYear')?.textContent || '';
+				const memberRating = item.querySelector('memberRating')?.textContent || '';
+				const watchedDate = item.querySelector('watchedDate')?.textContent;
+				const rewatch = item.querySelector('rewatch')?.textContent === 'Yes';
+				const description = item.querySelector('description')?.textContent || '';
+				const doc = parser.parseFromString(description, 'text/html');
+				const posterImg = doc.querySelector('img');
+				let posterUrl = posterImg ? posterImg.getAttribute('src')?.trim() || '' : '';
+				if (posterUrl.includes('/resized/')) {
+					posterUrl = posterUrl.replace(/-0-\d+-0-\d+-crop\.jpg/, '-0-200-0-300-crop.jpg');
+				}
+				const watchedDateFormatted = watchedDate
+					? new Date(watchedDate).toLocaleDateString(undefined, {
+							timeZone: 'UTC',
+							year: 'numeric',
+							month: 'long',
+							day: 'numeric',
+						})
+					: 'N/A';
+				filmItems.push({
+					title: filmTitle,
+					year: filmYear,
+					link,
+					poster: posterUrl,
+					rating: memberRating,
+					watchedDate: watchedDateFormatted,
+					rewatch,
+				});
+			});
+			saveCachedFilms(filmItems);
+			renderFilms(filmItems);
+		} catch {
+			const loading = document.querySelector('[data-films-loading]') as HTMLElement | null;
+			const error = document.querySelector('[data-films-error]') as HTMLElement | null;
+			if (loading) loading.classList.add('hidden');
+			if (error) error.classList.remove('hidden');
+		}
+	}
+
+	fetchFilms();
+</script>
