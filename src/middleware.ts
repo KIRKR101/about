@@ -80,8 +80,23 @@ function appendVaryAccept(headers: Headers): void {
 }
 
 export const onRequest = defineMiddleware(async (ctx, next) => {
-	const chosen = preferredType(ctx.request.headers.get('accept'));
-	ctx.locals.prefersMarkdown = chosen === 'text/markdown';
+	const raw = ctx.request.headers.get('accept');
+	// Strict per RFC 9110: if client sends Accept but nothing we produce is acceptable (q>0), return 406
+	if (raw !== null && raw.trim() !== '') {
+		const chosen = preferredType(raw);
+		if (chosen === null) {
+			return new Response('Not Acceptable', {
+				status: 406,
+				headers: {
+					Vary: 'Accept',
+					'Content-Type': 'text/plain; charset=utf-8'
+				}
+			});
+		}
+		ctx.locals.prefersMarkdown = chosen === 'text/markdown';
+	} else {
+		ctx.locals.prefersMarkdown = false;
+	}
 
 	const response = await next();
 	appendVaryAccept(response.headers);
