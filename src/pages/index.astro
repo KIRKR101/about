@@ -3,41 +3,17 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { projects } from '../lib/projects-data';
+import { getCollection } from 'astro:content';
 
-// Gather writings at build time
-import { readdirSync, readFileSync } from 'fs';
-import { join } from 'path';
-
-interface WritingMeta {
-	title: string;
-	date: string;
-	file: string;
-	snippet: string | null;
-}
-
-function getWritings(): WritingMeta[] {
-	try {
-		const dir = join(process.cwd(), 'src/routes/writing');
-		const entries = readdirSync(dir, { withFileTypes: true })
-			.filter((e) => e.isDirectory())
-			.map((e) => e.name);
-		const writings: WritingMeta[] = [];
-		for (const file of entries) {
-			try {
-				const md = readFileSync(join(dir, file, '+page.md'), 'utf8');
-				const title = md.match(/^title:\s*['"]?([^'"\n]+)/m)?.[1]?.trim() ?? file;
-				const date = md.match(/^date:\s*['"]?([^'"\n]+)/m)?.[1]?.trim() ?? '';
-				const snippet = md.match(/^snippet:\s*['"]?([^'"\n]+)/m)?.[1]?.trim() ?? null;
-				writings.push({ title, date, file, snippet });
-			} catch {}
-		}
-		return writings.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-	} catch {
-		return [];
-	}
-}
-
-const allWritings = getWritings();
+const writingsCollection = await getCollection('writings');
+const allWritings = writingsCollection
+	.map((entry) => ({
+		title: entry.data.title,
+		date: entry.data.date,
+		file: entry.id,
+		snippet: entry.data.snippet ?? null,
+	}))
+	.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 const visibleWritings = allWritings.slice(0, 5);
 const visibleProjects = projects.slice(0, 5);
 
@@ -231,16 +207,29 @@ function getHardcoverSrcset(coverUrl: string): string {
 								href={`/writing/${writing.file}`}
 								class="group flex w-full flex-col rounded-sm border-b border-bd/40 py-2.5 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
 							>
-								<div class="flex w-full items-baseline justify-between">
-									<span class="font-sans text-[14px] text-ink-80 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2">
-										{writing.title}
-									</span>
+								<div class="flex w-full items-baseline justify-between gap-4">
+									<div class="min-w-0 sm:flex sm:items-baseline">
+										<span class="font-sans text-[14px] text-ink-80 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2">
+											{writing.title}
+										</span>
+
+										{writing.snippet && (
+											<>
+												<span class="mx-1.5 hidden text-ink-50 sm:inline">—</span>
+												<span class="hidden truncate font-sans text-[12px] text-ink-70 sm:inline">
+													{writing.snippet}
+												</span>
+											</>
+										)}
+									</div>
+
 									<span class="shrink-0 font-mono text-[11px] tracking-wider text-ink-70 uppercase">
 										{formatDate(writing.date)}
 									</span>
 								</div>
+
 								{writing.snippet && (
-									<span class="mt-1 line-clamp-2 font-sans text-[12px] leading-relaxed text-ink-70">
+									<span class="mt-1 line-clamp-2 font-sans text-[12px] leading-relaxed text-ink-70 sm:hidden">
 										{writing.snippet}
 									</span>
 								)}
@@ -269,16 +258,29 @@ function getHardcoverSrcset(coverUrl: string): string {
 								href={`/project/${project.id}`}
 								class="group flex w-full flex-col rounded-sm border-b border-bd/40 py-2.5 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
 							>
-								<div class="flex w-full items-baseline justify-between">
-									<span class="font-sans text-[14px] text-ink-80 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2">
-										{project.title}
-									</span>
+								<div class="flex w-full items-baseline justify-between gap-4">
+									<div class="min-w-0 sm:flex sm:items-baseline">
+										<span class="font-sans text-[14px] text-ink-80 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2">
+											{project.title}
+										</span>
+
+										{project.shortDescription && (
+											<>
+												<span class="mx-1.5 hidden text-ink-50 sm:inline">—</span>
+												<span class="hidden truncate font-sans text-[12px] text-ink-70 sm:inline">
+													{project.shortDescription}
+												</span>
+											</>
+										)}
+									</div>
+
 									<span class="shrink-0 font-mono text-[11px] tracking-wider text-ink-70 uppercase">
 										{project.firstCommit}
 									</span>
 								</div>
+
 								{project.shortDescription && (
-									<span class="mt-2 line-clamp-2 font-sans text-[12px] leading-relaxed text-ink-70">
+									<span class="mt-2 line-clamp-2 font-sans text-[12px] leading-relaxed text-ink-70 sm:hidden">
 										{project.shortDescription}
 									</span>
 								)}

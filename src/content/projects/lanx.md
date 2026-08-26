@@ -1,5 +1,4 @@
 ---
-layout: ProjectLayout
 title: 'Lanx'
 description: 'Transfer files and directories between machines over a local network.'
 github: 'https://github.com/Kirkr101/lanx'

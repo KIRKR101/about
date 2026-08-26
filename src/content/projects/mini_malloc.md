@@ -1,5 +1,4 @@
 ---
-layout: ProjectLayout
 title: 'Mini Malloc'
 description: 'A minimal memory allocator written in C as a learning exercise.'
 github: 'https://github.com/Kirkr101/mini_malloc'

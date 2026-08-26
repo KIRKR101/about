@@ -1,5 +1,4 @@
 ---
-layout: ProjectLayout
 title: 'WASMagick'
 description: 'Run ImageMagick filters directly in the browser through WebAssembly. Everything is local: no servers, no uploads.'
 github: 'https://github.com/Kirkr101/wasmagick'

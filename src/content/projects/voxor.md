@@ -1,5 +1,4 @@
 ---
-layout: ProjectLayout
 title: 'Voxor'
 description: 'Self-hosted chat with threading, typing indicators, LaTeX rendering, and a CMD+K quick-search modal.'
 github: 'https://github.com/Kirkr101/Voxor'

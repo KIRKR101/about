@@ -1,5 +1,4 @@
 ---
-layout: ProjectLayout
 title: 'Audioshare'
 description: 'Stream any audio format, including lossless, with automatic metadata and cover-art parsing. Built for sharing large music files.'
 github: 'https://github.com/Kirkr101/audioshare-sv'

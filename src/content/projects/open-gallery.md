@@ -1,5 +1,4 @@
 ---
-layout: ProjectLayout
 title: 'Open Gallery'
 description: "Browse the National Gallery's collection with full historical metadata, search, and filtering."
 github: 'https://github.com/KIRKR101/open-gallery'

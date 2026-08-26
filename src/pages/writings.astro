@@ -2,39 +2,17 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
-import { readdirSync, readFileSync } from 'fs';
-import { join } from 'path';
+import { getCollection } from 'astro:content';
 
-interface Writing {
-	file: string;
-	title: string;
-	date: string;
-	snippet?: string;
-}
-
-function getWritings(): Writing[] {
-	try {
-		const dir = join(process.cwd(), 'src/routes/writing');
-		const entries = readdirSync(dir, { withFileTypes: true })
-			.filter((e) => e.isDirectory())
-			.map((e) => e.name);
-		const writings: Writing[] = [];
-		for (const file of entries) {
-			try {
-				const md = readFileSync(join(dir, file, '+page.md'), 'utf8');
-				const title = md.match(/^title:\s*['"]?([^'"\n]+)/m)?.[1]?.trim() ?? file;
-				const date = md.match(/^date:\s*['"]?([^'"\n]+)/m)?.[1]?.trim() ?? '';
-				const snippet = md.match(/^snippet:\s*['"]?([^'"\n]+)/m)?.[1]?.trim();
-				writings.push({ file, title, date, snippet });
-			} catch {}
-		}
-		return writings.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-	} catch {
-		return [];
-	}
-}
-
-const allWritings = getWritings();
+const writingsCollection = await getCollection('writings');
+const allWritings = writingsCollection
+	.map((entry) => ({
+		file: entry.id,
+		title: entry.data.title,
+		date: entry.data.date,
+		snippet: entry.data.snippet,
+	}))
+	.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 const groupedWritings = (() => {
 	const groups: Record<string, Writing[]> = {};

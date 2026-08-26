@@ -1,5 +1,4 @@
 ---
-layout: ProjectLayout
 title: 'Dezoomify-rs-jxl'
 description: 'Download and stitch massive zoomable images from museum archives. Outputs JPEG XL with multithreaded encoding and colour profile preservation.'
 github: 'https://github.com/Kirkr101/dezoomify-rs-jxl'

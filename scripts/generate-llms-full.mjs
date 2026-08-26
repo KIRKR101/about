@@ -35,8 +35,8 @@ const cleanBody = (md) =>
 
 const collect = (dir) =>
 	readdirSync(join(ROOT, dir), { withFileTypes: true })
-		.filter((e) => e.isDirectory())
-		.map((e) => join(ROOT, dir, e.name, '+page.md'))
+		.filter((e) => e.isFile() && e.name.endsWith('.md'))
+		.map((e) => join(ROOT, dir, e.name))
 		.filter((p) => {
 			try {
 				readFileSync(p);
@@ -59,12 +59,12 @@ ${body}
 };
 
 let out = OPENING;
-const writings = collect('src/routes/writing').sort((a, b) => {
+const writings = collect('src/content/writings').sort((a, b) => {
 	const da = frontmatterField(readFileSync(a, 'utf8'), 'date');
 	const db = frontmatterField(readFileSync(b, 'utf8'), 'date');
 	return da && db ? (db < da ? -1 : 1) : 0;
 });
-const projects = collect('src/routes/project').sort();
+const projects = collect('src/content/projects').sort();
 
 for (const w of writings) out += render(w, 'Writing');
 out += `\n## Projects\n\n`;

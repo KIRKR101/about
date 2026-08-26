@@ -1,5 +1,4 @@
 ---
-layout: ProjectLayout
 title: 'Linux Keylogger'
 description: 'A minimal daemon that hooks Linux input device drivers to log keystrokes. Written as a low-level systems exercise.'
 github: 'https://github.com/KIRKR101/linux_keylogger'

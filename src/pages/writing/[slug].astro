@@ -1,46 +1,28 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
-import { readdirSync, readFileSync } from 'fs';
-import { join } from 'path';
-import {
-	preprocessMarkdown,
-	renderMarkdown,
-	stripFrontmatter,
-	parseFrontmatter,
-} from '../../scripts/render-markdown';
+import { getCollection } from 'astro:content';
+import { preprocessMarkdown, renderMarkdown } from '../../scripts/render-markdown';
 
 export async function getStaticPaths() {
-	const dir = join(process.cwd(), 'src/routes/writing');
-	const entries = readdirSync(dir, { withFileTypes: true })
-		.filter((e) => e.isDirectory())
-		.map((e) => e.name);
-	return entries.map((slug) => ({ params: { slug } }));
+	const writings = await getCollection('writings');
+	return writings.map((entry) => ({
+		params: { slug: entry.id },
+		props: { entry },
+	}));
 }
 
-const { slug } = Astro.params;
+const { entry } = Astro.props as { entry: Awaited<ReturnType<typeof getCollection>>[number] };
 
-let title = slug;
-let longTitle: string | undefined;
-let date = '';
-let snippet = '';
+let title = entry.data.title;
+let longTitle: string | undefined = entry.data.longTitle;
+let date = entry.data.date;
+let snippet = entry.data.snippet;
 let htmlContent = '';
-let notFound = false;
 
-try {
-	const mdPath = join(process.cwd(), 'src/routes/writing', slug!, '+page.md');
-	const raw = readFileSync(mdPath, 'utf8');
-	const fm = parseFrontmatter(raw);
-	title = fm.title ?? slug;
-	longTitle = fm.longTitle;
-	date = fm.date ?? '';
-	snippet = fm.snippet ?? '';
-	const body = stripFrontmatter(raw);
-	const preprocessed = preprocessMarkdown(body);
-	htmlContent = renderMarkdown(preprocessed);
-} catch {
-	notFound = true;
-}
+const preprocessed = preprocessMarkdown(entry.body ?? '');
+htmlContent = renderMarkdown(preprocessed);
+const notFound = false;
 
 function formatDate(dateString: string) {
 	try {
@@ -52,10 +34,6 @@ function formatDate(dateString: string) {
 	} catch {
 		return dateString;
 	}
-}
-
-if (notFound) {
-	Astro.response.status = 404;
 }
 ---
 

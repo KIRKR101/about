@@ -1,5 +1,4 @@
 ---
-layout: ProjectLayout
 title: 'RMT-Debrid'
 description: 'Manage torrent downloads through Real-Debrid from a web dashboard, with real-time progress over WebSockets.'
 github: 'https://github.com/Kirkr101/RMT-Debrid'

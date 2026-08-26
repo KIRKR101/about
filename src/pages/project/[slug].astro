@@ -1,53 +1,32 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
-import { readdirSync, readFileSync } from 'fs';
-import { join } from 'path';
-import {
-	preprocessMarkdown,
-	renderMarkdown,
-	stripFrontmatter,
-	parseFrontmatter,
-} from '../../scripts/render-markdown';
+import { getCollection } from 'astro:content';
+import { preprocessMarkdown, renderMarkdown } from '../../scripts/render-markdown';
 
 export async function getStaticPaths() {
-	const dir = join(process.cwd(), 'src/routes/project');
-	const entries = readdirSync(dir, { withFileTypes: true })
-		.filter((e) => e.isDirectory())
-		.map((e) => e.name);
-	return entries.map((slug) => ({ params: { slug } }));
+	const projects = await getCollection('projects');
+	return projects.map((entry) => ({
+		params: { slug: entry.id },
+		props: { entry },
+	}));
 }
 
-const { slug } = Astro.params;
+const { entry } = Astro.props as { entry: Awaited<ReturnType<typeof getCollection>>[number] };
 
-let title = slug;
-let description = '';
-let github = '';
+let title = entry.data.title;
+let description = entry.data.description;
+let github = entry.data.github ?? '';
 let htmlContent = '';
-let notFound = false;
 
-try {
-	const mdPath = join(process.cwd(), 'src/routes/project', slug!, '+page.md');
-	const raw = readFileSync(mdPath, 'utf8');
-	const fm = parseFrontmatter(raw);
-	title = fm.title ?? slug;
-	description = fm.description ?? title;
-	github = fm.github ?? '';
-	const body = stripFrontmatter(raw);
-	const preprocessed = preprocessMarkdown(body);
-	htmlContent = renderMarkdown(preprocessed);
-	// Prepend TL;DR description (mirrors ProjectLayout.svelte) — escape to match Svelte auto-escaping
-	function esc(s: string) {
-		return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-	}
-	htmlContent = `<p>TL;DR: ${esc(description)}</p>\n` + htmlContent;
-} catch {
-	notFound = true;
+const preprocessed = preprocessMarkdown(entry.body ?? '');
+htmlContent = renderMarkdown(preprocessed);
+// Prepend TL;DR description (mirrors ProjectLayout.svelte) — escape to match Svelte auto-escaping
+function esc(s: string) {
+	return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
-
-if (notFound) {
-	Astro.response.status = 404;
-}
+htmlContent = `<p>TL;DR: ${esc(description)}</p>\n` + htmlContent;
+const notFound = false;
 ---
 
 {

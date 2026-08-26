@@ -1,5 +1,4 @@
 ---
-layout: ProjectLayout
 title: 'CPUsim'
 description: 'A 16-bit CPU emulator written from scratch, including a custom assembler and binary simulator. Handles arithmetic, stack ops, and function calls.'
 github: 'https://github.com/Kirkr101/CPUsim'

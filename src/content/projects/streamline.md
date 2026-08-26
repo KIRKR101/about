@@ -1,5 +1,4 @@
 ---
-layout: ProjectLayout
 title: 'Streamline'
 description: 'Copy large folders across a local network without SFTP or Samba overhead. Zips, chunks, and transfers in parallel with SHA256 verification.'
 github: 'https://github.com/Kirkr101/Streamline'
