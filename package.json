@@ -13,9 +13,7 @@
 		"check": "astro check",
 		"check:watch": "astro check --watch",
 		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint .",
-		"dev:svelte": "vite dev",
-		"build:svelte": "node scripts/generate-llms-full.mjs && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json && vite build"
+		"lint": "prettier --check . && eslint ."
 	},
 	"devDependencies": {
 		"@astrojs/mdx": "^4",
