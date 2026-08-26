@@ -1,7 +1,5 @@
 import MarkdownIt from 'markdown-it';
 import footnote from 'markdown-it-footnote';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 
 const md = new MarkdownIt({ html: true, linkify: true, typographer: false }).use(footnote);
 
@@ -23,20 +21,11 @@ export function preprocessMarkdown(content: string, _fileName?: string): string 
 	);
 
 	// Inlines SVG files referenced in Markdown as embedded HTML elements.
-	transformed = transformed.replace(
-		/^!\[([^\]]*)\]\((\/?writing\/[^)]+\.svg)\)\s*$/gm,
-		(match, _alt, src) => {
-			const fileName = src.replace(/^\/?writing\//, '');
-			try {
-				const svgPath = join(process.cwd(), 'static', 'writing', fileName);
-				const svgContent = readFileSync(svgPath, 'utf8');
-				const altText = _alt ?? '';
-				return `<div class="svg-container mb-2" role="img" aria-label="${altText}">${svgContent}</div>\n\n`;
-			} catch {
-				return match;
-			}
-		}
-	);
+	// NOTE: fs-based inlining removed for Cloudflare Workers compatibility
+	// (Workers have no `fs`/`path`; build-time inlining would require
+	// import-time fs which crashes `astro:middleware` server entries).
+	// Keep markdown image syntax as-is; browser will load via <img>.
+	// If you need inlined SVGs, pre-inline at build via Vite `?raw` imports.
 
 	// Transform Svelte Carousel components to SSR HTML matching Carousel.svelte 1:1
 	// <Carousel images={[...]} captions={[...]} height="..." />
