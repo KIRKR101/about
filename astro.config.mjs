@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
+import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
 import remarkFootnotes from 'remark-footnotes';
 
@@ -7,7 +8,13 @@ import remarkFootnotes from 'remark-footnotes';
 export default defineConfig({
 	publicDir: './static',
 	outDir: './dist',
-	output: 'static',
+	output: 'server',
+	adapter: cloudflare({
+		imageService: 'cloudflare',
+		platformProxy: {
+			enabled: true
+		}
+	}),
 	site: 'https://kirkr.xyz',
 	integrations: [mdx({ remarkPlugins: [remarkFootnotes] })],
 	vite: {

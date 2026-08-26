@@ -4,6 +4,8 @@ import Navbar from '../../components/Navbar.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { preprocessMarkdown, renderMarkdown } from '../../scripts/render-markdown';
 
+export const prerender = false;
+
 export async function getStaticPaths() {
 	const projects = await getCollection('projects');
 	return projects.map((entry: CollectionEntry<'projects'>) => ({
@@ -12,7 +14,27 @@ export async function getStaticPaths() {
 	}));
 }
 
-const { entry } = Astro.props as { entry: CollectionEntry<'projects'> };
+let entry = (Astro.props as { entry?: CollectionEntry<'projects'> }).entry;
+if (!entry) {
+	const slug = (Astro.params as { slug?: string }).slug;
+	if (slug) {
+		const projects = await getCollection('projects');
+		entry = projects.find((e: CollectionEntry<'projects'>) => e.id === slug);
+	}
+}
+if (!entry) {
+	return Astro.redirect('/404');
+}
+
+if (Astro.locals.prefersMarkdown) {
+	return new Response(entry.body ?? '', {
+		status: 200,
+		headers: {
+			'Content-Type': 'text/markdown; charset=utf-8',
+			Vary: 'Accept'
+		}
+	});
+}
 
 let title = entry.data.title;
 let description = entry.data.description;

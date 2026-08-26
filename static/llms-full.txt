@@ -244,7 +244,7 @@ The execution hinges on the dramatic interplay of light and shadow, with an almo
 
 _Fig 5: Carel Fabritius, Self-Portrait, Circa 1647–1648_
 
-“All this goes with the Rotterdam portrait of Fabritius, into a special category in which the portrait of a human being is transformed into something luminous and consoling.”
+“All this goes with the Rotterdam portrait of Fabritius, into a special category in which the portrait of a human being is transformed into something luminous and consoling.”  
 — Vincent Van Gogh, to Theo van Gogh. Saint-Rémy-de-Provence, on or about Monday, 2 September 1889.[^5]
 
 In this self-portrait, painted at around twenty-three years old, Fabritius presents himself with tousled curls falling to his shoulders and an open-necked shirt that reveals his chest hair, partially obscured by his work apron. He is set against a crumbling wall into which he scratched his signature while the paint was still wet. The portrait captures a young man who had already endured more than his share of hardship — he had recently survived the death of his young wife and all three of their children, returning from Amsterdam to grieve in his parents' home in Beemster. His piercing black eyes inspect us directly, and though he is young, his face shows the rugged features of someone who has lived a difficult life.
@@ -583,10 +583,6 @@ British responses like the mass arrests during Operation Agatha in 1946 were act
 
 ## Project: Audioshare
 
-<script>
-	import Carousel from '$lib/components/Carousel.svelte';
-</script>
-
 This site was mostly inspired by pillowcase.su, a music sharing platform mostly aimed towards leaks. I liked the idea for a music file sharing platform, so I built one myself.
 
 The main aim was better performance and a more modern look and feel, combined with better discoverability and user experience.
@@ -697,10 +693,6 @@ Because it is self-hosted, everything runs on your own machine and your own netw
 
 ## Project: WASMagick
 
-<script>
-	import Carousel from '$lib/components/Carousel.svelte';
-</script>
-
 This was a project I started after developing a distdain for every publically-available tool. As somehow who knows how to use the command line, searching 'png to jpg' online feels like sacrilege, but that is the only thing that works in the browser.
 
 Especially ones that simply do a server call and convert in the backend feel like a waste of resources. WASMagick does all the conversion in the browser, so you never have to leave the page, and your data stays local instead of being uploaded to one of those fishy sites.
@@ -809,3 +801,4 @@ height="h-[640px]"
 - Keyboard Ctrl+Z / Ctrl+Shift+Z, toolbar + history panel controls
 - History list with thumbnails, per-entry process time, dims, format, size
 - Per-entry settings diff ("Since last" / "From original" modes), jump-to-any-state, clear (with confirm)
+
