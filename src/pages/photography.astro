@@ -1,0 +1,492 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { photographyData } from '../lib/photography-list';
+import { photographyMarkdown } from '../lib/markdown-helpers';
+// @ts-ignore - false positive
+void photographyMarkdown;
+
+const cities = Object.keys(photographyData);
+const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
+
+if (Astro.locals.prefersMarkdown) {
+	return new Response(photographyMarkdown(cities), {
+		status: 200,
+		headers: {
+			'Content-Type': 'text/markdown; charset=utf-8',
+			Vary: 'Accept'
+		}
+	});
+}
+---
+
+<Layout title="Photography | kirkr.xyz" description="A collection of photography from various cities.">
+	<Navbar slot="navbar" />
+	<link rel="preconnect" href="https://res.cloudinary.com" crossorigin="anonymous" slot="head" />
+
+	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
+		<main class="w-full max-w-5xl">
+			<div class="pt-4">
+				<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
+					<span class="opacity-90">Photography</span><span class="opacity-40">.</span>
+				</h1>
+				<div class="mt-4 h-px bg-bd"></div>
+			</div>
+
+			<nav class="sticky top-16 z-30 bg-bg/80 backdrop-blur-sm" aria-label="Photography sections">
+				<div data-photo-nav class="no-scrollbar flex h-12 items-center gap-6 overflow-x-auto px-2">
+					{
+						cities.map((city) => (
+							<a
+								href={`#${slugify(city)}`}
+								data-city-link={city}
+								class="relative flex h-full shrink-0 items-center font-sans text-[11px] tracking-[0.1em] whitespace-nowrap uppercase transition-colors duration-75 text-ink-70 hover:text-ink"
+							>
+								<span class="relative">
+									{city}
+									<span
+										data-city-underline={city}
+										class="absolute inset-x-0 -bottom-0.5 h-px bg-ink-80 opacity-0 transition-opacity duration-150"
+									/>
+								</span>
+							</a>
+						))
+					}
+				</div>
+			</nav>
+
+			<div class="min-w-0 flex-1 pt-8">
+				<div data-photo-grid>
+					{
+						Object.entries(photographyData).map(([city, images]) => (
+							<section
+								id={slugify(city)}
+								data-city-section={city}
+								class="cv-auto mb-16 scroll-mt-[150px] last:mb-0 md:scroll-mt-[190px]"
+							>
+								<div class="mb-6 py-2">
+									<h2 class="mb-1 font-serif text-[32px] leading-none text-ink-80">{city}</h2>
+								</div>
+
+								<div class="columns-1 gap-4 sm:columns-2">
+									{images.map((image) => (
+										<button
+											type="button"
+											class="group mb-4 w-full cursor-pointer break-inside-avoid overflow-hidden rounded-sm border border-bd bg-transparent p-0 text-left transition-all duration-75"
+											data-photo-card={image.id}
+											data-photo-city={city}
+											aria-label={`View photo from ${city}`}
+										>
+											<img
+												src={image.url}
+												srcset={image.srcset}
+												sizes="(max-width: 640px) 100vw, 50vw"
+												alt={`Photo from ${city}`}
+												style={`aspect-ratio: ${image.aspectRatio}`}
+												class="h-auto w-full object-cover transition-all duration-700 ease-out group-hover:scale-102 group-hover:cursor-zoom-in group-hover:brightness-105"
+												loading="lazy"
+												decoding="async"
+											/>
+										</button>
+									))}
+								</div>
+							</section>
+						))
+					}
+				</div>
+			</div>
+
+			<Footer />
+		</main>
+	</div>
+
+	<!-- Lightbox -->
+	<div data-photo-lightbox class="fixed inset-0 z-60 hidden bg-[#0b0b0b]/95 select-none" role="dialog" aria-modal="true" tabindex="-1">
+		<div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.04),transparent_60%)]"></div>
+		<button type="button" data-photo-close class="absolute top-4 right-4 z-50 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 md:top-6 md:right-6 md:h-11 md:w-11" aria-label="Close lightbox">
+			<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+		</button>
+		<button type="button" data-photo-prev class="absolute top-1/2 left-3 z-50 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 md:left-6 md:h-14 md:w-14" aria-label="Previous image">
+			<svg class="h-5 w-5 md:h-6 md:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"></path></svg>
+		</button>
+		<button type="button" data-photo-next class="absolute top-1/2 right-3 z-50 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 md:right-6 md:h-14 md:w-14" aria-label="Next image">
+			<svg class="h-5 w-5 md:h-6 md:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"></path></svg>
+		</button>
+		<div data-photo-media-wrap class="absolute inset-x-1 top-2 bottom-2 flex [touch-action:pinch-zoom] items-center justify-center" role="button" tabindex="0" aria-label="Toggle image details">
+			<div data-photo-loading class="absolute animate-pulse font-mono text-[10px] tracking-widest text-white/20 uppercase hidden">Loading</div>
+			<img data-photo-image src="" alt="" class="max-h-full max-w-full object-contain transition-all duration-300" draggable="false" />
+		</div>
+		<div data-photo-footer class="pointer-events-none absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent px-4 pt-20 pb-6 transition-opacity duration-300 select-none md:px-6 md:pt-28 md:pb-8">
+			<div class="pointer-events-auto mx-auto w-full max-w-[780px] text-center">
+				<div data-photo-title class="font-serif text-[22px] leading-tight tracking-tight text-white/95 md:text-[30px]"></div>
+				<div data-photo-counter class="mt-2 font-mono text-[10px] tracking-[0.18em] text-white/40 uppercase md:mt-3"></div>
+				<div data-photo-meta class="mt-5 flex flex-wrap justify-center gap-x-8 gap-y-3 md:mt-7"></div>
+			</div>
+		</div>
+	</div>
+</Layout>
+
+<script>
+import { photographyData } from '../lib/photography-list';
+
+	const cities: string[] = Object.keys(photographyData);
+	const allImages = Object.entries(photographyData).flatMap(([city, images]) =>
+		images.map((img) => ({ ...img, city })),
+	);
+	const cityById = new Map<string, string>();
+	for (const img of allImages) cityById.set(img.id, img.city);
+
+	let activeCity = cities[0] ?? '';
+	let visualOrder: string[] = allImages.map((img) => img.id);
+	let currentImageId: string | null = null;
+	let exifMap: Record<string, [string, string][]> | null = null;
+	let exifLoadPromise: Promise<Record<string, [string, string][]>> | null = null;
+	let isAnimating = false;
+	let footerVisible = true;
+	let swipeTimestamp = 0;
+	let touchStartX: number | null = null;
+	let touchStartY: number | null = null;
+
+	function computeVisualOrder(positions: { id: string; left: number; top: number }[], rowTolerance = 20): string[] {
+		if (positions.length === 0) return [];
+		const sorted = [...positions].sort((a, b) => a.top - b.top);
+		const rows: { id: string; left: number; top: number }[][] = [];
+		let currentRow: { id: string; left: number; top: number }[] = [];
+		let rowAnchorTop = sorted[0]!.top;
+		for (const pos of sorted) {
+			if (currentRow.length > 0 && Math.abs(pos.top - rowAnchorTop) > rowTolerance) {
+				rows.push(currentRow);
+				currentRow = [];
+				rowAnchorTop = pos.top;
+			}
+			currentRow.push(pos);
+		}
+		if (currentRow.length > 0) rows.push(currentRow);
+		const result: string[] = [];
+		for (const row of rows) {
+			row.sort((a, b) => a.left - b.left);
+			for (const item of row) result.push(item.id);
+		}
+		return result;
+	}
+
+	function createRafObserver(callback: () => void) {
+		let frame = 0;
+		let observer: ResizeObserver | null = null;
+		function schedule() {
+			if (frame) return;
+			frame = requestAnimationFrame(() => {
+				frame = 0;
+				callback();
+			});
+		}
+		function observe(target: Element) {
+			if (observer) observer.disconnect();
+			observer = new ResizeObserver(schedule);
+			observer.observe(target);
+		}
+		function destroy() {
+			if (observer) observer.disconnect();
+			observer = null;
+			if (frame) cancelAnimationFrame(frame);
+			frame = 0;
+		}
+		return { observe, destroy };
+	}
+
+	async function ensureExif() {
+		if (exifMap) return exifMap;
+		if (!exifLoadPromise) {
+			exifLoadPromise = import('../lib/photography-exif').then((m: any) => {
+				exifMap = m.photographyExif;
+				return exifMap!;
+			});
+		}
+		return exifLoadPromise;
+	}
+
+	function updateVisualOrder() {
+		const cards = document.querySelectorAll('[data-photo-card]');
+		if (cards.length === 0) return;
+		const positions: { id: string; left: number; top: number }[] = [];
+		cards.forEach((el) => {
+			const id = (el as HTMLElement).dataset['photoCard']!;
+			const rect = el.getBoundingClientRect();
+			positions.push({ id, left: rect.left, top: rect.top });
+		});
+		// Group by city
+		const byCity = new Map<string, typeof positions>();
+		for (const pos of positions) {
+			const city = cityById.get(pos.id);
+			if (!city) continue;
+			if (!byCity.has(city)) byCity.set(city, []);
+			byCity.get(city)!.push(pos);
+		}
+		const ordered: string[] = [];
+		for (const city of Object.keys(photographyData)) {
+			const cityPositions = byCity.get(city);
+			if (cityPositions) ordered.push(...computeVisualOrder(cityPositions));
+		}
+		visualOrder = ordered;
+	}
+
+	function initPhotography() {
+		const navListEl = document.querySelector('[data-photo-nav]') as HTMLElement | null;
+		const gridContainer = document.querySelector('[data-photo-grid]') as HTMLElement | null;
+
+		// Active city tracking via IntersectionObserver
+		const sectionEls = new Map<string, HTMLElement>();
+		document.querySelectorAll('[data-city-section]').forEach((el) => {
+			const city = (el as HTMLElement).dataset['citySection']!;
+			sectionEls.set(city, el as HTMLElement);
+		});
+
+		function scrollNavToCity(city: string) {
+			if (!navListEl) return;
+			const label = navListEl.querySelector<HTMLElement>(`[data-city-link="${city}"]`);
+			if (!label) return;
+			const listRect = navListEl.getBoundingClientRect();
+			const labelRect = label.getBoundingClientRect();
+			const inset = 8;
+			if (labelRect.left < listRect.left + inset) {
+				navListEl.scrollTo({
+					left: navListEl.scrollLeft + (labelRect.left - listRect.left) - inset,
+					behavior: 'smooth',
+				});
+			} else if (labelRect.right > listRect.right - inset) {
+				navListEl.scrollTo({
+					left: navListEl.scrollLeft + (labelRect.right - listRect.right) + inset,
+					behavior: 'smooth',
+				});
+			}
+		}
+
+		function setActiveCity(city: string) {
+			if (city === activeCity) return;
+			activeCity = city;
+			document.querySelectorAll('[data-city-link]').forEach((el) => {
+				const c = (el as HTMLElement).dataset['cityLink']!;
+				const underline = document.querySelector(`[data-city-underline="${c}"]`) as HTMLElement | null;
+				const isActive = c === city;
+				el.classList.toggle('text-ink-80', isActive);
+				el.classList.toggle('text-ink-70', !isActive);
+				if (underline) underline.classList.toggle('opacity-100', isActive);
+				if (underline) underline.classList.toggle('opacity-0', !isActive);
+			});
+			scrollNavToCity(city);
+		}
+
+		// Set initial active
+		if (cities[0]) setActiveCity(cities[0]);
+
+		if (sectionEls.size >= cities.length) {
+			const observer = new IntersectionObserver(
+				(entries) => {
+					let best: Element | null = null;
+					let bestTop = -Infinity;
+					for (const entry of entries) {
+						if (!entry.isIntersecting) continue;
+						if (entry.boundingClientRect.top > bestTop) {
+							bestTop = entry.boundingClientRect.top;
+							best = entry.target;
+						}
+					}
+					if (best) {
+						for (const [city, el] of sectionEls) {
+							if (el === best) {
+								setActiveCity(city);
+								break;
+							}
+						}
+					}
+				},
+				{ rootMargin: '-150px 0px -55% 0px' },
+			);
+			for (const el of sectionEls.values()) observer.observe(el);
+		}
+
+		document.querySelectorAll('[data-city-link]').forEach((el) => {
+			el.addEventListener('click', (e) => {
+				e.preventDefault();
+				const city = (el as HTMLElement).dataset['cityLink']!;
+				sectionEls.get(city)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			});
+		});
+
+		// Visual order via RAF observer
+		const rafObserver = createRafObserver(updateVisualOrder);
+		requestAnimationFrame(() => updateVisualOrder());
+		if (gridContainer) rafObserver.observe(gridContainer);
+		// Also update on image load
+		document.querySelectorAll('[data-photo-card] img').forEach((img) => {
+			img.addEventListener('load', updateVisualOrder);
+		});
+
+		// Lightbox
+		const lightbox = document.querySelector('[data-photo-lightbox]') as HTMLElement | null;
+		const imgEl = document.querySelector('[data-photo-image]') as HTMLImageElement | null;
+		const titleEl = document.querySelector('[data-photo-title]') as HTMLElement | null;
+		const counterEl = document.querySelector('[data-photo-counter]') as HTMLElement | null;
+		const metaEl = document.querySelector('[data-photo-meta]') as HTMLElement | null;
+		const loadingEl = document.querySelector('[data-photo-loading]') as HTMLElement | null;
+		const footerEl = document.querySelector('[data-photo-footer]') as HTMLElement | null;
+		const mediaWrap = document.querySelector('[data-photo-media-wrap]') as HTMLElement | null;
+		const closeBtn = document.querySelector('[data-photo-close]') as HTMLElement | null;
+		const prevBtn = document.querySelector('[data-photo-prev]') as HTMLElement | null;
+		const nextBtn = document.querySelector('[data-photo-next]') as HTMLElement | null;
+
+		function getCurrentIndex() {
+			if (!currentImageId) return 0;
+			return visualOrder.indexOf(currentImageId);
+		}
+
+		function renderLightbox() {
+			if (!currentImageId || !imgEl || !titleEl || !counterEl) return;
+			const idx = getCurrentIndex();
+			const item = allImages.find((img) => img.id === currentImageId);
+			if (!item) return;
+			if (loadingEl) loadingEl.classList.remove('hidden');
+			imgEl.classList.add('scale-[0.98]', 'opacity-0');
+			imgEl.classList.remove('scale-100', 'opacity-100');
+			imgEl.src = item.url;
+			imgEl.alt = `Photo from ${item.city}`;
+			imgEl.onload = () => {
+				if (loadingEl) loadingEl.classList.add('hidden');
+				imgEl.classList.remove('scale-[0.98]', 'opacity-0');
+				imgEl.classList.add('scale-100', 'opacity-100');
+			};
+			titleEl.textContent = item.city;
+			counterEl.textContent = `${idx + 1} / ${allImages.length}`;
+			const exif = exifMap?.[currentImageId!];
+			if (metaEl) {
+				if (exif && exif.length > 0) {
+					metaEl.innerHTML = exif
+						.map(([k, v]) => `<div class="font-mono text-[10px] whitespace-nowrap text-white/25 md:text-[11px]">${k}: <span class="text-white/50">${v}</span></div>`)
+						.join('');
+				} else {
+					metaEl.innerHTML = '';
+				}
+			}
+			footerVisible = true;
+			if (footerEl) footerEl.style.opacity = '1';
+
+			// Prefetch neighbors
+			const nextId = visualOrder[(idx + 1) % visualOrder.length];
+			const prevId = visualOrder[(idx - 1 + visualOrder.length) % visualOrder.length];
+			[nextId, prevId].forEach((id) => {
+				if (!id) return;
+				const u = allImages.find((img) => img.id === id)?.url;
+				if (u) {
+					const link = document.createElement('link');
+					link.rel = 'preload';
+					link.as = 'image';
+					link.href = u;
+					document.head.appendChild(link);
+					setTimeout(() => link.remove(), 5000);
+				}
+			});
+		}
+
+		function openLightbox(imageId: string) {
+			ensureExif().then(() => {
+				currentImageId = imageId;
+				if (lightbox) {
+					lightbox.classList.remove('hidden');
+					lightbox.focus();
+				}
+				const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+				if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`;
+				document.body.style.overflow = 'hidden';
+				renderLightbox();
+			});
+		}
+
+		function closeLightbox() {
+			if (lightbox) {
+				lightbox.classList.add('hidden');
+			}
+			document.body.style.overflow = '';
+			document.body.style.paddingRight = '';
+		}
+
+		function goNext() {
+			if (isAnimating) return;
+			isAnimating = true;
+			const idx = getCurrentIndex();
+			currentImageId = visualOrder[(idx + 1) % visualOrder.length] ?? null;
+			renderLightbox();
+			setTimeout(() => (isAnimating = false), 250);
+		}
+
+		function goPrev() {
+			if (isAnimating) return;
+			isAnimating = true;
+			const idx = getCurrentIndex();
+			currentImageId = visualOrder[(idx - 1 + visualOrder.length) % visualOrder.length] ?? null;
+			renderLightbox();
+			setTimeout(() => (isAnimating = false), 250);
+		}
+
+		function toggleFooter() {
+			if (Date.now() - swipeTimestamp < 300) return;
+			footerVisible = !footerVisible;
+			if (footerEl) footerEl.style.opacity = footerVisible ? '1' : '0';
+		}
+
+		document.querySelectorAll('[data-photo-card]').forEach((el) => {
+			el.addEventListener('click', () => {
+				const id = (el as HTMLElement).dataset['photoCard']!;
+				openLightbox(id);
+			});
+		});
+
+		closeBtn?.addEventListener('click', closeLightbox);
+		nextBtn?.addEventListener('click', goNext);
+		prevBtn?.addEventListener('click', goPrev);
+		mediaWrap?.addEventListener('click', toggleFooter);
+		mediaWrap?.addEventListener('keydown', (e: KeyboardEvent) => {
+			if (e.key === 'Enter' || e.key === ' ') {
+				e.preventDefault();
+				toggleFooter();
+			}
+		});
+
+		lightbox?.addEventListener('click', (e) => {
+			if (Date.now() - swipeTimestamp < 300) return;
+			if (!(e.target as Element).closest('img, button, [data-photo-footer]')) closeLightbox();
+		});
+
+		lightbox?.addEventListener('touchstart', (e) => {
+			const t = e.touches[0];
+			if (t) {
+				touchStartX = t.clientX;
+				touchStartY = t.clientY;
+			}
+		});
+		lightbox?.addEventListener('touchend', (e) => {
+			if (touchStartX === null || touchStartY === null) return;
+			const t = e.changedTouches[0];
+			if (!t) return;
+			const diffX = t.clientX - touchStartX;
+			const diffY = t.clientY - touchStartY;
+			if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+				swipeTimestamp = Date.now();
+				if (diffX > 0) goPrev();
+				else goNext();
+			}
+			touchStartX = null;
+			touchStartY = null;
+		});
+
+		document.addEventListener('keydown', (e: KeyboardEvent) => {
+			if (!lightbox || lightbox.classList.contains('hidden')) return;
+			if (e.key === 'Escape') closeLightbox();
+			if (e.key === 'ArrowRight') goNext();
+			if (e.key === 'ArrowLeft') goPrev();
+		});
+	}
+
+	initPhotography();
+	document.addEventListener('astro:after-swap', initPhotography);
+</script>

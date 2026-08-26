@@ -18,34 +18,57 @@ llms.txt: the index lives at https://kirkr.xyz/llms.txt.
 
 `;
 
+/** @param {string} md @returns {string} */
 const stripFrontmatter = (md) => md.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '');
+/** @param {string} md @returns {string} */
 const frontmatter = (md) => md.match(/^---\s*\n([\s\S]*?)\n---\s*\n/)?.[1] ?? md;
+/** @param {string} md @param {string} field @returns {string | undefined} */
 const frontmatterField = (md, field) =>
 	frontmatter(md).match(new RegExp(`^${field}:\\s*['"]?([^\\n'"]+)`, 'm'))?.[1];
+/** @param {string} md @returns {string} */
 const cleanBody = (md) =>
 	md
 		// Obsidian-style images: ![[file|alt]] -> alt text
-		.replace(/!\[\[[^|\]]+(?:\|([^\]]+))?\]\]/g, (_m, alt) => alt ?? '')
+		.replace(
+			/!\[\[[^|\]]+(?:\|([^\]]+))?\]\]/g,
+			/** @param {string} _m @param {string | undefined} alt @returns {string} */
+			(_m, alt) => alt ?? ''
+		)
 		// Inline SVGs: ![alt](/writing/x.svg) -> alt text
-		.replace(/!\[([^\]]*)\]\(\/?writing\/[^)]+\.svg\)/g, (_m, alt) => alt ?? '')
+		.replace(
+			/!\[([^\]]*)\]\(\/?writing\/[^)]+\.svg\)/g,
+			/** @param {string} _m @param {string | undefined} alt @returns {string} */
+			(_m, alt) => alt ?? ''
+		)
 		// External images: keep only the caption if present
 		.replace(/!\[[^\]]*\]\([^)]*\)/g, '')
 		.replace(/\n{3,}/g, '\n\n')
 		.trim();
 
+/** @param {string} dir @returns {string[]} */
 const collect = (dir) =>
 	readdirSync(join(ROOT, dir), { withFileTypes: true })
-		.filter((e) => e.isDirectory())
-		.map((e) => join(ROOT, dir, e.name, '+page.md'))
-		.filter((p) => {
-			try {
-				readFileSync(p);
-				return true;
-			} catch {
-				return false;
+		.filter(
+			/** @param {import('node:fs').Dirent} e @returns {boolean} */
+			(e) => e.isFile() && e.name.endsWith('.md')
+		)
+		.map(
+			/** @param {import('node:fs').Dirent} e @returns {string} */
+			(e) => join(ROOT, dir, e.name)
+		)
+		.filter(
+			/** @param {string} p @returns {boolean} */
+			(p) => {
+				try {
+					readFileSync(p);
+					return true;
+				} catch {
+					return false;
+				}
 			}
-		});
+		);
 
+/** @param {string} path @param {string} heading @returns {string} */
 const render = (path, heading) => {
 	const md = readFileSync(path, 'utf8');
 	const title = frontmatterField(md, 'title');
@@ -59,12 +82,15 @@ ${body}
 };
 
 let out = OPENING;
-const writings = collect('src/routes/writing').sort((a, b) => {
-	const da = frontmatterField(readFileSync(a, 'utf8'), 'date');
-	const db = frontmatterField(readFileSync(b, 'utf8'), 'date');
-	return da && db ? (db < da ? -1 : 1) : 0;
-});
-const projects = collect('src/routes/project').sort();
+const writings = collect('src/content/writings').sort(
+	/** @param {string} a @param {string} b @returns {number} */
+	(a, b) => {
+		const da = frontmatterField(readFileSync(a, 'utf8'), 'date');
+		const db = frontmatterField(readFileSync(b, 'utf8'), 'date');
+		return da && db ? (db < da ? -1 : 1) : 0;
+	}
+);
+const projects = collect('src/content/projects').sort();
 
 for (const w of writings) out += render(w, 'Writing');
 out += `\n## Projects\n\n`;

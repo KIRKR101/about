@@ -1,5 +1,5 @@
 {
-	"extends": "./.svelte-kit/tsconfig.json",
+	"extends": "astro/tsconfigs/strict",
 	"compilerOptions": {
 		"allowJs": true,
 		"checkJs": true,
@@ -34,5 +34,23 @@
 		"target": "ESNext",
 		"module": "ESNext",
 		"lib": ["ESNext", "DOM", "DOM.Iterable"]
-	}
+	},
+	"include": ["src/**/*", ".astro/types.d.ts", "astro.config.mjs", "scripts/**/*"],
+	"exclude": [
+		"dist",
+		"public",
+		"static",
+		"node_modules",
+		".svelte-kit",
+		".wrangler",
+		".vercel",
+		".netlify",
+		".output",
+		"build",
+		"target",
+		"dist/**/*",
+		"public/_app/**/*",
+		".astro/data-store.json",
+		".astro/content.d.ts"
+	]
 }

@@ -1,0 +1,119 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { writingsMarkdown } from '../lib/markdown-helpers';
+// @ts-ignore - false positive
+void writingsMarkdown;
+
+interface Writing {
+	file: string;
+	title: string;
+	date: string;
+	snippet?: string;
+}
+
+const writingsCollection = await getCollection('writings');
+const allWritings = writingsCollection
+	.map((entry: CollectionEntry<'writings'>) => ({
+		file: entry.id,
+		title: entry.data.title,
+		date: entry.data.date,
+		snippet: entry.data.snippet,
+	}))
+	.sort(
+		(a: (typeof allWritings)[number], b: (typeof allWritings)[number]) =>
+			new Date(b.date).getTime() - new Date(a.date).getTime()
+	);
+
+const groupedWritings = (() => {
+	const groups: Record<string, Writing[]> = {};
+	for (const w of allWritings) {
+		const year = new Date(w.date).getFullYear().toString();
+		(groups[year] ??= []).push(w);
+	}
+	return Object.entries(groups)
+		.map(([year, writings]) => ({ year, writings }))
+		.sort((a, b) => b.year.localeCompare(a.year));
+})();
+
+function formatShortDate(dateString: string) {
+	try {
+		return new Intl.DateTimeFormat('en-GB', { month: 'short', day: '2-digit' }).format(
+			new Date(dateString),
+		);
+	} catch {
+		return dateString;
+	}
+}
+
+if (Astro.locals.prefersMarkdown) {
+	return new Response(writingsMarkdown(allWritings), {
+		status: 200,
+		headers: {
+			'Content-Type': 'text/markdown; charset=utf-8',
+			Vary: 'Accept'
+		}
+	});
+}
+---
+
+<Layout title="Writings | kirkr.xyz" description="Writings and articles on various topics.">
+	<Navbar slot="navbar" />
+	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
+		<main class="w-full max-w-[600px]">
+			<div class="py-4">
+				<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
+					<span class="opacity-90">Writings</span><span class="opacity-40">.</span>
+				</h1>
+			</div>
+
+			<div class="mb-8 h-px bg-bd"></div>
+
+			{
+				allWritings.length === 0 ? (
+					<div class="py-12 text-center">
+						<div class="font-mono text-[11px] tracking-[0.1em] text-ink-70 uppercase">
+							No entries found
+						</div>
+					</div>
+				) : (
+					<div class="flex flex-col gap-10">
+						{groupedWritings.map((group) => (
+							<div class="flex flex-col">
+								<h2 class="mb-3 font-mono text-[14px] text-ink-40 uppercase sm:px-1.5">
+									{group.year}
+								</h2>
+								<div class="flex flex-col">
+									{group.writings.map((writing) => (
+										<a
+											href={`/writing/${writing.file}`}
+											class="group flex w-full flex-col rounded-sm border-b border-bd/30 py-3 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
+										>
+											<div class="flex w-full items-baseline justify-between">
+												<span class="font-sans text-[14px] text-ink-70 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2">
+													{writing.title}
+												</span>
+												<span class="shrink-0 font-mono text-[11px] tracking-wider text-ink-70 uppercase">
+													{formatShortDate(writing.date)}
+												</span>
+											</div>
+											{writing.snippet && (
+												<span class="mt-1 line-clamp-2 font-sans text-[12px] leading-relaxed text-ink-70">
+													{writing.snippet}
+												</span>
+											)}
+										</a>
+									))}
+								</div>
+							</div>
+						))}
+					</div>
+				)
+			}
+
+			<Footer />
+		</main>
+	</div>
+</Layout>

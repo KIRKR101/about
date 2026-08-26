@@ -583,10 +583,6 @@ British responses like the mass arrests during Operation Agatha in 1946 were act
 
 ## Project: Audioshare
 
-<script>
-	import Carousel from '$lib/components/Carousel.svelte';
-</script>
-
 This site was mostly inspired by pillowcase.su, a music sharing platform mostly aimed towards leaks. I liked the idea for a music file sharing platform, so I built one myself.
 
 The main aim was better performance and a more modern look and feel, combined with better discoverability and user experience.
@@ -697,10 +693,6 @@ Because it is self-hosted, everything runs on your own machine and your own netw
 
 ## Project: WASMagick
 
-<script>
-	import Carousel from '$lib/components/Carousel.svelte';
-</script>
-
 This was a project I started after developing a distdain for every publically-available tool. As somehow who knows how to use the command line, searching 'png to jpg' online feels like sacrilege, but that is the only thing that works in the browser.
 
 Especially ones that simply do a server call and convert in the backend feel like a waste of resources. WASMagick does all the conversion in the browser, so you never have to leave the page, and your data stays local instead of being uploaded to one of those fishy sites.
@@ -760,7 +752,7 @@ height="h-[640px]"
 - Canvas Extent (W/H + gravity + background colour picker)
 - Border (size slider + colour picker)
 
-### 4. colour & Tone
+### 4. Colour & Tone
 
 - Adjust: Brightness, Saturation, Hue sliders (modulate) + Contrast (brightness-contrast)
 - Normalize, Auto Level, Auto Gamma toggles

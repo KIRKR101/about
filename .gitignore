@@ -6,6 +6,7 @@ node_modules
 .netlify
 .wrangler
 /.svelte-kit
+.astro
 /build
 
 # OS
@@ -26,6 +27,7 @@ vite.config.ts.timestamp-*
 target/
 /lastfm-server/.env
 
-# SvelteKit build output
-/public/
+# Build output (Astro: dist, legacy SvelteKit: public)
+dist/
+public/
 scrape.py
