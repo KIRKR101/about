@@ -2,6 +2,19 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import { filmsMarkdown } from '../lib/markdown-helpers';
+// @ts-ignore - false positive
+void filmsMarkdown;
+
+if (Astro.locals.prefersMarkdown) {
+	return new Response(filmsMarkdown(), {
+		status: 200,
+		headers: {
+			'Content-Type': 'text/markdown; charset=utf-8',
+			Vary: 'Accept'
+		}
+	});
+}
 ---
 
 <Layout title="Films | kirkr.xyz" description="A log of recently watched films.">

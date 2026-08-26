@@ -4,6 +4,9 @@ import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { projects } from '../lib/projects-data';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { indexMarkdown } from '../lib/markdown-helpers';
+// @ts-ignore - astro check false positive for noUnusedLocals with early return
+void indexMarkdown;
 
 const writingsCollection = await getCollection('writings');
 const allWritings = writingsCollection
@@ -19,6 +22,16 @@ const allWritings = writingsCollection
 	);
 const visibleWritings = allWritings.slice(0, 5);
 const visibleProjects = projects.slice(0, 5);
+
+if (Astro.locals.prefersMarkdown) {
+	return new Response(indexMarkdown(visibleWritings, visibleProjects), {
+		status: 200,
+		headers: {
+			'Content-Type': 'text/markdown; charset=utf-8',
+			Vary: 'Accept'
+		}
+	});
+}
 
 function formatDate(dateString: string) {
 	try {

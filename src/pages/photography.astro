@@ -3,9 +3,22 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { photographyData } from '../lib/photography-list';
+import { photographyMarkdown } from '../lib/markdown-helpers';
+// @ts-ignore - false positive
+void photographyMarkdown;
 
 const cities = Object.keys(photographyData);
 const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
+
+if (Astro.locals.prefersMarkdown) {
+	return new Response(photographyMarkdown(cities), {
+		status: 200,
+		headers: {
+			'Content-Type': 'text/markdown; charset=utf-8',
+			Vary: 'Accept'
+		}
+	});
+}
 ---
 
 <Layout title="Photography | kirkr.xyz" description="A collection of photography from various cities.">
@@ -115,7 +128,7 @@ const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
 </Layout>
 
 <script>
-	import { photographyData } from '../lib/photography-list';
+import { photographyData } from '../lib/photography-list';
 
 	const cities: string[] = Object.keys(photographyData);
 	const allImages = Object.entries(photographyData).flatMap(([city, images]) =>

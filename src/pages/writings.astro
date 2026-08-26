@@ -3,6 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { writingsMarkdown } from '../lib/markdown-helpers';
+// @ts-ignore - false positive
+void writingsMarkdown;
 
 interface Writing {
 	file: string;
@@ -43,6 +46,16 @@ function formatShortDate(dateString: string) {
 	} catch {
 		return dateString;
 	}
+}
+
+if (Astro.locals.prefersMarkdown) {
+	return new Response(writingsMarkdown(allWritings), {
+		status: 200,
+		headers: {
+			'Content-Type': 'text/markdown; charset=utf-8',
+			Vary: 'Accept'
+		}
+	});
 }
 ---
 
