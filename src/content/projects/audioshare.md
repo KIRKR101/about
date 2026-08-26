@@ -4,10 +4,6 @@ description: 'Stream any audio format, including lossless, with automatic metada
 github: 'https://github.com/Kirkr101/audioshare-sv'
 ---
 
-<script>
-	import Carousel from '$lib/components/Carousel.svelte';
-</script>
-
 This site was mostly inspired by pillowcase.su, a music sharing platform mostly aimed towards leaks. I liked the idea for a music file sharing platform, so I built one myself.
 
 The main aim was better performance and a more modern look and feel, combined with better discoverability and user experience.

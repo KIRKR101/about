@@ -4,10 +4,6 @@ description: 'Run ImageMagick filters directly in the browser through WebAssembl
 github: 'https://github.com/Kirkr101/wasmagick'
 ---
 
-<script>
-	import Carousel from '$lib/components/Carousel.svelte';
-</script>
-
 This was a project I started after developing a distdain for every publically-available tool. As somehow who knows how to use the command line, searching 'png to jpg' online feels like sacrilege, but that is the only thing that works in the browser.
 
 Especially ones that simply do a server call and convert in the backend feel like a waste of resources. WASMagick does all the conversion in the browser, so you never have to leave the page, and your data stays local instead of being uploaded to one of those fishy sites.
