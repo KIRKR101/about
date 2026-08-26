@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
 interface Writing {
 	file: string;
@@ -13,13 +13,16 @@ interface Writing {
 
 const writingsCollection = await getCollection('writings');
 const allWritings = writingsCollection
-	.map((entry) => ({
+	.map((entry: CollectionEntry<'writings'>) => ({
 		file: entry.id,
 		title: entry.data.title,
 		date: entry.data.date,
 		snippet: entry.data.snippet,
 	}))
-	.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+	.sort(
+		(a: (typeof allWritings)[number], b: (typeof allWritings)[number]) =>
+			new Date(b.date).getTime() - new Date(a.date).getTime()
+	);
 
 const groupedWritings = (() => {
 	const groups: Record<string, Writing[]> = {};

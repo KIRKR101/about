@@ -3,17 +3,20 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { projects } from '../lib/projects-data';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
 const writingsCollection = await getCollection('writings');
 const allWritings = writingsCollection
-	.map((entry) => ({
+	.map((entry: CollectionEntry<'writings'>) => ({
 		title: entry.data.title,
 		date: entry.data.date,
 		file: entry.id,
 		snippet: entry.data.snippet ?? null,
 	}))
-	.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+	.sort(
+		(a: (typeof allWritings)[number], b: (typeof allWritings)[number]) =>
+			new Date(b.date).getTime() - new Date(a.date).getTime()
+	);
 const visibleWritings = allWritings.slice(0, 5);
 const visibleProjects = projects.slice(0, 5);
 
@@ -27,24 +30,6 @@ function formatDate(dateString: string) {
 	} catch {
 		return dateString;
 	}
-}
-
-function getHardcoverSrcset(coverUrl: string): string {
-	if (!coverUrl) return '';
-	const base = 'https://production-img.hardcover.app/enlarge';
-	const widths = [150, 270, 400];
-	return widths
-		.map((w) => {
-			const h = Math.round(w * 1.5);
-			const params = new URLSearchParams({
-				width: String(w),
-				height: String(h),
-				type: 'webp',
-				url: coverUrl,
-			});
-			return `${base}?${params} ${w}w`;
-		})
-		.join(', ');
 }
 ---
 
@@ -202,7 +187,7 @@ function getHardcoverSrcset(coverUrl: string): string {
 
 				<div class="flex flex-col">
 					{
-						visibleWritings.map((writing) => (
+						visibleWritings.map((writing: (typeof visibleWritings)[number]) => (
 							<a
 								href={`/writing/${writing.file}`}
 								class="group flex w-full flex-col rounded-sm border-b border-bd/40 py-2.5 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
@@ -677,7 +662,6 @@ function getHardcoverSrcset(coverUrl: string): string {
 		const toggle = document.querySelector('[data-activity-toggle]') as HTMLButtonElement | null;
 		const drawer = document.querySelector('[data-activity-drawer]') as HTMLElement | null;
 		const closeBtn = document.querySelector('[data-activity-close]') as HTMLButtonElement | null;
-		const backdrop = document.querySelector('[data-activity-backdrop]') as HTMLElement | null;
 		const label = document.querySelector('[data-activity-toggle-label]') as HTMLElement | null;
 
 		if (!toggle || !drawer) return;
@@ -705,7 +689,7 @@ function getHardcoverSrcset(coverUrl: string): string {
 			if (e.target === drawer) setOpen(false);
 		});
 
-		document.addEventListener('keydown', (e) => {
+		document.addEventListener('keydown', (e: KeyboardEvent) => {
 			if (open && e.key === 'Escape') setOpen(false);
 		});
 

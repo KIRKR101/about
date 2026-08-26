@@ -238,7 +238,7 @@ function getMetaValue(data: [string, string][], key: string): string | undefined
 		if (cardEls.length === 0) return;
 		const positions: { id: string; left: number; top: number }[] = [];
 		cardEls.forEach((el) => {
-			const id = (el as HTMLElement).dataset.artCard!;
+			const id = (el as HTMLElement).dataset['artCard']!;
 			const rect = el.getBoundingClientRect();
 			positions.push({ id, left: rect.left, top: rect.top });
 		});
@@ -251,8 +251,8 @@ function getMetaValue(data: [string, string][], key: string): string | undefined
 		const cards = Array.from(container.querySelectorAll('[data-art-card]')) as HTMLElement[];
 		// Re-sort by shuffledEntries order
 		cards.sort((a, b) => {
-			const ai = shuffledEntries.findIndex(([id]) => id === a.dataset.artCard);
-			const bi = shuffledEntries.findIndex(([id]) => id === b.dataset.artCard);
+			const ai = shuffledEntries.findIndex(([id]) => id === a.dataset['artCard']);
+			const bi = shuffledEntries.findIndex(([id]) => id === b.dataset['artCard']);
 			return ai - bi;
 		});
 		cards.forEach((c) => container.appendChild(c));
@@ -284,7 +284,6 @@ function getMetaValue(data: [string, string][], key: string): string | undefined
 		const nextBtn = document.querySelector('[data-lightbox-next]') as HTMLElement | null;
 
 		let previousFocus: HTMLElement | null = null;
-		let mediaLoaded = false;
 
 		function showLightbox(index: number) {
 			currentIndex = index;
@@ -324,14 +323,12 @@ function getMetaValue(data: [string, string][], key: string): string | undefined
 			const entry = (artData as any)[id];
 			if (!entry || !imgEl || !titleEl || !counterEl) return;
 
-			mediaLoaded = false;
 			if (loadingEl) loadingEl.classList.remove('hidden');
 			imgEl.classList.add('scale-[0.98]', 'opacity-0');
 			imgEl.classList.remove('scale-100', 'opacity-100');
 			imgEl.src = entry.image;
 			imgEl.alt = entry.title;
 			imgEl.onload = () => {
-				mediaLoaded = true;
 				if (loadingEl) loadingEl.classList.add('hidden');
 				imgEl.classList.remove('scale-[0.98]', 'opacity-0');
 				imgEl.classList.add('scale-100', 'opacity-100');
@@ -393,16 +390,16 @@ function getMetaValue(data: [string, string][], key: string): string | undefined
 			if (footerEl) footerEl.style.opacity = footerVisible ? '1' : '0';
 		}
 
-		document.querySelectorAll('[data-art-card]').forEach((el) => {
+		document.querySelectorAll<HTMLElement>('[data-art-card]').forEach((el) => {
 			el.addEventListener('click', () => {
-				const id = (el as HTMLElement).dataset.artCard!;
+				const id = el.dataset['artCard']!;
 				const index = visualOrder.indexOf(id);
 				showLightbox(index >= 0 ? index : 0);
 			});
-			el.addEventListener('keydown', (e) => {
+			el.addEventListener('keydown', (e: KeyboardEvent) => {
 				if (e.key === 'Enter' || e.key === ' ') {
 					e.preventDefault();
-					const id = (el as HTMLElement).dataset.artCard!;
+					const id = el.dataset['artCard']!;
 					const index = visualOrder.indexOf(id);
 					showLightbox(index >= 0 ? index : 0);
 				}
@@ -413,7 +410,7 @@ function getMetaValue(data: [string, string][], key: string): string | undefined
 		nextBtn?.addEventListener('click', goNext);
 		prevBtn?.addEventListener('click', goPrev);
 		mediaWrap?.addEventListener('click', toggleFooter);
-		mediaWrap?.addEventListener('keydown', (e) => {
+		mediaWrap?.addEventListener('keydown', (e: KeyboardEvent) => {
 			if (e.key === 'Enter' || e.key === ' ') {
 				e.preventDefault();
 				toggleFooter();
@@ -450,7 +447,7 @@ function getMetaValue(data: [string, string][], key: string): string | undefined
 			touchStartY = null;
 		});
 
-		document.addEventListener('keydown', (e) => {
+		document.addEventListener('keydown', (e: KeyboardEvent) => {
 			if (!lightbox || lightbox.classList.contains('hidden')) return;
 			if (e.key === 'Escape') hideLightbox();
 			if (e.key === 'ArrowRight' && visualOrder.length > 1) goNext();

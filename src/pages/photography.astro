@@ -5,9 +5,6 @@ import Footer from '../components/Footer.astro';
 import { photographyData } from '../lib/photography-list';
 
 const cities = Object.keys(photographyData);
-const allImages = Object.entries(photographyData).flatMap(([city, images]) =>
-	images.map((img) => ({ ...img, city })),
-);
 const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
 ---
 
@@ -126,12 +123,10 @@ const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
 	);
 	const cityById = new Map<string, string>();
 	for (const img of allImages) cityById.set(img.id, img.city);
-	const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
 
 	let activeCity = cities[0] ?? '';
 	let visualOrder: string[] = allImages.map((img) => img.id);
 	let currentImageId: string | null = null;
-	let lightboxActive = false;
 	let exifMap: Record<string, [string, string][]> | null = null;
 	let exifLoadPromise: Promise<Record<string, [string, string][]>> | null = null;
 	let isAnimating = false;
@@ -203,7 +198,7 @@ const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
 		if (cards.length === 0) return;
 		const positions: { id: string; left: number; top: number }[] = [];
 		cards.forEach((el) => {
-			const id = (el as HTMLElement).dataset.photoCard!;
+			const id = (el as HTMLElement).dataset['photoCard']!;
 			const rect = el.getBoundingClientRect();
 			positions.push({ id, left: rect.left, top: rect.top });
 		});
@@ -230,7 +225,7 @@ const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
 		// Active city tracking via IntersectionObserver
 		const sectionEls = new Map<string, HTMLElement>();
 		document.querySelectorAll('[data-city-section]').forEach((el) => {
-			const city = (el as HTMLElement).dataset.citySection!;
+			const city = (el as HTMLElement).dataset['citySection']!;
 			sectionEls.set(city, el as HTMLElement);
 		});
 
@@ -258,7 +253,7 @@ const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
 			if (city === activeCity) return;
 			activeCity = city;
 			document.querySelectorAll('[data-city-link]').forEach((el) => {
-				const c = (el as HTMLElement).dataset.cityLink!;
+				const c = (el as HTMLElement).dataset['cityLink']!;
 				const underline = document.querySelector(`[data-city-underline="${c}"]`) as HTMLElement | null;
 				const isActive = c === city;
 				el.classList.toggle('text-ink-80', isActive);
@@ -301,7 +296,7 @@ const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
 		document.querySelectorAll('[data-city-link]').forEach((el) => {
 			el.addEventListener('click', (e) => {
 				e.preventDefault();
-				const city = (el as HTMLElement).dataset.cityLink!;
+				const city = (el as HTMLElement).dataset['cityLink']!;
 				sectionEls.get(city)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 			});
 		});
@@ -383,7 +378,6 @@ const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
 		function openLightbox(imageId: string) {
 			ensureExif().then(() => {
 				currentImageId = imageId;
-				lightboxActive = true;
 				if (lightbox) {
 					lightbox.classList.remove('hidden');
 					lightbox.focus();
@@ -396,7 +390,6 @@ const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
 		}
 
 		function closeLightbox() {
-			lightboxActive = false;
 			if (lightbox) {
 				lightbox.classList.add('hidden');
 			}
@@ -430,7 +423,7 @@ const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
 
 		document.querySelectorAll('[data-photo-card]').forEach((el) => {
 			el.addEventListener('click', () => {
-				const id = (el as HTMLElement).dataset.photoCard!;
+				const id = (el as HTMLElement).dataset['photoCard']!;
 				openLightbox(id);
 			});
 		});
@@ -439,7 +432,7 @@ const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
 		nextBtn?.addEventListener('click', goNext);
 		prevBtn?.addEventListener('click', goPrev);
 		mediaWrap?.addEventListener('click', toggleFooter);
-		mediaWrap?.addEventListener('keydown', (e) => {
+		mediaWrap?.addEventListener('keydown', (e: KeyboardEvent) => {
 			if (e.key === 'Enter' || e.key === ' ') {
 				e.preventDefault();
 				toggleFooter();
@@ -473,7 +466,7 @@ const slugify = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
 			touchStartY = null;
 		});
 
-		document.addEventListener('keydown', (e) => {
+		document.addEventListener('keydown', (e: KeyboardEvent) => {
 			if (!lightbox || lightbox.classList.contains('hidden')) return;
 			if (e.key === 'Escape') closeLightbox();
 			if (e.key === 'ArrowRight') goNext();

@@ -6,7 +6,7 @@ import { preprocessMarkdown, renderMarkdown } from '../../scripts/render-markdow
 
 export async function getStaticPaths() {
 	const projects = await getCollection('projects');
-	return projects.map((entry) => ({
+	return projects.map((entry: CollectionEntry<'projects'>) => ({
 		params: { slug: entry.id },
 		props: { entry },
 	}));

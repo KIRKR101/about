@@ -242,7 +242,7 @@ const collectionsActive = isChildActive(collectionPaths);
 
 		menuToggle?.addEventListener('click', () => setMenu(!menuOpen));
 		backdrop?.addEventListener('click', () => setMenu(false));
-		backdrop?.addEventListener('keydown', (e) => {
+		backdrop?.addEventListener('keydown', (e: KeyboardEvent) => {
 			if (e.key === 'Enter' || e.key === ' ') {
 				e.preventDefault();
 				setMenu(false);
@@ -251,14 +251,14 @@ const collectionsActive = isChildActive(collectionPaths);
 		document.querySelectorAll('[data-mobile-link]').forEach((el) => {
 			el.addEventListener('click', () => setMenu(false));
 		});
-		document.addEventListener('keydown', (e) => {
+		document.addEventListener('keydown', (e: KeyboardEvent) => {
 			if (e.key === 'Escape' && menuOpen) setMenu(false);
 		});
 
 		// Dropdowns (desktop + mobile)
 		const dropdowns = new Map<string, boolean>();
 		document.querySelectorAll('[data-dropdown-trigger]').forEach((btn) => {
-			const key = (btn as HTMLElement).dataset.dropdownTrigger!;
+			const key = (btn as HTMLElement).dataset['dropdownTrigger']!;
 			dropdowns.set(key, false);
 			btn.addEventListener('click', (e) => {
 				e.stopPropagation();
@@ -309,9 +309,9 @@ const collectionsActive = isChildActive(collectionPaths);
 		document.querySelectorAll('[data-dropdown]').forEach((dd) => {
 			const trigger = dd.querySelector('[data-dropdown-trigger]') as HTMLElement | null;
 			const items = Array.from(dd.querySelectorAll('[data-dropdown-item]')) as HTMLElement[];
-			trigger?.addEventListener('keydown', (e) => {
+			trigger?.addEventListener('keydown', (e: KeyboardEvent) => {
 				if (e.key === 'ArrowDown') {
-					const key = (trigger as HTMLElement).dataset.dropdownTrigger!;
+					const key = (trigger as HTMLElement).dataset['dropdownTrigger']!;
 					if (!dropdowns.get(key)) {
 						e.preventDefault();
 						dropdowns.set(key, true);
@@ -321,14 +321,14 @@ const collectionsActive = isChildActive(collectionPaths);
 				}
 			});
 			items.forEach((item, i) => {
-				item.addEventListener('keydown', (e) => {
+				item.addEventListener('keydown', (e: KeyboardEvent) => {
 					if (e.key === 'ArrowDown') {
 						e.preventDefault();
 						items[i + 1]?.focus();
 					} else if (e.key === 'ArrowUp') {
 						e.preventDefault();
 						if (i === 0) {
-							const key = (trigger as HTMLElement)?.dataset.dropdownTrigger;
+							const key = (trigger as HTMLElement)?.dataset['dropdownTrigger'];
 							if (key) {
 								dropdowns.set(key, false);
 								syncDropdowns();
@@ -339,7 +339,7 @@ const collectionsActive = isChildActive(collectionPaths);
 						}
 					} else if (e.key === 'Escape') {
 						e.preventDefault();
-						const key = (trigger as HTMLElement)?.dataset.dropdownTrigger;
+						const key = (trigger as HTMLElement)?.dataset['dropdownTrigger'];
 						if (key) {
 							dropdowns.set(key, false);
 							syncDropdowns();

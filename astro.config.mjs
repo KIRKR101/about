@@ -9,15 +9,13 @@ export default defineConfig({
 	outDir: './dist',
 	output: 'static',
 	site: 'https://kirkr.xyz',
-	integrations: [
-		mdx({
-			remarkPlugins: [remarkFootnotes]
-		})
-	],
+	integrations: [mdx({ remarkPlugins: [remarkFootnotes] })],
 	vite: {
+		// @ts-expect-error - tailwindcss Vite plugin HotUpdatePluginContext vs MinimalPluginContext with exactOptionalPropertyTypes
 		plugins: [tailwindcss()]
 	},
 	markdown: {
+		// @ts-expect-error - remark-footnotes Node vs Root transformer mismatch
 		remarkPlugins: [remarkFootnotes],
 		syntaxHighlight: false
 	}
