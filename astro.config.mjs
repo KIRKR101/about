@@ -3,6 +3,7 @@ import mdx from '@astrojs/mdx';
 import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
 import remarkFootnotes from 'remark-footnotes';
+import { unified } from '@astrojs/markdown-remark';
 
 // https://astro.build/config
 export default defineConfig({
@@ -10,20 +11,16 @@ export default defineConfig({
 	outDir: './dist',
 	output: 'server',
 	adapter: cloudflare({
-		imageService: 'cloudflare',
-		platformProxy: {
-			enabled: true
-		}
+		imageService: 'cloudflare'
 	}),
 	site: 'https://kirkr.xyz',
-	integrations: [mdx({ remarkPlugins: [remarkFootnotes] })],
+	integrations: [mdx()],
 	vite: {
-		// @ts-expect-error - tailwindcss Vite plugin HotUpdatePluginContext vs MinimalPluginContext with exactOptionalPropertyTypes
 		plugins: [tailwindcss()]
 	},
 	markdown: {
 		// @ts-expect-error - remark-footnotes Node vs Root transformer mismatch
-		remarkPlugins: [remarkFootnotes],
+		processor: unified({ remarkPlugins: [remarkFootnotes] }),
 		syntaxHighlight: false
 	}
 });

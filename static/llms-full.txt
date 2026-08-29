@@ -133,6 +133,7 @@ I will call this a WIP for the time being. I may elaborate on this essay at a la
 
 Born in Antwerp in 1582, then part of the Spanish Netherlands, Frans Hals is easily recognisable for his art style, comprising fast, directional brushstrokes which differentiated his art from the Dutch academic style, (think van der Helst).
 
+
 _Young Man with a Skull (c. 1626–1628)_
 
 > _How alertly Frans paints people after life?_ — Samuel Ampzing, c.1628[^1]
@@ -145,11 +146,13 @@ Van Dyck left with his still-wet portrait and pressed something into Hals' child
 
 Van Dyck kept a high opinion of his art all the same, saying later that if Hals' pigments had been a little more delicate he would have been among the greatest masters, since no one matched him in that control of the brush by which, setting up a portrait, he could place the lights and darks in a single pass without correction.
 
+
 _Portrait of Nicolaes Hasselaer (c. 1627)_
 
 It was said he laid his portraits on thickly and let them merge softly, then returned with sharper brushwork, announcing: _now the essence of the master must be introduced_.
 
 ---
+
 
 _Copy of a lost self-portrait of Frans Hals_
 
@@ -157,13 +160,16 @@ This anecdote recorded by Arnold Houbraken in 1718 conflated loose brushwork wit
 
 Before Hals, Dutch civic guard portraits resembled static class photographs, with rows of detached heads staring directly out of the canvas. Hals commandeered this style in 1616 with the _Banquet of the Officers of the St George Militia Company_, organising the 12 officers around a table using intersecting diagonals, placing some figures in the foreground and pushing others back. He animated them with distinct tasks, depicting officers carving meat or holding raised glasses, and unified the composition through intersecting sightlines. He repeated this success in 1627 with a second painting of the same militia company, giving equal weight to the individual likenesses and the overall geometry of the composition.
 
+
 _Banquet of the Officers of the St George Militia Company (1616)_
 
 His genre paintings allowed for even rougher execution. _Malle Babbe_ (c. 1633) depicts a local Haarlem character laughing with an owl on her shoulder and a large pewter tankard in her hand. He used thick [impasto](https://en.wikipedia.org/wiki/Impasto) to catch the light on the metal tankard, and blocked in her face with aggressive, visible strokes. The fractured brushwork suits her.
 
+
 _Malle Babbe (c. 1633)_
 
 His palette darkened in his final decade, and the prosperous, colourful citizens of his early career gave way to more austere figures. He painted _The Regents of the Old Men's Almshouse_ (1664) using strict variations of black and muted white. The execution here is looser than any of his early work, but he retained control over the underlying anatomical structure of the faces and hands.
+
 
 _The Regents of the Old Men's Almshouse (1664)_
 
@@ -183,7 +189,11 @@ His early career conformed broadly to contemporary taste, producing _geselschapj
 
 Within these scenes, the laying out of laundry or the rocking of a cradle is afforded a dignity more commonly reserved for historical or religious themes. In _A Mother’s Duty_ (c. 1660–61), he depicts a woman calmly picking lice from her daughter’s hair: a task intimate and mundane, faintly unpleasant. Under De Hooch’s hand it becomes an image of careful attention and maternal responsibility. Such works are often read as quiet morality pieces—visual sermons extolling tidiness, motherhood, and the moral centre of the home.[^2] They were likely drawn from his own immediate surroundings, reflecting a habit of close observation already evident in his treatment of Delft and Amsterdam architecture.
 
+
+
 The distinguishing feature of De Hooch’s oeuvre, however, lies in his rigorous construction of space. His interiors are deliberately ordered environments, composed of floors, walls, and beams arranged into legible cubic volumes. He was a master of the _doorkijkje_, or “see-through” view, in which a doorway or window opens onto a second room, a courtyard, or a sunlit street beyond. This device, employed throughout much of his work, situates his interiors within a continuous spatial logic, where the inner life of the household and the outer world of the Dutch Republic[^4] remain in measured and intelligible relation.
+
+
 
 Light is the animating principle within these carefully ordered geometries. Whether as a raking shaft of sun caught upon a polished tile or a softer diffusion illuminating a wooden door, De Hooch uses light to give presence to stillness. His realism is analytical rather than theatrical, an enquiry into structure and relation that, at its best, has a subdued poetry of its own. Every piece of furniture and every shadow functions as a spatial instrument, guiding the eye through interiors that feel at once measured and contemplative.
 
@@ -192,6 +202,8 @@ Inevitably, De Hooch is set alongside his contemporary and fellow member of the 
 After his removal to Amsterdam around 1660, the work of De Hooch shows signs of flagging. This coincided with a shift in patronage and ambition, as the artist, seeking the favour of wealthier clients, enlarged his compositions and adopted a more opulent visual language; the humble brick floors of Delft give way to marble. The easy and indifferent patronage of fashionable society may have weakened the earnestness and sincerity of his work, leading him to rely upon a system of formulas which become monotonous in repetition. The paintings of this period are also unequal in merit: some retain the painter’s former command of perspective and spatial clarity, while others, whose genuineness cannot be doubted, display failings one would rather attribute to a pupil or imitator.
 
 Writers have been quick to conclude that he “quickly lost his inspiration and charm,”[^6] yet such judgements seem to measure these later “salon” paintings against the intimate luminosity of his Delft interiors, rather than against the evolving artistic norms of post-1670 Dutch art. This stylistic transformation unfolded against the backdrop of the disastrous Rampjaar of 1672,[^5] which devastated the economy and curtailed the careers of many of his contemporaries, Vermeer among them.
+
+
 
 For example, this picture, _A Musical party in a Courtyard_, provoked a debate in the House of Commons upon its acquisition by the National Gallery in 1916. Critics at the time called the purchase “an act of folly on the part of the Trustees,” dismissing it as “a work of the painter’s late and bad period.”[^7] Yet, nearly 50% of de Hooch’s works date to his final fifteen years, suggesting a prolific period of activity despite an economic downturn. Personal distress over his wife’s supposed death in 1667 was once thought to explain this, though Jansen (2019) has since shown that she actually died much later.[^8] While his later works are sometimes described as “lifeless,” I rather view them as a necessary adaptation to a changing market.
 
@@ -222,7 +234,9 @@ _Fig 1: Estimates of the number of painters and publishers active in the Dutch R
 
 On the morning of October 12th, 1654, that serenity shattered. A gunpowder store exploded, devastating the prosperous town with the _Delftsche Donderslag_ (the Delft Thunderclap), an explosion heard as far as Texel on the North Sea, some 150 kilometres away. Though much of the town was razed, relatively few casualties were recorded (possibly a hundred, though records were of course obliterated). Among them was Carel Fabritius, a relatively new but promising artist from Rembrandt's circle. Pulled alive from the rubble but succumbing to injury, his death cut short the career of an artist who, I believe, could have risen to the heights of Rembrandt himself.
 
+
 _Fig 2: Egbert van der Poel: A View of Delft after the Explosion of 1654_
+
 
 _Fig 3: A detail of the Guild of Saint Luke register with Vermeer's name at number 78 and Pieter de Hooch's name at 80 and Carel Fabritius at 75.[^3]_
 
@@ -234,6 +248,7 @@ Following his teacher, he developed a refined technique, with broad and dark bru
 
 ### The Beheading of John the Baptist, Early 1640s
 
+
 _Fig 4: Carel Fabritius, The Beheading of John the Baptist, Early 1640s[^4]_
 
 This work, first circulated as a Rembrandt, represents the earliest works of Fabritius — history paintings — which followed the stylistic tendencies of his teacher. On the right stands Salomé, who — according to the biblical account — received the head of John the Baptist on a platter as her reward for dancing.
@@ -241,6 +256,7 @@ This work, first circulated as a Rembrandt, represents the earliest works of Fab
 The execution hinges on the dramatic interplay of light and shadow, with an almost blinding "flood (almost a flash) of daylight" and "half shadows, textures" producing a convincing optical impression of space. Technically, The Beheading displays a masterful handling of the palette and the texture of both flesh and cloth, consistent with the treatment found in works like _Mercury, Argus and Io_. The head of the executioner is directly comparable to the artist’s own likeness in the National Gallery Self-Portrait. A distinctive technical feature is the use of a device to brightly illuminate the backs of the figures' hands. The treatment of the four nearest figures, especially, points to the mature vision of Fabritius in his later period.
 
 ### Self-portrait, 1647-1648
+
 
 _Fig 5: Carel Fabritius, Self-Portrait, Circa 1647–1648_
 
@@ -252,6 +268,7 @@ In this self-portrait, painted at around twenty-three years old, Fabritius prese
 Fabritius's treatment of the background is what sets this work apart from his training under Rembrandt (documented by fellow pupil Samuel van Hoogstraten in his 1678 treatise _Inleyding tot de hooge schoole der schilderkonst_). He devoted as much care to painting the wall behind himself as to his own face, allocating far more space to the background than would normally appear in a portrait. Rembrandt would have emphasised the face and kept the background minimal; Fabritius painted a turbulent wall whose crumbling surface echoes the turmoil the young artist had endured. This attention to backgrounds would mark his later work and influence other Dutch artists.
 
 ### Portrait of Abraham de Potter, 1649
+
 
 _Fig 6: Carel Fabritius, Portrait of Abraham de Potter, 1649_
 
@@ -267,6 +284,7 @@ After the death of his first wife, Fabritius moved to Delft with his second wife
 
 ### View of Delft, 1652
 
+
 _Fig 7: Carel Fabritius, A View of Delft, 1652_
 
 This is a very small and unusual painting, measuring just 15.5 × 31.7 centimetres, showing a view of the Nieuwe Kerk in Delft as though through a wide-angle lens. We look roughly north-west over a canal from the corner of two streets, the Oude Langendijk and Oosteinde. The grey shape just to the left of the church is the town hall. Both these buildings look much the same today, but the canal has been filled in and the houses on the right have been knocked down.[^7]
@@ -281,6 +299,7 @@ What hasn't been definitively proven is exactly how Fabritius's view was intende
 
 ### The Sentry, 1654
 
+
 _Fig 8: Carel Fabritius, The Sentry, 1654_
 
 This work presents itself as a simple scene of military life, yet its strangeness becomes apparent upon examination. A soldier has dozed off on a rough bench, his musket resting across his lap mid-loading. The architectural backdrop defies logic: a moss-covered pillar supports nothing, stairs climb towards an absent destination, and a carved relief of Saint Anthony and his pig adorns what appears to be an awkward hybrid of gateway and bridge spanning an empty moat. Barely visible beyond this structure lurks a partial figure — legs and a sword — painted over in the eighteenth century. The figure remained hidden until conservators uncovered it again in 2004-2005.
@@ -290,6 +309,7 @@ Perhaps Fabritius critiques the complacency that followed the 1648 Peace of Mün
 Whatever Fabritius intended, he created one of the strangest works of the Dutch Golden Age.
 
 ### Young Man in a Fur Cap, 1654
+
 
 _Fig 9: Carel Fabritius, Young Man in a Fur Cap, 1654_
 
@@ -304,6 +324,7 @@ A decade removed from Rembrandt's studio, Fabritius had clearly forged his own p
 The shift towards luminosity and atmosphere reflects his exposure to other painters in Delft, where Fabritius had settled in 1650, four years before this work was completed.
 
 ### The Goldfinch, 1654
+
 
 _Fig 10: Carel Fabritius, The Goldfinch, 1654_
 
@@ -337,6 +358,7 @@ The work exists on a relatively thick small panel sawn from a much larger board,
 
 A CPU can do pretty much anything. An ASIC does a single thing, which is why they're faster, cheaper to run at scale, and more power-efficient than anything general-purpose. The problem is, you can't reprogram one. Once the silicon is cut, the function is fixed. Using something reconfigurable is an easier decision to make, but sometimes the ASIC is the better one.
 
+
 _Figure 1: A tray of ASIC chips_
 
 ---
@@ -352,6 +374,7 @@ Gate arrays offer the middle ground, where the silicon wafer is pre-fabricated w
 As fabrication has improved, "one chip, one function" has given way to more ambitious 'System-on-Chip' (SoC) designs. An SoC integrates an entire system, be it processor cores, memory, graphics, I/O, specialised accelerators, onto a single piece of silicon. This is the predominant method of building modern ASICs.
 
 The reason SoCs don't take decades to design is because of IP cores, which are pre-verified blocks of logic that can be dropped into a design. A block comes in two forms: a soft macro, which is a flexible HDL description that can be adapted to different manufacturing processes, or a hard macro, which is a fixed physical layout optimised for one specific process. Hard macros perform predictably but soft macros travel better.
+
 
 _Figure 2: A gate-array ASIC under a microscope. This design uses less than 20% of its available logic gates_
 
