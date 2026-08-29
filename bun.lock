@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "about-svelte",
+      "name": "about",
       "dependencies": {
         "markdown-it": "^15.0.0",
         "markdown-it-footnote": "^4.0.0",
