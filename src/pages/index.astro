@@ -310,8 +310,7 @@ function formatDate(dateString: string) {
 	let progressRafId: number | undefined;
 	let retryTimeoutId: ReturnType<typeof setTimeout> | undefined;
 	let currentlyReading: any[] = [];
-	let isDrawerOpen = false;
-	let hasFetchedInitialTrack = false;
+	let hiddenAt: number | null = null;
 
 	function startTrackPolling() {
 		if (intervalId) clearInterval(intervalId);
@@ -531,9 +530,7 @@ function formatDate(dateString: string) {
 					localProgress = duration;
 					updateTrackUI();
 					if (retryTimeoutId) clearTimeout(retryTimeoutId);
-					if (!hasFetchedInitialTrack || isDrawerOpen) {
-						retryTimeoutId = setTimeout(fetchSpotifyTrack, 500);
-					}
+					retryTimeoutId = setTimeout(fetchSpotifyTrack, 500);
 					return;
 				}
 				localProgress = newProgress;
@@ -546,7 +543,6 @@ function formatDate(dateString: string) {
 
 	async function fetchSpotifyTrack() {
 		if (isFetching) return;
-		if (hasFetchedInitialTrack && !isDrawerOpen) return;
 		isFetching = true;
 		try {
 			const response = await fetch(SPOTIFY_API_URL);
@@ -554,9 +550,7 @@ function formatDate(dateString: string) {
 			const data = await response.json();
 			if (data.isPlaying === false && !data.title) {
 				if (retryTimeoutId) clearTimeout(retryTimeoutId);
-				if (!hasFetchedInitialTrack || isDrawerOpen) {
-					retryTimeoutId = setTimeout(fetchSpotifyTrack, 30_000);
-				}
+				retryTimeoutId = setTimeout(fetchSpotifyTrack, 30_000);
 				return;
 			}
 			if (data.isPlaying === undefined) throw new Error('Invalid Spotify response');
@@ -576,12 +570,10 @@ function formatDate(dateString: string) {
 			updateTrackUI();
 		} finally {
 			isFetching = false;
-			hasFetchedInitialTrack = true;
 		}
 	}
 
 	async function fetchLastFmTrack() {
-		if (hasFetchedInitialTrack && !isDrawerOpen) return;
 		try {
 			const response = await fetch(LASTFM_API_URL);
 			if (response.ok) {
@@ -589,13 +581,10 @@ function formatDate(dateString: string) {
 			}
 		} catch (e) {
 			console.error('Error fetching Last.fm track:', e);
-		} finally {
-			hasFetchedInitialTrack = true;
 		}
 	}
 
 	function fetchCurrentTrack() {
-		if (hasFetchedInitialTrack && !isDrawerOpen) return;
 		if (dataSource === 'lastfm') {
 			fetchLastFmTrack().then(updateTrackUI);
 		} else {
@@ -721,29 +710,14 @@ function formatDate(dateString: string) {
 
 		function setOpen(next: boolean) {
 			open = next;
-			isDrawerOpen = open;
 			toggle!.setAttribute('aria-expanded', String(open));
 			if (label) label.textContent = open ? '[-]' : '[+]';
 			if (open) {
 				drawer!.classList.remove('hidden');
 				drawer!.classList.add('flex');
-				if (hasFetchedInitialTrack) {
-					fetchCurrentTrack();
-				}
-				startTrackPolling();
-				setupProgressUpdate();
 			} else {
 				drawer!.classList.add('hidden');
 				drawer!.classList.remove('flex');
-				stopTrackPolling();
-				if (progressRafId) {
-					cancelAnimationFrame(progressRafId);
-					progressRafId = undefined;
-				}
-				if (retryTimeoutId) {
-					clearTimeout(retryTimeoutId);
-					retryTimeoutId = undefined;
-				}
 			}
 		}
 
@@ -757,14 +731,40 @@ function formatDate(dateString: string) {
 			if (open && e.key === 'Escape') setOpen(false);
 		});
 
-		// Fetch data immediately (first fetch always runs)
+		// Fetch data immediately
 		fetchSpotifyTrack();
 		fetchCurrentlyReading();
-		// Subsequent now-playing polls only while drawer is open
+		startTrackPolling();
+
+		function handleVisibilityChange() {
+			if (document.hidden) {
+				hiddenAt = Date.now();
+				stopTrackPolling();
+				if (progressRafId) {
+					cancelAnimationFrame(progressRafId);
+					progressRafId = undefined;
+				}
+				if (retryTimeoutId) {
+					clearTimeout(retryTimeoutId);
+					retryTimeoutId = undefined;
+				}
+			} else {
+				const wasHiddenFor = hiddenAt ? Date.now() - hiddenAt : 0;
+				hiddenAt = null;
+				setupProgressUpdate();
+				if (wasHiddenFor >= 30_000) {
+					fetchCurrentTrack();
+				}
+				startTrackPolling();
+			}
+		}
+
+		document.addEventListener('visibilitychange', handleVisibilityChange);
 
 		// Cleanup on page navigation (Astro View Transitions)
 		document.addEventListener('astro:before-swap', () => {
 			stopTrackPolling();
+			document.removeEventListener('visibilitychange', handleVisibilityChange);
 			if (progressRafId) cancelAnimationFrame(progressRafId);
 			if (retryTimeoutId) clearTimeout(retryTimeoutId);
 		});
