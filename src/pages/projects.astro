@@ -162,10 +162,13 @@ if (Astro.locals.prefersMarkdown) {
 
 	function getContributionColor(count: number) {
 		if (count === 0) return 'var(--contribution-0)';
-		if (count < 5) return 'var(--contribution-1)';
-		if (count < 10) return 'var(--contribution-2)';
-		if (count < 20) return 'var(--contribution-3)';
-		return 'var(--contribution-4)';
+		if (count < 2) return 'var(--contribution-1)';
+		if (count < 4) return 'var(--contribution-2)';
+		if (count < 6) return 'var(--contribution-3)';
+		if (count < 8) return 'var(--contribution-4)';
+		if (count < 10) return 'var(--contribution-5)';
+		if (count < 12) return 'var(--contribution-6)';
+		return 'var(--contribution-7)';
 	}
 
 	function loadCache(): Record<number, any> {
@@ -232,7 +235,7 @@ if (Astro.locals.prefersMarkdown) {
 				col.className = 'grid grid-rows-7 gap-[3px]';
 				for (let di = 0; di < 7; di++) {
 					const cell = document.createElement('div');
-					cell.className = 'aspect-square w-full animate-pulse rounded-sm bg-ink/5';
+					cell.className = 'aspect-square w-full animate-pulse rounded-[2px] bg-ink/5';
 					col.appendChild(cell);
 				}
 				grid.appendChild(col);
@@ -254,7 +257,7 @@ if (Astro.locals.prefersMarkdown) {
 			for (const day of week.contributionDays) {
 				const btn = document.createElement('button');
 				btn.className =
-					'relative aspect-square w-full cursor-default border-0 p-0 transition-all duration-75 sm:rounded-[3px] sm:hover:z-10 sm:hover:scale-110 sm:hover:brightness-125 sm:focus:z-10';
+					'relative aspect-square w-full cursor-default border-0 p-0 rounded-[2px] transition-all duration-75 sm:hover:z-10 sm:hover:scale-110 sm:hover:brightness-125 sm:focus:z-10';
 				btn.style.backgroundColor = getContributionColor(day.contributionCount);
 				btn.setAttribute('data-day', day.date);
 				btn.setAttribute('data-count', String(day.contributionCount));

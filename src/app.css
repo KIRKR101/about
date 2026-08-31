@@ -52,10 +52,13 @@
 	--code-bg: rgba(0, 0, 0, 0.05);
 	--focus: rgba(0, 0, 0, 0.4);
 	--contribution-0: #e4e4e6;
-	--contribution-1: #9be9a8;
-	--contribution-2: #40c463;
-	--contribution-3: #30a14e;
-	--contribution-4: #216e39;
+	--contribution-1: #cacacd;
+	--contribution-2: #b0b0b4;
+	--contribution-3: #96969b;
+	--contribution-4: #7c7c82;
+	--contribution-5: #626269;
+	--contribution-6: #484850;
+	--contribution-7: #414147;
 }
 
 .dark {
@@ -83,10 +86,13 @@
 	--code-bg: rgba(255, 255, 255, 0.06);
 	--focus: rgba(255, 255, 255, 0.4);
 	--contribution-0: #1a1a1c;
-	--contribution-1: #0e4429;
-	--contribution-2: #006d32;
-	--contribution-3: #26a641;
-	--contribution-4: #39d353;
+	--contribution-1: #37373d;
+	--contribution-2: #54545b;
+	--contribution-3: #717179;
+	--contribution-4: #8e8e96;
+	--contribution-5: #ababb1;
+	--contribution-6: #c8c8ce;
+	--contribution-7: #d0d0d5;
 }
 
 @theme inline {

@@ -22,10 +22,13 @@ export function getMetaValue(
 
 export function getContributionColor(count: number) {
 	if (count === 0) return 'var(--contribution-0)';
-	if (count < 5) return 'var(--contribution-1)';
-	if (count < 10) return 'var(--contribution-2)';
-	if (count < 20) return 'var(--contribution-3)';
-	return 'var(--contribution-4)';
+	if (count < 2) return 'var(--contribution-1)';
+	if (count < 4) return 'var(--contribution-2)';
+	if (count < 6) return 'var(--contribution-3)';
+	if (count < 8) return 'var(--contribution-4)';
+	if (count < 10) return 'var(--contribution-5)';
+	if (count < 12) return 'var(--contribution-6)';
+	return 'var(--contribution-7)';
 }
 
 const IIIF_WIDTHS: readonly number[] = [500, 800, 1200, 1600];
