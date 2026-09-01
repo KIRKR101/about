@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { writingsMarkdown } from '../lib/markdown-helpers';
@@ -60,7 +59,6 @@ if (Astro.locals.prefersMarkdown) {
 ---
 
 <Layout title="Writings | kirkr.xyz" description="Writings and articles on various topics.">
-	<Navbar slot="navbar" />
 	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
 		<main class="w-full max-w-[600px]">
 			<div class="py-4">

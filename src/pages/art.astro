@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { artData } from '../lib/art-data';
 import { artMarkdown } from '../lib/markdown-helpers';
@@ -48,7 +47,6 @@ if (Astro.locals.prefersMarkdown) {
 ---
 
 <Layout title="Art | kirkr.xyz" description="Artworks I like.">
-	<Navbar slot="navbar" />
 	<link rel="preconnect" href="https://iiif.micr.io" crossorigin="anonymous" slot="head" />
 	<link rel="preconnect" href="https://upload.wikimedia.org" crossorigin="anonymous" slot="head" />
 

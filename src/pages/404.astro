@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { notFoundMarkdown } from '../lib/markdown-helpers';
 // @ts-ignore - false positive
@@ -18,7 +17,6 @@ if (Astro.locals.prefersMarkdown) {
 ---
 
 <Layout title="404 | kirkr.xyz">
-	<Navbar slot="navbar" />
 	<div
 		class="flex min-h-full flex-col items-center justify-start px-6 pt-[20vh] pb-6 lg:pt-[24vh] lg:pb-16"
 	>

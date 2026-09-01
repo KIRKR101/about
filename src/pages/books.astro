@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { booksMarkdown } from '../lib/markdown-helpers';
 // @ts-ignore - false positive
@@ -18,7 +17,6 @@ if (Astro.locals.prefersMarkdown) {
 ---
 
 <Layout title="Books | kirkr.xyz" description="A log of books currently reading and previously read.">
-	<Navbar slot="navbar" />
 	<link rel="preconnect" href="https://hardcover.kirkr.xyz" crossorigin="anonymous" slot="head" />
 
 	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">

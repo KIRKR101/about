@@ -1,0 +1,50 @@
+---
+interface Props {
+	pathname: string;
+	title: string;
+}
+
+const { pathname, title } = Astro.props;
+const segments = pathname.split('/').filter(Boolean);
+const labels: Record<string, string> = {
+	projects: 'Projects',
+	writings: 'Writings',
+	films: 'Films',
+	books: 'Books',
+	art: 'Art',
+	photography: 'Photography',
+	project: 'Projects',
+	writing: 'Writings',
+};
+
+const items = segments.map((segment, index) => ({
+	label:
+		index === segments.length - 1 && (segments.length > 1 || !labels[segment])
+			? title.replace(/\s*\|\s*kirkr\.xyz$/, '')
+			: (labels[segment] ?? segment.replace(/-/g, ' ')),
+	href:
+		index === 0 && segment === 'project'
+			? '/projects'
+			: index === 0 && segment === 'writing'
+				? '/writings'
+				: `/${segments.slice(0, index + 1).join('/')}`,
+}));
+---
+
+<nav aria-label="Breadcrumb" class="font-sans text-[11px] tracking-wider text-ink-70 uppercase">
+	<ol class="flex flex-wrap items-center gap-2">
+		<li><a href="/" class="transition-colors hover:text-ink">Home</a></li>
+		{items.map((item, index) => (
+			<>
+				<li aria-hidden="true" class="text-ink-30">/</li>
+				<li>
+					{index === items.length - 1 ? (
+						<span aria-current="page" class="text-ink-90">{item.label}</span>
+					) : (
+						<a href={item.href} class="transition-colors hover:text-ink">{item.label}</a>
+					)}
+				</li>
+			</>
+		))}
+	</ol>
+</nav>

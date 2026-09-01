@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import { projects } from '../lib/projects-data';
 import { projectsMarkdown } from '../lib/markdown-helpers';
@@ -22,7 +21,6 @@ if (Astro.locals.prefersMarkdown) {
 	title="Projects | kirkr.xyz"
 	description="Projects I've built."
 >
-	<Navbar slot="navbar" />
 	<link rel="preconnect" href="https://github.kirkr.xyz" crossorigin="anonymous" slot="head" />
 
 	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">

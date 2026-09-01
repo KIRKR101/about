@@ -1,5 +1,6 @@
 ---
 import '../app.css';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 
 interface Props {
 	title?: string;
@@ -23,6 +24,10 @@ const {
 
 const canonicalTitle = ogTitle ?? title;
 const canonicalDesc = ogDescription ?? description;
+
+const pathname = Astro.url.pathname;
+const showBreadcrumbs = pathname !== '/';
+const breadcrumbWidth = pathname === '/art' || pathname === '/photography' ? 'max-w-5xl' : 'max-w-[600px]';
 ---
 
 <!doctype html>
@@ -83,7 +88,11 @@ const canonicalDesc = ogDescription ?? description;
 			Skip to content
 		</a>
 		<div class="flex min-h-dvh flex-col bg-bg text-ink antialiased">
-			<slot name="navbar" />
+			{showBreadcrumbs && (
+				<div class:list={['mx-auto w-[calc(100%-3rem)] pt-5', breadcrumbWidth]}>
+					<Breadcrumbs pathname={pathname} title={title} />
+				</div>
+			)}
 			<main id="main-content">
 				<slot />
 			</main>
