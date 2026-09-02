@@ -31,15 +31,16 @@ const items = segments.map((segment, index) => ({
 }));
 ---
 
-<nav aria-label="Breadcrumb" class="font-sans text-[11px] tracking-wider text-ink-70 uppercase">
-	<ol class="flex flex-wrap items-center gap-2">
-		<li><a href="/" class="transition-colors hover:text-ink">Home</a></li>
+
+<nav aria-label="Breadcrumb" class="overflow-hidden font-sans text-[11px] tracking-wider text-ink-70 uppercase">
+	<ol class="flex min-w-0 flex-nowrap items-center gap-2">
+		<li class="shrink-0"><a href="/" class="transition-colors hover:text-ink">Home</a></li>
 		{items.map((item, index) => (
 			<>
-				<li aria-hidden="true" class="text-ink-30">/</li>
-				<li>
+				<li aria-hidden="true" class="shrink-0 text-ink-30">/</li>
+				<li class:list={[index === items.length - 1 ? 'min-w-0 truncate' : 'shrink-0']}>
 					{index === items.length - 1 ? (
-						<span aria-current="page" class="text-ink-90">{item.label}</span>
+						<span aria-current="page" class="block truncate text-ink-90">{item.label}</span>
 					) : (
 						<a href={item.href} class="transition-colors hover:text-ink">{item.label}</a>
 					)}

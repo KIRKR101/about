@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Footer from '../../components/Footer.astro';
+import { photographyData } from '../../lib/photography-list';
+
+export const prerender = true;
+export function getStaticPaths() {
+	return Object.keys(photographyData).map((city) => ({ params: { city: city.toLowerCase().replace(/\s+/g, '-') }, props: { city } }));
+}
+const { city } = Astro.props;
+const images = photographyData[city as string] ?? [];
+---
+
+<Layout title={`${city} Photography | kirkr.xyz`} description={`Photography from ${city}.`}>
+	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
+		<main class="w-full max-w-[600px]">
+			<div class="flex items-end justify-between gap-4 py-4"><div><h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">{city}<span class="opacity-40">.</span></h1></div></div>
+			<div class="mb-10 h-px bg-bd"></div>
+			<div class="columns-1 gap-5 sm:columns-2">{images.map((image) => <figure class="mb-5 break-inside-avoid"><img src={image.url} srcset={image.srcset} sizes="(max-width: 640px) 100vw, 50vw" alt={`Photo from ${city}`} style={`aspect-ratio: ${image.aspectRatio}`} class="h-auto w-full rounded-sm border border-bd object-cover" loading="lazy" /></figure>)}</div>
+			<Footer />
+		</main>
+	</div>
+</Layout>

@@ -11,6 +11,52 @@ llms.txt: the index lives at https://kirkr.xyz/llms.txt.
 
 ## Writings
 
+## Writing: Shin-hanga (2026-09-01)
+
+The *Shin-hanga* movement (lit “new prints”) was an art movement in early 20th-century Japan, during the [Taishō](https://en.wikipedia.org/wiki/Taish%C5%8D_period "Taishō period") and [Shōwa periods](https://en.wikipedia.org/wiki/Sh%C5%8Dwa_period "Shōwa period"), that revitalized the traditional _[ukiyo-e](https://en.wikipedia.org/wiki/Ukiyo-e "Ukiyo-e")_ art rooted in the [Edo](https://en.wikipedia.org/wiki/Edo_period "Edo period") and [Meiji periods](https://en.wikipedia.org/wiki/Meiji_period "Meiji period"). It maintained the traditional *ukiyo-e* collaborative system where the artist, carver, printer, and publisher engaged in division of labour, as opposed to the parallel [[Sōsaku-hanga]] (creative prints) movement.
+
+
+*In the garden of artist [Itō Shinsui](https://en.wikipedia.org/wiki/It%C5%8D_Shinsui "Itō Shinsui")’s Tokyo home. Left to right, back row: Moriyama Tesutaro (assistant to publisher Watanabe); [Kawase Hasui](https://en.wikipedia.org/wiki/Kawase_Hasui "Kawase Hasui"), collector Robert O. Muller, Inge Muller, Itō Yoshiko and [Itō Shinsui](https://en.wikipedia.org/wiki/It%C5%8D_Shinsui "Itō Shinsui"). Left to right, front row: [Kasamatsu Shirō](https://en.wikipedia.org/wiki/Kasamatsu_Shir%C5%8D "Kasamatsu Shirō") and publisher Watanabe Shōzaburō, April 1940*
+
+*Shin-hanga* artists incorporated Western elements such as the impression of light and the expression of individual moods. It eschewed *ukiyo-e* traditions of emulating hand-drawn brushstrokes seeking instead to “create works replete with creativity and rich with artistic quality, by avoiding enslavement to hand-drawn painting or old models”.
+
+Watanabe introduced new printing techniques, notably baren *suji-zuri* and *goma-zuri* layering on thicker, drier paper than earlier *ukiyo-e*. He saw *shin-hanga* as fine art (*geijutsu*), distinct from *shinsaku-hanga*, his term for cheaper souvenir prints like [Takahashi Shōtei](https://en.wikipedia.org/wiki/Takahashi_Sh%C5%8Dtei)'s. *Shin-hanga* themes stayed traditional; landscapes (_fukeiga_), famous places (_[meishō](https://en.wikipedia.org/wiki/Meisho "Meisho")_), beautiful women (_[bijinga](https://en.wikipedia.org/wiki/Bijinga "Bijinga")_), [kabuki](https://en.wikipedia.org/wiki/Kabuki "Kabuki") actors (_[yakusha-e](https://en.wikipedia.org/wiki/Yakusha-e "Yakusha-e")_), and birds-and-flowers (_[kachō-e](https://en.wikipedia.org/wiki/Kach%C5%8D-e "Kachō-e")_).
+
+Shin-hanga was popular with Western collectors, who saw it as nostalgic, romanticised fine art, and exhibitions in Boston (1924), Indianapolis (1926), and Toledo (1930, 1936) — the latter promoted by [Hiroshi Yoshida](https://en.wikipedia.org/wiki/Hiroshi_Yoshida) — cemented its overseas reputation, with dealers like Robert O. Muller continuing to import prints through the 1930s and postwar. Domestically it fared worse: Meiji-era Westernisation had elevated _yōga_ (Western oil painting) to official status via the [Bunten](https://en.wikipedia.org/wiki/Japan_Fine_Arts_Exhibition#Bunten), leaving shin-hanga dismissed as outdated _ukiyo-e_. As Western demand grew through the 1920s, prints simplified — fewer _baren-suji_ and _goma_ layers, brighter colours — and shin-hanga displaced _shinsaku-hanga_ in the souvenir trade. Wartime militarisation and material rationing from the late 1930s, alongside collapsing overseas markets, brought steep decline. Postwar demand never fully recovered, though artists like [Itō Shinsui](https://en.wikipedia.org/wiki/It%C5%8D_Shinsui) and Shimura Tatsumi kept the collaborative tradition alive into the 1960s and 1970s, while later decades favoured reproductions and saw _sōsaku-hanga_ eclipse it in prestige. A modest revival emerged in the early 21st century, driven by renewed interest in masters like [Kawase Hasui](https://en.wikipedia.org/wiki/Kawase_Hasui) and Yoshida and contemporary artists such as [Paul Binnie](https://en.wikipedia.org/wiki/Paul_Binnie) — with [Steve Jobs](https://en.wikipedia.org/wiki/Steve_Jobs) among its notable modern collectors.
+
+## Gallery
+
+ _Kawase Hasui, Ushibori (1930), Rijksmuseum._
+
+ _Kawase Hasui, Herfst in Oirase (1933), Rijksmuseum._
+
+ _Kawase Hasui, De Zensetsu tempel in Sanshu (1937), Rijksmuseum._
+
+ _Kawase Hasui, Yuki no Zōjō-ji (Snow at Zōjō Temple)._
+
+ _Kawase Hasui, Miyajima in de mist (1947), Rijksmuseum._
+
+ _Kawase Hasui, Frosty Morning in Nagaoka, Izu (1939)._
+
+ _Hiroshi Yoshida, Tomonoura Harbour (1930), Rijksmuseum._
+
+ _Hiroshi Yoshida, Sacrificial Gate at Kumano Shrine (1925), Rijksmuseum._
+
+ _Kawase Hasui, Snow at Zojo-ji Temple (1925), Rijksmuseum._
+
+ _Kawase Hasui, Winter at Arashiyama (1920), Rijksmuseum._
+
+ _Natori Shunsen, The Actor Nakamura Ganjiro I as Kamiya Jihei (1927), Rijksmuseum._
+
+## Sources
+
+- [Wikipedia — Shin-hanga](https://en.wikipedia.org/wiki/Shin-hanga)
+- [Artelino — Shin Hanga: History, Artists, Market and Collecting Guide](https://www.artelino.com/articles/shin-hanga-essentials.asp)
+- [Artelino — Shin Hanga and the Toledo Museum Exhibitions](https://www.artelino.com/articles/shin-hanga-toledo-museum.asp)
+- [Museum für Ostasiatische Kunst Köln — Shin hanga](https://museum-fuer-ostasiatische-kunst.de/Shin-hanga-en)
+- [Worcester Art Museum — Reflections of a Changing Japan: The Evolution of Shin Hanga](https://www.worcesterart.org/exhibitions/reflections-of-a-changing-japan-the-evolution-of-shin-hanga/)
+- [Art & History Museum — Shin hanga](https://www.artandhistory.museum/en/shin-hanga)
+
 ## Writing: A Philosophical Credo (2026-07-26)
 
 I would describe myself as such: a consequentialist,[^1] believing that outcomes are the ultimate factor in 'goodness', closer to Mill than Kant; contextualist,[^2] in that I am not a strict utilitarian and that 'right' depends on context; compatibilist,[^3] I believe that free will and determinism can logically coexist; empiricist,[^4][^5] in that I trust evidence gathered through the senses over intuition or authority, like Hume and Locke over Descartes; individualist,[^6] in that personal freedom should take priority over collective interest; libertarian-leaning,[^7] in that people should be free to keep what they earn provided it doesn't harm others; meritocratic,[^8] in that outcomes should track effort and ability rather than be redistributed for fairness's sake where no inherent disadvantages exist; existentialist,[^9] in that I believe meaning is something we create for ourselves rather than something inherent to life, agreeing with Sartre; progressive,[^10] in that I see human history as generally moving towards something better over time, agreeing with Condorcet rather than the declinists; and dualist-curious,[^11] in that I suspect the mind may be more than just the physical brain, despite my empiricist tendencies I have a soft spot for Descartes.
@@ -726,7 +772,7 @@ There are a few caveats to this approach of course. For one, you are limited to 
 
 Of course, there are plenty of good points to using WASM. For instance, ImageMagick supports the most formats and features -- compared to other image processing websites WASMagick can handle a wider range of formats without JS canvas tricks. The list of supported formats includes practically every format you can think of. Since a WASM binary is being used, it is easy to use locally and does not require any server-side setup; as long as you have visited the site before and it cached the resource, you can use it offline with all features.
 
-I am personally not familiar with any online image editor with so many features:
+I am personally not familiar with any online image editor with so many features, especially one that does not use HTML/JS canvas tricks.
 
 <Carousel
 images={[
@@ -743,85 +789,4 @@ captions={[
 ]}
 height="h-[640px]"
 />
-
-### 1. Input / File Loading
-
-- Drag & drop anywhere (global drop overlay)
-- File picker / Browse (accepts image/\* + ~60 rare formats: raw camera, PDF, PS, XCF, PSD, EXR, DNG, JXL, HEIC, etc.)
-- Paste image from clipboard (Ctrl+V)
-- OS share-target support (mobile "share image" → editor via service worker + manifest.json share_target)
-- Random sample images in the empty state
-- 50 MB file-size limit with validation error
-- Fast dimension sniffing (JPEG/PNG/GIF/WebP/BMP) before full decode
-- Browser-preview capability probe: non-renderable formats (e.g. DNG) show a placeholder + warning, still process fine in WASM
-- Unsaved-change confirmation guard before replace/close (staged ConfirmDialog)
-
-### 2. Viewport & Preview
-
-- Zoom (10–5000%), pan by drag, wheel zoom, pinch-zoom on touch, double-click toggles fit ↔ 100%
-- Keyboard zoom/fit shortcuts; floating zoom toolbar (zoom %, in/out, fit, compare)
-- Hold-to-compare before/after (Space) and split-wipe compare with draggable handle (B)
-- Rotation badge overlay; loading pulse while processing; checkerboard transparency background
-- Dark/light theme toggle (persisted, follows system preference)
-
-### 3. Geometry
-
-- Resize (W/H, auto-keep-aspect via single dimension)
-- Rotate 0/90/180/270°, plus Flip (vertical) and Flop (horizontal)
-- Auto Orient (EXIF orientation)
-- Deskew / Trim: threshold slider, auto-crop toggle; trim boring borders toggle
-- Crop two modes: visual drag-to-select on canvas (with aspect-ratio presets Free/1:1/4:3/3:2/16:9/9:16, position rect display, clear) and manual gravity-crop (W/H + 9-point gravity anchor)
-- Shave pixels from edges (clamped)
-- Canvas Extent (W/H + gravity + background colour picker)
-- Border (size slider + colour picker)
-
-### 4. Colour & Tone
-
-- Adjust: Brightness, Saturation, Hue sliders (modulate) + Contrast (brightness-contrast)
-- Normalize, Auto Level, Auto Gamma toggles
-- Levels: per-channel (All/Red/Green/Blue) black point / white point / gamma
-- Level colours: black→white endpoint colours with optional Inverse, per channel
-- Advanced colour: Threshold, Sigmoidal Contrast, Black/White Threshold, Auto Threshold (Kapur / OTSU / Triangle)
-- CLAHE (X/Y tiles, histogram bins, clip limit)
-- colour Space conversion: RGB, Gray, CMYK, HSL, HSV, Lab
-
-### 5. Filters & Effects
-
-- Effect presets: Grayscale, Sepia Tone, Charcoal Sketch, Negative, Canny Edge Detection (strength/lower/upper), Oil Paint, Solarize, Bilateral Blur
-- Blur / Sharpen (radius)
-- Adaptive Sharpen / Blur (radius + sigma)
-- Advanced Blur: Gaussian (radius+sigma) and Motion Blur (radius, sigma, angle)
-- Add Noise: Uniform, Gaussian, Multiplicative Gaussian, Impulse, Laplacian, Poisson with attenuate slider (Poisson inverted for consistent direction)
-- colour LUT: 6 gradient presets (Warm, Cool, Vintage, High Contrast, Teal & Orange, Warm Mute) + interpolation method (Catrom, Bilinear, Nearest, Spline, Average)
-- Quantize / Dithering: colour count, dither method (None/Riemersma/Floyd-Steinberg), colour space, tree depth
-
-### 6. Annotation
-
-- Text overlay with custom text input
-- Fonts: 5 bundled (Roboto, Lato, PT Serif, Space Mono, Pacifico) + load system fonts via queryLocalFonts API (registered into the WASM engine)
-- Font size, colour picker, 9-point gravity position, pixel X/Y offsets, rotation angle (-180..180)
-- Stroke outline with width + colour
-
-### 7. Export
-
-- Formats: WebP, JPEG, PNG, AVIF, JXL, TIFF, GIF (JXL lossy noted as broken upstream in bundled IM 7.1.2-29)
-- Quality slider (disabled for lossless formats)
-- Strip Metadata toggle
-- EXIF viewer: lazy ExifTool-WASM extraction; priority tags (Make, Model, lens, exposure, ISO, GPS, etc.) with show-more for all fields
-- Output preview: dimensions, format, process time, file size (KB + % delta vs original)
-- Download as name-edited.ext; marks history entry saved; Ctrl+S
-- Persists last format/quality in localStorage
-
-### 8. Presets
-
-- 7 built-in one-click presets: Web Shrink, Thumbnail, B&W Photo, Sepia Vintage, Sharpen Scan, Social Square, HQ PNG
-- User presets: save current settings by name, apply, delete — persisted to localStorage (wasmagick.presets.v1)
-- Active-preset detection (highlight when settings match)
-
-### 9. History / Undo-Redo
-
-- 40-entry undo/redo stack with instant restore (settings + blob URL snapshots)
-- Keyboard Ctrl+Z / Ctrl+Shift+Z, toolbar + history panel controls
-- History list with thumbnails, per-entry process time, dims, format, size
-- Per-entry settings diff ("Since last" / "From original" modes), jump-to-any-state, clear (with confirm)
 

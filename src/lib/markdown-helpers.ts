@@ -1,39 +1,23 @@
 // Helpers to generate markdown for content-negotiation.
 // Each page imports its helper and returns Response when Astro.locals.prefersMarkdown.
 
-export function indexMarkdown(
-	visibleWritings: { title: string; file: string; snippet?: string | null; date: string }[],
-	visibleProjects: { title: string; id: string; shortDescription?: string | null }[]
-): string {
-	const writingsList = visibleWritings
-		.map((w) => `- [${w.title}](https://kirkr.xyz/writing/${w.file}) — ${w.snippet ?? ''} (${w.date})`)
-		.join('\n');
-	const projectsList = visibleProjects
-		.map((p) => `- [${p.title}](https://kirkr.xyz/project/${p.id}) — ${p.shortDescription ?? ''}`)
-		.join('\n');
-
+export function indexMarkdown(): string {
 	return `# kirkr.xyz
 
 I'm a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech more generally; this site is built on Astro. I'm also interested in politics, philosophy, economics and art - particularly Dutch.
 
-## Writings
+## Navigation
 
-${writingsList}
-
-[All writings](https://kirkr.xyz/writings)
-
-## Projects
-
-${projectsList}
-
-[All projects](https://kirkr.xyz/projects)
+- [Projects](https://kirkr.xyz/projects)
+- [Writings](https://kirkr.xyz/writings)
+- [About](https://kirkr.xyz/about)
+- [GitHub](https://github.com/KIRKR101)
 
 ## Collections
 
 - [Art](https://kirkr.xyz/art)
 - [Photography](https://kirkr.xyz/photography)
-- [Books](https://kirkr.xyz/books)
-- [Films](https://kirkr.xyz/films)
+- [Right now](https://kirkr.xyz/current)
 `;
 }
 
@@ -84,18 +68,10 @@ export function photographyMarkdown(cities: string[]): string {
 	let out = `# Photography\n\n`;
 	for (const c of cities) {
 		const slug = c.toLowerCase().replace(/\s+/g, '-');
-		out += `- [${c}](https://kirkr.xyz/photography#${slug})\n`;
+		out += `- [${c}](https://kirkr.xyz/photography/${slug})\n`;
 	}
 	out += `\nImages load from Cloudinary, grouped by city.\n`;
 	return out;
-}
-
-export function booksMarkdown(): string {
-	return `# Books\n\nBooks are loaded client-side from https://hardcover.kirkr.xyz.\n\n- View the full list in your browser at https://kirkr.xyz/books\n- Data source: OpenLibrary via Hardcover\n`;
-}
-
-export function filmsMarkdown(): string {
-	return `# Films\n\nFilms are loaded client-side from Letterboxd RSS via https://letterboxd.kirkr.xyz/kirkr101/rss/.\n\n- View the full list in your browser at https://kirkr.xyz/films\n`;
 }
 
 export function notFoundMarkdown(): string {

@@ -2,12 +2,12 @@
 <!-- Domain: kirkr.xyz -->
 <!-- Last updated: 2026-08-24 -->
 <!-- Version: 2 -->
-<!-- Content types: personal-site, essays, projects, art, photography, books, films -->
-<!-- URLs last crawled: https://kirkr.xyz/, https://kirkr.xyz/writings, https://kirkr.xyz/projects, https://kirkr.xyz/art, https://kirkr.xyz/photography, https://kirkr.xyz/books, https://kirkr.xyz/films -->
+<!-- Content types: personal-site, essays, projects, art, photography, current -->
+<!-- URLs last crawled: https://kirkr.xyz/, https://kirkr.xyz/writings, https://kirkr.xyz/projects, https://kirkr.xyz/art, https://kirkr.xyz/photography, https://kirkr.xyz/current -->
 
 # kirkr.xyz
 
-> kirkr.xyz is the personal website of a first-year Computer Engineering student at the University of Warwick. It contains long-form essays on computer engineering, economics, politics, philosophy, and (particularly Dutch) art; write-ups of the author's software projects; and collections of art, photography, books, and films. The site is built with Astro and is fully static.
+> kirkr.xyz is the personal website of a first-year Computer Engineering student at the University of Warwick. It contains long-form essays on computer engineering, economics, politics, philosophy, and (particularly Dutch) art; write-ups of the author's software projects; and collections of art, photography, books, and current media activity. The site is built with Astro.
 
 About the author: a first-year Computer Engineering student at Warwick who enjoys C and TypeScript and web technologies generally. Interests include politics, philosophy, economics, and art — particularly Dutch painting. Reachable by email at theo@kirkr.xyz; code lives on GitHub as [KIRKR101](https://github.com/KIRKR101).
 
@@ -22,7 +22,8 @@ Do not use this site for: factual reference where neutrality matters (the essays
 
 ## Site
 
-- [Home](https://kirkr.xyz/): Landing page. Author bio, current activity (GitHub contributions, Last.fm now-playing), and links to every section — writings, projects, art, photography, books, and films.
+- [Home](https://kirkr.xyz/): Landing page. Author bio, collection links, a temporary hero image, and accordions for recent writings and projects.
+- [Right now](https://kirkr.xyz/current): Current listening activity and the latest films from Letterboxd.
 - [All writings](https://kirkr.xyz/writings): Chronological index of every essay published on the site, newest first.
 - [All projects](https://kirkr.xyz/projects): Index of the author's software projects with per-project pages, galleries, and last-commit dates.
 
@@ -80,14 +81,6 @@ Visual and media collections. These pages are image-heavy and load their data fr
 ### Photography
 
 - [Photography](https://kirkr.xyz/photography): The author's own photography, organised by city, presented as a masonry gallery with lightbox viewing.
-
-### Books
-
-- [Books](https://kirkr.xyz/books): Books the author has read, sourced from OpenLibrary — covers, authors, descriptions, page counts, and ratings, with reading-tracker style organisation.
-
-### Films
-
-- [Films](https://kirkr.xyz/films): Films the author has watched, sourced from Last.fm's movie data — titles, release years, posters, ratings, watch dates, and rewatch flags.
 
 ## Feeds and data
 

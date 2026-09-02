@@ -19,7 +19,7 @@ const {
 	ogDescription,
 	ogType = 'website',
 	ogUrl = 'https://kirkr.xyz',
-	ogImage = 'https://kirkr.xyz/hero.webp',
+	ogImage = 'https://kirkr.xyz/hero.webp'
 } = Astro.props;
 
 const canonicalTitle = ogTitle ?? title;
@@ -27,7 +27,7 @@ const canonicalDesc = ogDescription ?? description;
 
 const pathname = Astro.url.pathname;
 const showBreadcrumbs = pathname !== '/';
-const breadcrumbWidth = pathname === '/art' || pathname === '/photography' ? 'max-w-5xl' : 'max-w-[600px]';
+const breadcrumbWidth = 'max-w-[600px]';
 ---
 
 <!doctype html>
@@ -57,7 +57,10 @@ const breadcrumbWidth = pathname === '/art' || pathname === '/photography' ? 'ma
 		<meta property="og:type" content={ogType} />
 		<meta property="og:url" content={ogUrl} />
 		<meta property="og:image" content={ogImage} />
-		<meta property="og:image:alt" content="Sketch of Landscape with Person on a Path by Anton Mauve" />
+		<meta
+			property="og:image:alt"
+			content="Sketch of Landscape with Person on a Path by Anton Mauve"
+		/>
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={canonicalTitle} />
 		<meta name="twitter:description" content={canonicalDesc} />
@@ -88,11 +91,13 @@ const breadcrumbWidth = pathname === '/art' || pathname === '/photography' ? 'ma
 			Skip to content
 		</a>
 		<div class="flex min-h-dvh flex-col bg-bg text-ink antialiased">
-			{showBreadcrumbs && (
-				<div class:list={['mx-auto w-[calc(100%-3rem)] pt-5', breadcrumbWidth]}>
-					<Breadcrumbs pathname={pathname} title={title} />
-				</div>
-			)}
+			{
+				showBreadcrumbs && (
+					<div class:list={['mx-auto w-[calc(100%-3rem)] pt-5', breadcrumbWidth]}>
+						<Breadcrumbs pathname={pathname} title={title} />
+					</div>
+				)
+			}
 			<main id="main-content">
 				<slot />
 			</main>

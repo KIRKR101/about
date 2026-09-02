@@ -1,192 +1,94 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
-import { projects } from '../lib/projects-data';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { projects } from '../lib/projects-data';
 import { indexMarkdown } from '../lib/markdown-helpers';
-// @ts-ignore - astro check false positive for noUnusedLocals with early return
+// @ts-ignore - used by the content-negotiation branch below
 void indexMarkdown;
 
-const writingsCollection = await getCollection('writings');
-const allWritings = writingsCollection
-	.map((entry: CollectionEntry<'writings'>) => ({
-		title: entry.data.title,
-		date: entry.data.date,
-		file: entry.id,
-		snippet: entry.data.snippet ?? null,
-	}))
-	.sort(
-		(a: (typeof allWritings)[number], b: (typeof allWritings)[number]) =>
-			new Date(b.date).getTime() - new Date(a.date).getTime()
-	);
-const visibleWritings = allWritings.slice(0, 5);
-const visibleProjects = projects.slice(0, 5);
-
 if (Astro.locals.prefersMarkdown) {
-	return new Response(indexMarkdown(visibleWritings, visibleProjects), {
+	return new Response(indexMarkdown(), {
 		status: 200,
-		headers: {
-			'Content-Type': 'text/markdown; charset=utf-8',
-			Vary: 'Accept'
-		}
+		headers: { 'Content-Type': 'text/markdown; charset=utf-8', Vary: 'Accept' }
 	});
 }
 
-function formatDate(dateString: string) {
-	try {
-		return new Intl.DateTimeFormat('en-GB', {
-			day: '2-digit',
-			month: 'short',
-			year: 'numeric',
-		}).format(new Date(dateString));
-	} catch {
-		return dateString;
-	}
-}
+type RecentWriting = { id: string; title: string; date: string; snippet?: string };
+const writings: RecentWriting[] = (await getCollection('writings'))
+	.map((entry: CollectionEntry<'writings'>) => ({
+		id: entry.id,
+		title: entry.data.title,
+		date: entry.data.date,
+		snippet: entry.data.snippet
+	}))
+	.sort(
+		(a: RecentWriting, b: RecentWriting) => new Date(b.date).getTime() - new Date(a.date).getTime()
+	)
+	.slice(0, 5);
+const recentProjects = projects.slice(0, 5);
+const navigation = [
+	{ href: '/writings', label: 'Writings' },
+	{ href: '/projects', label: 'Projects' },
+	{ href: '/photography', label: 'Photography' },
+	{ href: '/art', label: 'Art' },
+	{ href: '/about', label: 'About' },
+	{ href: '/current', label: 'Right now' },
+	{ href: '/contact', label: 'Contact' },
+	{ href: 'https://github.com/KIRKR101', label: 'GitHub', external: true }
+];
+const formatDate = (date: string) =>
+	new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(
+		new Date(date)
+	);
 ---
 
 <Layout title="kirkr.xyz" description="Writing on computer engineering, and other interests.">
-	<link rel="preconnect" href="https://i.scdn.co" slot="head" />
-
-	<div class="flex min-h-dvh flex-col items-center justify-center px-6 py-8 md:py-16">
-		<main class="w-full max-w-[700px]">
-			<section class="pb-2">
-				<div class="flex items-start gap-6">
-					<div class="min-w-0">
-						<p class="mt-4 font-sans text-[14px] sm:text-[16px] leading-[1.75] text-ink-80">
-							I am a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech
-							more generally; this site is built on Astro. I am also interested in politics,
-							philosophy, economics, photography, and art - particularly Dutch.
-						</p>
-
-						<button
-							type="button"
-							data-activity-toggle
-							class="mt-3.5 inline-flex cursor-pointer items-center gap-1.5 font-mono text-[11px] tracking-wider text-ink-70 uppercase transition-colors duration-100 hover:text-ink"
-							aria-expanded="false"
-							aria-controls="activity-drawer"
-						>
-							<span class="decoration-ink-70 underline-offset-2 hover:underline"
-								>See current activity</span
+	<div class="relative flex min-h-dvh flex-col items-center justify-center px-6 py-8 md:py-16">
+		<main class="relative z-10 w-full max-w-[600px]">
+			<section class="pb-8">
+				<p class="max-w-none font-sans text-[14px] leading-[1.8] text-ink-80 sm:text-[16px]">
+					I am a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech more
+					generally; this site is built on Astro. I am also interested in politics, philosophy,
+					economics, photography, and art — particularly Dutch.
+				</p>
+				<div class="mt-7">
+					<nav
+						class="grid grid-cols-2 gap-px border border-bd bg-bd font-sans text-[13px] text-ink-80 sm:grid-cols-4"
+						aria-label="Main navigation"
+					>
+						{navigation.map((link) => (
+							<a
+								href={link.href}
+								{...(link.external && { target: '_blank', rel: 'noopener noreferrer' })}
+								class="flex min-w-0 flex-wrap items-center justify-start gap-2 bg-bg px-3 py-2.5 text-left transition-colors hover:bg-bg hover:text-ink"
 							>
-							<span data-activity-toggle-label>[+]</span>
-						</button>
-					</div>
-
-					<div class="hidden w-80 shrink-0 rounded-sm sm:block">
-						<img
-							src="/hero.webp"
-							alt="Sketch of Landscape with Person on a Path by Anton Mauve"
-							class="w-80 rounded-sm object-cover dark:invert"
-							fetchpriority="high"
-						/>
-					</div>
+								<svg
+									width="14"
+									height="14"
+									viewBox="0 0 16 16"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+									aria-hidden="true"
+									class="text-ink-30"
+								>
+									<path
+										d="M12 10V4m0 0H6m6 0l-7.833 7.833"
+										stroke="currentColor"
+										stroke-width="1"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									></path>
+								</svg>
+								<span class="min-w-0 break-words">{link.label}</span>
+							</a>
+						))}
+					</nav>
 				</div>
 			</section>
 
-			<!-- Activity Drawer -->
-			<div
-				id="activity-drawer"
-				data-activity-drawer
-				class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6"
-				role="presentation"
-			>
-				<div data-activity-backdrop class="pointer-events-none absolute inset-0 backdrop-blur-[2px]">
-				</div>
-				<div
-					class="relative z-10 max-h-[min(42rem,calc(100dvh-1.5rem))] w-full max-w-lg overflow-y-auto scrollbar-gutter-stable rounded-sm border border-ink/15 bg-bg p-5 shadow-2xl shadow-ink/5 sm:max-h-[calc(100dvh-3rem)] sm:p-6"
-					role="dialog"
-					aria-modal="true"
-					aria-label="Current activity"
-				>
-					<div class="mb-6 flex items-center justify-between border-b border-bd pb-4">
-						<div>
-							<div class="font-serif text-[28px] text-ink-90">Right now</div>
-						</div>
-						<button
-							type="button"
-							data-activity-close
-							class="group cursor-pointer font-mono text-[12px] tracking-wider text-ink-70 uppercase transition-colors hover:text-ink"
-							aria-label="Close current activity"
-						>
-							<span class="group-hover:underline">Close</span> [x]
-						</button>
-					</div>
-
-					<div class="space-y-6">
-						<section class="w-full" data-track-section>
-							<div
-								data-track-status
-								class="mb-4 font-sans text-[12px] tracking-[0.1em] text-ink-70 uppercase"
-							>
-								Initialising
-							</div>
-							<div class="flex items-start gap-4">
-								<div
-									class="h-16 w-16 aspect-square shrink-0 overflow-hidden rounded-sm bg-art-bg"
-								>
-									<img
-										data-track-image
-										src=""
-										alt=""
-										class="hidden h-full w-full object-cover"
-										width="64"
-										height="64"
-										sizes="64px"
-										fetchpriority="high"
-									/>
-								</div>
-
-								<div class="min-w-0 flex-1">
-									<div
-										data-track-title
-										class="font-serif text-[18px] -mt-0.5 leading-snug text-ink-90"
-									>
-										Loading
-									</div>
-									<div
-										data-track-artist
-										class="mt-1 font-sans text-[12px] leading-relaxed tracking-wide text-ink-70"
-									>
-									</div>
-
-									<div data-track-progress-wrap class="mt-1 hidden items-center gap-2">
-										<span
-											data-track-progress-current
-											class="shrink-0 font-mono text-[10px] text-ink-70">0:00</span
-										>
-										<div class="relative h-0.5 flex-1 bg-rail" aria-label="progress">
-											<div
-												data-track-progress-bar
-												class="absolute inset-y-0 left-0 h-full bg-ink/40"
-												style="width: 0%"
-											>
-											</div>
-										</div>
-										<span
-											data-track-progress-total
-											class="shrink-0 font-mono text-[10px] text-ink-70">0:00</span
-										>
-									</div>
-								</div>
-							</div>
-						</section>
-
-						<section
-							data-books-section
-							class="hidden w-full border-t border-bd pt-6"
-						>
-							<div class="mb-4 font-sans text-[12px] tracking-[0.1em] text-ink-70 uppercase">
-								Currently Reading
-							</div>
-							<div data-books-list class="flex flex-col gap-4"></div>
-						</section>
-					</div>
-				</div>
-			</div>
-
-			<section class="cv-auto py-6">
-				<div class="mb-1 pb-1 flex items-baseline justify-between sm:px-1.5 border-b border-bd/80">
+			<section class="cv-auto py-4">
+				<div class="mb-1 flex items-baseline justify-between border-b border-bd/80 pb-1 sm:px-1.5">
 					<div class="font-serif text-[24px] text-ink-90">Writings</div>
 					<a
 						href="/writings"
@@ -194,12 +96,11 @@ function formatDate(dateString: string) {
 						>[+]</a
 					>
 				</div>
-
 				<div class="flex flex-col">
 					{
-						visibleWritings.map((writing: (typeof visibleWritings)[number]) => (
+						writings.map((writing) => (
 							<a
-								href={`/writing/${writing.file}`}
+								href={`/writing/${writing.id}`}
 								class="group flex w-full flex-col rounded-sm border-b border-bd/40 py-2.5 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
 							>
 								<div class="flex w-full items-baseline justify-between gap-4">
@@ -207,7 +108,6 @@ function formatDate(dateString: string) {
 										<span class="font-sans text-[14px] text-ink-80 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2">
 											{writing.title}
 										</span>
-
 										{writing.snippet && (
 											<>
 												<span class="mx-1.5 hidden text-ink-50 sm:inline">—</span>
@@ -217,12 +117,10 @@ function formatDate(dateString: string) {
 											</>
 										)}
 									</div>
-
 									<span class="shrink-0 font-mono text-[11px] tracking-wider text-ink-70 uppercase">
 										{formatDate(writing.date)}
 									</span>
 								</div>
-
 								{writing.snippet && (
 									<span class="mt-1 line-clamp-2 font-sans text-[12px] leading-relaxed text-ink-70 sm:hidden">
 										{writing.snippet}
@@ -234,8 +132,8 @@ function formatDate(dateString: string) {
 				</div>
 			</section>
 
-			<section class="cv-auto pt-6 pb-2">
-				<div class="mb-1 pb-1 flex items-baseline justify-between sm:px-1.5 border-b border-bd/80">
+			<section class="cv-auto pt-4 pb-2">
+				<div class="mb-1 flex items-baseline justify-between border-b border-bd/80 pb-1 sm:px-1.5">
 					<div class="font-serif text-[24px] text-ink-90">Projects</div>
 					<a
 						href="/projects"
@@ -243,10 +141,9 @@ function formatDate(dateString: string) {
 						>[+]</a
 					>
 				</div>
-
 				<div class="flex flex-col">
 					{
-						visibleProjects.map((project) => (
+						recentProjects.map((project) => (
 							<a
 								href={`/project/${project.id}`}
 								class="group flex w-full flex-col rounded-sm border-b border-bd/40 py-2.5 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
@@ -256,7 +153,6 @@ function formatDate(dateString: string) {
 										<span class="font-sans text-[14px] text-ink-80 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2">
 											{project.title}
 										</span>
-
 										{project.shortDescription && (
 											<>
 												<span class="mx-1.5 hidden text-ink-50 sm:inline">—</span>
@@ -266,12 +162,10 @@ function formatDate(dateString: string) {
 											</>
 										)}
 									</div>
-
 									<span class="shrink-0 font-mono text-[11px] tracking-wider text-ink-70 uppercase">
 										{project.firstCommit}
 									</span>
 								</div>
-
 								{project.shortDescription && (
 									<span class="mt-2 line-clamp-2 font-sans text-[12px] leading-relaxed text-ink-70 sm:hidden">
 										{project.shortDescription}
@@ -287,483 +181,3 @@ function formatDate(dateString: string) {
 		</main>
 	</div>
 </Layout>
-
-<script>
-	// Activity drawer + Spotify/Last.fm/books - vanilla JS port of src/routes/+page.svelte
-	const SPOTIFY_API_URL = 'https://spotify.kirkr.xyz/api/now-playing';
-	const LASTFM_API_URL = 'https://lastfm.kirkr.xyz/api/lastfm-track';
-	const BOOKS_CACHE_TTL = 2 * 60 * 60 * 1000;
-
-	let spotifyData: any = null;
-	let lastFmData: any = null;
-	let dataSource: 'spotify' | 'lastfm' | null = null;
-	let localProgress = 0;
-	let lastFetchTime = 0;
-	let isFetching = false;
-	let intervalId: ReturnType<typeof setInterval> | undefined;
-	let progressRafId: number | undefined;
-	let retryTimeoutId: ReturnType<typeof setTimeout> | undefined;
-	let currentlyReading: any[] = [];
-	let hiddenAt: number | null = null;
-
-	function startTrackPolling() {
-		if (intervalId) clearInterval(intervalId);
-		intervalId = setInterval(fetchCurrentTrack, 30000);
-	}
-
-	function stopTrackPolling() {
-		if (intervalId) {
-			clearInterval(intervalId);
-			intervalId = undefined;
-		}
-	}
-
-	function formatTime(ms: number): string {
-		const totalSeconds = Math.floor(ms / 1000);
-		const minutes = Math.floor(totalSeconds / 60);
-		const seconds = totalSeconds % 60;
-		return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-	}
-
-	function generateSpotifySrcset(images: any[] = []): string {
-		return [...images]
-			.sort((a, b) => a.width - b.width)
-			.map((img) => `${img.url} ${img.width}w`)
-			.join(', ');
-	}
-
-	function getSpotifyImageForDisplay(images: any[] = []): string {
-		if (!images?.length) return '';
-		const sorted = [...images].sort((a, b) => a.width - b.width);
-		// Display is 64px (128px on 2x DPR) – pick smallest >=64 to avoid fetching 640w
-		const suitable = sorted.find((img) => img.width >= 64);
-		return (suitable ?? sorted[0])?.url ?? '';
-	}
-
-	function generateLastFmSrcset(images: Record<string, string> = {}): string {
-		const mapping: Record<string, string> = {
-			small: '34w',
-			medium: '64w',
-			large: '174w',
-			extralarge: '300w',
-			mega: '500w',
-		};
-		return Object.entries(images)
-			.filter(([size, url]) => url && mapping[size])
-			.map(([size, url]) => `${url} ${mapping[size]}`)
-			.join(', ');
-	}
-
-	function getHardcoverSrcset(coverUrl: string): string {
-		if (!coverUrl) return '';
-		const base = 'https://production-img.hardcover.app/enlarge';
-		const widths = [150, 270, 400];
-		return widths
-			.map((w) => {
-				const h = Math.round(w * 1.5);
-				const params = new URLSearchParams({
-					width: String(w),
-					height: String(h),
-					type: 'webp',
-					url: coverUrl,
-				});
-				return `${base}?${params} ${w}w`;
-			})
-			.join(', ');
-	}
-
-	function updateTrackUI() {
-		const statusEl = document.querySelector('[data-track-status]') as HTMLElement | null;
-		const imgEl = document.querySelector('[data-track-image]') as HTMLImageElement | null;
-		const titleEl = document.querySelector('[data-track-title]') as HTMLElement | null;
-		const artistEl = document.querySelector('[data-track-artist]') as HTMLElement | null;
-		const progressWrap = document.querySelector(
-			'[data-track-progress-wrap]',
-		) as HTMLElement | null;
-		const progressBar = document.querySelector('[data-track-progress-bar]') as HTMLElement | null;
-		const progressCurrent = document.querySelector(
-			'[data-track-progress-current]',
-		) as HTMLElement | null;
-		const progressTotal = document.querySelector(
-			'[data-track-progress-total]',
-		) as HTMLElement | null;
-
-		if (!statusEl || !titleEl || !artistEl || !imgEl) return;
-
-		let track: any = null;
-		if (dataSource === 'spotify' && spotifyData) {
-			track = {
-				source: 'Spotify',
-				title: spotifyData.title,
-				artist: spotifyData.artist,
-				artistUrl: spotifyData.artistUrl,
-				album: spotifyData.album,
-				url: spotifyData.songUrl || spotifyData.externalUrl,
-				imageUrl: getSpotifyImageForDisplay(spotifyData.images),
-				imageSrcset: generateSpotifySrcset(spotifyData.images),
-				isPlaying: spotifyData.isPlaying,
-				showProgress: spotifyData.isPlaying,
-				duration: spotifyData.duration,
-				progress: localProgress,
-			};
-		} else if (dataSource === 'lastfm' && lastFmData) {
-			const imgs = lastFmData.images || {};
-			const fallback = imgs['medium'] || imgs['small'] || imgs['large'] || imgs['extralarge'] || '';
-			track = {
-				source: 'Last.fm',
-				title: lastFmData.title,
-				artist: lastFmData.artist,
-				artistUrl: '',
-				album: '',
-				url: lastFmData.trackUrl,
-				imageUrl: fallback,
-				imageSrcset: generateLastFmSrcset(imgs),
-				isPlaying: lastFmData.status === 'Currently playing',
-				showProgress: false,
-				duration: 0,
-				progress: 0,
-			};
-		}
-
-		if (!track) {
-			statusEl.textContent = 'Initialising';
-			titleEl.textContent = 'Loading';
-			artistEl.textContent = '';
-			if (imgEl) {
-				imgEl.classList.add('hidden');
-				imgEl.removeAttribute('src');
-				imgEl.removeAttribute('srcset');
-			}
-			if (progressWrap) {
-				progressWrap.classList.add('hidden');
-				progressWrap.classList.remove('flex');
-			}
-			return;
-		}
-
-		statusEl.textContent = track.isPlaying ? 'Now playing' : 'Last listen';
-
-		// Image
-		if (track.imageUrl) {
-			imgEl.src = track.imageUrl;
-			if (track.imageSrcset) {
-				imgEl.srcset = track.imageSrcset;
-				imgEl.sizes = '64px';
-			} else {
-				imgEl.removeAttribute('srcset');
-				imgEl.removeAttribute('sizes');
-			}
-			imgEl.alt = track.title;
-			imgEl.classList.remove('hidden');
-			// Wrap in link if url exists - handle via parent
-			const linkWrap = imgEl.closest('a');
-			if (track.url && !linkWrap) {
-				const parent = imgEl.parentElement;
-				if (parent && !parent.querySelector('a')) {
-					// Create link wrapper dynamically for image
-					const a = document.createElement('a');
-					a.href = track.url;
-					a.target = '_blank';
-					a.rel = 'noopener noreferrer';
-					a.className = 'block h-full w-full';
-					imgEl.parentElement?.appendChild(a);
-					a.appendChild(imgEl);
-				}
-			}
-		} else {
-			imgEl.classList.add('hidden');
-		}
-
-		// Title (with link)
-		if (track.url) {
-			titleEl.innerHTML = `<a href="${track.url}" target="_blank" rel="noopener noreferrer" class="text-inherit no-underline transition-colors duration-75 hover:text-ink-80">${track.title}</a>`;
-		} else {
-			titleEl.textContent = track.title;
-		}
-
-		// Artist
-		let artistHtml = '';
-		if (track.artistUrl) {
-			artistHtml = `<a href="${track.artistUrl}" target="_blank" rel="noopener noreferrer" class="text-inherit no-underline transition-colors hover:text-ink-70">${track.artist}</a>`;
-		} else {
-			artistHtml = track.artist;
-		}
-		if (track.album) artistHtml += ` · ${track.album}`;
-		artistEl.innerHTML = artistHtml;
-
-		// Progress
-		if (track.showProgress && track.duration > 0) {
-			if (progressWrap) {
-				progressWrap.classList.remove('hidden');
-				progressWrap.classList.add('flex');
-			}
-			const pct = track.duration > 0 ? (track.progress / track.duration) * 100 : 0;
-			if (progressBar) progressBar.style.width = `${pct}%`;
-			if (progressCurrent) progressCurrent.textContent = formatTime(track.progress);
-			if (progressTotal) progressTotal.textContent = formatTime(track.duration);
-		} else {
-			if (progressWrap) {
-				progressWrap.classList.add('hidden');
-				progressWrap.classList.remove('flex');
-			}
-		}
-	}
-
-	function setupProgressUpdate() {
-		if (progressRafId) {
-			cancelAnimationFrame(progressRafId);
-			progressRafId = undefined;
-		}
-		if (spotifyData?.isPlaying && localProgress < (spotifyData?.duration ?? 0)) {
-			function tick() {
-				if (!spotifyData?.isPlaying) return;
-				const elapsed = Date.now() - lastFetchTime;
-				const newProgress = (spotifyData?.progress ?? 0) + elapsed;
-				const duration = spotifyData?.duration ?? 0;
-				if (newProgress >= duration) {
-					localProgress = duration;
-					updateTrackUI();
-					if (retryTimeoutId) clearTimeout(retryTimeoutId);
-					retryTimeoutId = setTimeout(fetchSpotifyTrack, 500);
-					return;
-				}
-				localProgress = newProgress;
-				updateTrackUI();
-				progressRafId = requestAnimationFrame(tick);
-			}
-			progressRafId = requestAnimationFrame(tick);
-		}
-	}
-
-	async function fetchSpotifyTrack() {
-		if (isFetching) return;
-		isFetching = true;
-		try {
-			const response = await fetch(SPOTIFY_API_URL);
-			if (!response.ok) throw new Error(`Spotify API status ${response.status}`);
-			const data = await response.json();
-			if (data.isPlaying === false && !data.title) {
-				if (retryTimeoutId) clearTimeout(retryTimeoutId);
-				retryTimeoutId = setTimeout(fetchSpotifyTrack, 30_000);
-				return;
-			}
-			if (data.isPlaying === undefined) throw new Error('Invalid Spotify response');
-			if (retryTimeoutId) {
-				clearTimeout(retryTimeoutId);
-				retryTimeoutId = undefined;
-			}
-			spotifyData = data;
-			localProgress = data.progress ?? 0;
-			lastFetchTime = Date.now();
-			dataSource = 'spotify';
-			updateTrackUI();
-			setupProgressUpdate();
-		} catch {
-			dataSource = 'lastfm';
-			await fetchLastFmTrack();
-			updateTrackUI();
-		} finally {
-			isFetching = false;
-		}
-	}
-
-	async function fetchLastFmTrack() {
-		try {
-			const response = await fetch(LASTFM_API_URL);
-			if (response.ok) {
-				lastFmData = await response.json();
-			}
-		} catch (e) {
-			console.error('Error fetching Last.fm track:', e);
-		}
-	}
-
-	function fetchCurrentTrack() {
-		if (dataSource === 'lastfm') {
-			fetchLastFmTrack().then(updateTrackUI);
-		} else {
-			fetchSpotifyTrack();
-		}
-	}
-
-	function loadCachedBooks() {
-		try {
-			const stored = localStorage.getItem('books-cache');
-			if (!stored) return null;
-			const parsed = JSON.parse(stored);
-			if (Array.isArray(parsed?.currentlyReading) && typeof parsed.timestamp === 'number') {
-				if (Date.now() - parsed.timestamp > BOOKS_CACHE_TTL) {
-					localStorage.removeItem('books-cache');
-					return null;
-				}
-				return parsed.currentlyReading;
-			}
-		} catch {}
-		return null;
-	}
-
-	function saveCachedBooks(books: any[]) {
-		try {
-			localStorage.setItem(
-				'books-cache',
-				JSON.stringify({ currentlyReading: books, timestamp: Date.now() }),
-			);
-		} catch (e) {
-			console.warn('Failed to cache books:', e);
-		}
-	}
-
-	async function fetchCurrentlyReading() {
-		const cached = loadCachedBooks();
-		if (cached) {
-			currentlyReading = cached;
-			renderBooks();
-			return;
-		}
-		try {
-			const response = await fetch('https://hardcover.kirkr.xyz');
-			if (!response.ok) throw new Error(`Status ${response.status}`);
-			const data = await response.json();
-			currentlyReading = data.currently_reading || [];
-			saveCachedBooks(currentlyReading);
-			renderBooks();
-		} catch (e) {
-			console.warn('Failed to fetch currently reading:', e);
-		}
-	}
-
-	function renderBooks() {
-		const section = document.querySelector('[data-books-section]') as HTMLElement | null;
-		const list = document.querySelector('[data-books-list]') as HTMLElement | null;
-		if (!section || !list) return;
-		if (currentlyReading.length === 0) {
-			section.classList.add('hidden');
-			return;
-		}
-		section.classList.remove('hidden');
-		list.innerHTML = currentlyReading
-			.map(
-				(item: any) => `
-			<div class="flex items-start gap-4">
-				<a
-					href="https://hardcover.app/books/${item.book.slug}?referrer_id=120657"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="relative flex h-[5.75rem] w-16 shrink-0 items-center justify-center overflow-hidden rounded-sm border border-bd bg-card-bg text-ink-20"
-				>
-					<span class="-rotate-[315deg] text-center font-serif text-[9px] leading-tight tracking-wide select-none" aria-hidden="true">
-						${item.book.title}
-					</span>
-					<img
-						src="${item.book.cover_url}"
-						srcset="${getHardcoverSrcset(item.book.cover_url)}"
-						sizes="64px"
-						alt="${item.book.title}"
-						class="absolute inset-0 h-full w-full rounded-sm object-cover"
-						loading="lazy"
-						onerror="this.style.opacity='0'"
-					/>
-				</a>
-				<div class="flex min-w-0 flex-1 flex-col">
-					<div class="font-serif text-[18px] leading-snug text-ink-90">
-						<a
-							href="https://hardcover.app/books/${item.book.slug}?referrer_id=120657"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="text-inherit no-underline transition-colors duration-75 hover:text-ink-80"
-						>
-							${item.book.title}
-						</a>
-					</div>
-					<div class="mt-1 font-mono text-[12px] leading-relaxed tracking-wider text-ink-70">
-						${item.book.authors[0] ?? 'Unknown author'}
-					</div>
-					${
-						item.progress
-							? `<div class="mt-2 font-mono text-[12px] tracking-wider text-ink-70">
-						${Math.round(item.progress.percentage)}% · ${item.progress.pages_read}/${item.progress.total_pages}
-					</div>`
-							: ''
-					}
-				</div>
-			</div>
-		`,
-			)
-			.join('');
-	}
-
-	function initActivity() {
-		const toggle = document.querySelector('[data-activity-toggle]') as HTMLButtonElement | null;
-		const drawer = document.querySelector('[data-activity-drawer]') as HTMLElement | null;
-		const closeBtn = document.querySelector('[data-activity-close]') as HTMLButtonElement | null;
-		const label = document.querySelector('[data-activity-toggle-label]') as HTMLElement | null;
-
-		if (!toggle || !drawer) return;
-
-		let open = false;
-
-		function setOpen(next: boolean) {
-			open = next;
-			toggle!.setAttribute('aria-expanded', String(open));
-			if (label) label.textContent = open ? '[-]' : '[+]';
-			if (open) {
-				drawer!.classList.remove('hidden');
-				drawer!.classList.add('flex');
-			} else {
-				drawer!.classList.add('hidden');
-				drawer!.classList.remove('flex');
-			}
-		}
-
-		toggle.addEventListener('click', () => setOpen(!open));
-		closeBtn?.addEventListener('click', () => setOpen(false));
-		drawer.addEventListener('click', (e) => {
-			if (e.target === drawer) setOpen(false);
-		});
-
-		document.addEventListener('keydown', (e: KeyboardEvent) => {
-			if (open && e.key === 'Escape') setOpen(false);
-		});
-
-		// Fetch data immediately
-		fetchSpotifyTrack();
-		fetchCurrentlyReading();
-		startTrackPolling();
-
-		function handleVisibilityChange() {
-			if (document.hidden) {
-				hiddenAt = Date.now();
-				stopTrackPolling();
-				if (progressRafId) {
-					cancelAnimationFrame(progressRafId);
-					progressRafId = undefined;
-				}
-				if (retryTimeoutId) {
-					clearTimeout(retryTimeoutId);
-					retryTimeoutId = undefined;
-				}
-			} else {
-				const wasHiddenFor = hiddenAt ? Date.now() - hiddenAt : 0;
-				hiddenAt = null;
-				setupProgressUpdate();
-				if (wasHiddenFor >= 30_000) {
-					fetchCurrentTrack();
-				}
-				startTrackPolling();
-			}
-		}
-
-		document.addEventListener('visibilitychange', handleVisibilityChange);
-
-		// Cleanup on page navigation (Astro View Transitions)
-		document.addEventListener('astro:before-swap', () => {
-			stopTrackPolling();
-			document.removeEventListener('visibilitychange', handleVisibilityChange);
-			if (progressRafId) cancelAnimationFrame(progressRafId);
-			if (retryTimeoutId) clearTimeout(retryTimeoutId);
-		});
-	}
-
-	initActivity();
-	document.addEventListener('astro:after-swap', initActivity);
-</script>

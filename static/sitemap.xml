@@ -71,9 +71,14 @@
 		<priority>0.6</priority>
 	</url>
 	<url>
-		<loc>https://kirkr.xyz/films</loc>
+		<loc>https://kirkr.xyz/current</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>https://kirkr.xyz/about</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.6</priority>
 	</url>
 	<url>
 		<loc>https://kirkr.xyz/art</loc>
@@ -82,11 +87,6 @@
 	</url>
 	<url>
 		<loc>https://kirkr.xyz/photography</loc>
-		<changefreq>monthly</changefreq>
-		<priority>0.8</priority>
-	</url>
-	<url>
-		<loc>https://kirkr.xyz/books</loc>
 		<changefreq>monthly</changefreq>
 		<priority>0.8</priority>
 	</url>

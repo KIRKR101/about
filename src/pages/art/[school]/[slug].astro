@@ -1,0 +1,37 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Footer from '../../../components/Footer.astro';
+import { getArtGroups, artGroupSlug } from '../../../lib/art-groups';
+
+export const prerender = true;
+export function getStaticPaths() {
+	return getArtGroups().flatMap((group) =>
+		group.entries.map(([id, artwork]) => ({
+			params: { school: artGroupSlug(group.name), slug: id },
+			props: { group: group.name, artwork }
+		}))
+	);
+}
+const { artwork } = Astro.props;
+const artist = artwork.data.find(([key]) => key === 'artist')?.[1];
+---
+
+<Layout title={`${artwork.title} | kirkr.xyz`} description={artwork.description}>
+	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
+		<main class="w-full max-w-[600px]">
+			<div class="py-4">
+				<h1 class="mt-4 font-serif text-[42px] leading-tight text-ink">{artwork.title}</h1>
+			</div><div class="mb-8 h-px bg-bd"></div><img
+				src={artwork.image}
+				alt={artwork.title}
+				class="max-h-[75vh] w-full object-contain"
+			/><div class="mt-6 border-t border-bd pt-5">
+				<div class="font-sans text-[13px] text-ink-70">
+					{artist} · {artwork.data.find(([key]) => key === 'year')?.[1]}
+				</div><p class="mt-4 font-sans text-[15px] leading-relaxed text-ink-80">
+					{artwork.description}
+				</p>
+			</div><Footer />
+		</main>
+	</div>
+</Layout>
