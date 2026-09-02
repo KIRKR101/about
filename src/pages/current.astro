@@ -6,7 +6,7 @@ import Footer from '../components/Footer.astro';
 <Layout title="Right now | kirkr.xyz" description="What I am listening to, reading, and watching right now.">
 	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16"><main class="w-full max-w-[600px]">
 		<div class="py-4"><h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">Right now<span class="opacity-40">.</span></h1></div><div class="mb-8 h-px bg-bd"></div>
-		<section class="border-b border-bd pb-7"><div class="mb-5 font-mono text-[11px] tracking-wider text-ink-70 uppercase">Listening</div><div class="flex items-center gap-6"><div class="h-32 w-32 shrink-0 overflow-hidden rounded-sm bg-ink/5"><img data-track-image alt="" class="hidden h-full w-full object-cover" /></div><div class="min-w-0"><div data-track-title class="font-serif text-[24px] leading-tight text-ink-90">Loading</div><div data-track-artist class="mt-2 font-sans text-[13px] text-ink-70">Checking Spotify…</div></div></div></section>
+		<section class="border-b border-bd pb-7"><div data-track-status class="mb-5 font-mono text-[11px] tracking-wider text-ink-70 uppercase">Listening</div><div class="flex items-start gap-6"><div class="h-32 w-32 shrink-0 overflow-hidden rounded-sm bg-ink/5"><img data-track-image alt="" class="hidden h-full w-full object-cover" /></div><div class="min-w-0 flex-1"><div data-track-title class="font-serif text-[24px] leading-tight text-ink-90">Loading</div><div data-track-artist class="mt-2 font-sans text-[13px] text-ink-70">Checking Spotify…</div><div data-track-progress-wrap class="mt-4 hidden items-center gap-2"><span data-track-progress-current class="shrink-0 font-mono text-[10px] text-ink-70">0:00</span><div class="relative h-0.5 flex-1 bg-ink/10"><div data-track-progress-bar class="absolute inset-y-0 left-0 h-full bg-ink/40" style="width: 0%"></div></div><span data-track-progress-total class="shrink-0 font-mono text-[10px] text-ink-70">0:00</span></div></div></div></section>
 		<section class="border-b border-bd py-7"><div class="mb-5 font-mono text-[11px] tracking-wider text-ink-70 uppercase">Films</div><div data-films-loading class="font-mono text-[11px] text-ink-50">Loading recent films…</div><div data-films-list class="hidden grid grid-cols-3 gap-4"></div><div data-films-error class="hidden font-mono text-[11px] text-ink-50">Films unavailable right now.</div></section>
 		<section class="py-7"><div class="mb-5 font-mono text-[11px] tracking-wider text-ink-70 uppercase">Books</div><div data-books-loading class="font-mono text-[11px] text-ink-50">Loading books…</div><div data-books-list class="hidden grid grid-cols-3 gap-4"></div><div data-books-error class="hidden font-mono text-[11px] text-ink-50">Books unavailable right now.</div></section>
 		<Footer />
@@ -14,12 +14,149 @@ import Footer from '../components/Footer.astro';
 </Layout>
 
 <script>
-	const trackImage = document.querySelector('[data-track-image]') as HTMLImageElement | null;
-	const trackTitle = document.querySelector('[data-track-title]');
-	const trackArtist = document.querySelector('[data-track-artist]');
-	fetch('https://spotify.kirkr.xyz/api/now-playing').then((r) => r.json()).then((data) => { if (trackTitle) trackTitle.textContent = data.title || 'Nothing playing'; if (trackArtist) trackArtist.textContent = data.artist || '—'; if (trackImage && data.images?.[0]?.url) { trackImage.src = data.images[0].url; trackImage.alt = data.title || ''; trackImage.classList.remove('hidden'); } }).catch(() => { if (trackTitle) trackTitle.textContent = 'Nothing playing'; if (trackArtist) trackArtist.textContent = 'Spotify unavailable'; });
+	const SPOTIFY_API_URL = 'https://spotify.kirkr.xyz/api/now-playing';
+	const LASTFM_API_URL = 'https://lastfm.kirkr.xyz/api/lastfm-track';
+	const FILMS_CACHE_TTL = 6 * 60 * 60 * 1000;
+	const BOOKS_CACHE_TTL = 3 * 60 * 60 * 1000;
+	let spotifyData: any = null;
+	let lastFmData: any = null;
+	let dataSource: 'spotify' | 'lastfm' | null = null;
+	let localProgress = 0;
+	let lastFetchTime = 0;
+	let isFetching = false;
+	let pollId: ReturnType<typeof setInterval> | undefined;
+	let progressFrame: number | undefined;
+	let retryTimeout: ReturnType<typeof setTimeout> | undefined;
+	let hiddenAt: number | null = null;
+	let removeVisibility: (() => void) | undefined;
+
+	const formatTime = (milliseconds: number) => {
+		const seconds = Math.max(0, Math.floor(milliseconds / 1000));
+		return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+	};
+	const spotifyImageSet = (images: any[] = []) => [...images].sort((a, b) => a.width - b.width).map((image) => `${image.url} ${image.width}w`).join(', ');
+	const spotifyImage = (images: any[] = []) => {
+		const sorted = [...images].sort((a, b) => a.width - b.width);
+		return sorted.find((image) => image.width >= 128)?.url ?? sorted[0]?.url ?? '';
+	};
+	const lastFmImageSet = (images: Record<string, string> = {}) => {
+		const widths: Record<string, string> = { small: '34w', medium: '64w', large: '174w', extralarge: '300w', mega: '500w' };
+		return Object.entries(images).filter(([size, url]) => url && widths[size]).map(([size, url]) => `${url} ${widths[size]}`).join(', ');
+	};
+	const setExternalContent = (element: Element, text: string, href?: string) => {
+		element.textContent = '';
+		if (!href) { element.textContent = text; return; }
+		const link = document.createElement('a');
+		link.href = href; link.target = '_blank'; link.rel = 'noopener noreferrer';
+		link.className = 'text-inherit no-underline transition-colors hover:text-ink-70';
+		link.textContent = text; element.append(link);
+	};
+	const readCache = <T,>(key: string, ttl: number): T | null => {
+		try {
+			const cached = JSON.parse(localStorage.getItem(key) ?? 'null');
+			return cached && Date.now() - cached.timestamp < ttl ? cached.value as T : null;
+		} catch { return null; }
+	};
+	const writeCache = (key: string, value: unknown) => {
+		try { localStorage.setItem(key, JSON.stringify({ timestamp: Date.now(), value })); } catch {}
+	};
+
+	function updateTrack() {
+		const status = document.querySelector('[data-track-status]');
+		const image = document.querySelector('[data-track-image]') as HTMLImageElement | null;
+		const title = document.querySelector('[data-track-title]');
+		const artist = document.querySelector('[data-track-artist]');
+		const wrap = document.querySelector('[data-track-progress-wrap]');
+		const bar = document.querySelector('[data-track-progress-bar]') as HTMLElement | null;
+		const current = document.querySelector('[data-track-progress-current]');
+		const total = document.querySelector('[data-track-progress-total]');
+		const track = dataSource === 'spotify' ? spotifyData : dataSource === 'lastfm' ? lastFmData : null;
+		if (!status || !title || !artist || !image) return;
+		if (!track) {
+			status.textContent = 'Listening'; title.textContent = 'Nothing playing'; artist.textContent = 'Music unavailable';
+			image.classList.add('hidden'); wrap?.classList.add('hidden'); wrap?.classList.remove('flex'); return;
+		}
+		const spotify = dataSource === 'spotify';
+		status.textContent = spotify && track.isPlaying ? 'Now playing' : 'Last listen';
+		setExternalContent(title, track.title || 'Unknown track', track.songUrl || track.externalUrl || track.trackUrl);
+		setExternalContent(artist, [track.artist, track.album].filter(Boolean).join(' · ') || '—', track.artistUrl);
+		const imageUrl = spotify ? spotifyImage(track.images) : track.images?.medium ?? track.images?.small ?? track.images?.large ?? track.images?.extralarge ?? '';
+		if (imageUrl) {
+			image.src = imageUrl; image.alt = track.title || ''; image.classList.remove('hidden');
+			if (spotify && track.images?.length) { image.srcset = spotifyImageSet(track.images); image.sizes = '128px'; }
+			else if (!spotify && track.images) { image.srcset = lastFmImageSet(track.images); image.sizes = '128px'; }
+			else { image.removeAttribute('srcset'); image.removeAttribute('sizes'); }
+		}
+		if (spotify && track.isPlaying && track.duration > 0) {
+			wrap?.classList.remove('hidden'); wrap?.classList.add('flex');
+			const percent = Math.min(100, (localProgress / track.duration) * 100);
+			if (bar) bar.style.width = `${percent}%`;
+			if (current) current.textContent = formatTime(localProgress);
+			if (total) total.textContent = formatTime(track.duration);
+		} else { wrap?.classList.add('hidden'); wrap?.classList.remove('flex'); }
+	}
+
+	function stopProgress() { if (progressFrame !== undefined) cancelAnimationFrame(progressFrame); progressFrame = undefined; }
+	function startProgress() {
+		stopProgress();
+		if (!spotifyData?.isPlaying) return;
+		const tick = () => {
+			if (!spotifyData?.isPlaying) return;
+			localProgress = Math.min(spotifyData.duration ?? 0, (spotifyData.progress ?? 0) + Date.now() - lastFetchTime);
+			updateTrack();
+			if (localProgress < (spotifyData.duration ?? 0)) progressFrame = requestAnimationFrame(tick);
+			else if (retryTimeout === undefined) retryTimeout = setTimeout(fetchCurrentTrack, 500);
+		};
+		progressFrame = requestAnimationFrame(tick);
+	}
+
+	async function fetchSpotifyTrack() {
+		if (isFetching) return;
+		isFetching = true;
+		try {
+			const response = await fetch(SPOTIFY_API_URL);
+			if (!response.ok) throw new Error(`Spotify ${response.status}`);
+			const data = await response.json();
+			if (data.isPlaying === false && !data.title) { retryTimeout = setTimeout(fetchSpotifyTrack, 30_000); return; }
+			if (data.isPlaying === undefined) throw new Error('Invalid Spotify response');
+			if (retryTimeout !== undefined) { clearTimeout(retryTimeout); retryTimeout = undefined; }
+			spotifyData = data; localProgress = data.progress ?? 0; lastFetchTime = Date.now(); dataSource = 'spotify';
+			updateTrack(); startProgress();
+		} catch {
+			try {
+				const response = await fetch(LASTFM_API_URL);
+				if (!response.ok) throw new Error(`Last.fm ${response.status}`);
+				lastFmData = await response.json();
+				dataSource = 'lastfm';
+			} catch { dataSource = null; }
+			stopProgress(); updateTrack();
+		} finally { isFetching = false; }
+	}
+
+	async function fetchLastFmTrack() {
+		try { const response = await fetch(LASTFM_API_URL); if (!response.ok) throw new Error(`Last.fm ${response.status}`); lastFmData = await response.json(); dataSource = 'lastfm'; updateTrack(); }
+		catch { dataSource = null; updateTrack(); }
+	}
+	function fetchCurrentTrack() { if (dataSource === 'lastfm') fetchLastFmTrack(); else fetchSpotifyTrack(); }
+	function startPolling() { if (pollId === undefined) pollId = setInterval(fetchCurrentTrack, 30_000); }
+	function stopPolling() { if (pollId !== undefined) clearInterval(pollId); pollId = undefined; }
+	function stopRetry() { if (retryTimeout !== undefined) clearTimeout(retryTimeout); retryTimeout = undefined; }
+	function initTrackPolling() {
+		stopPolling(); stopProgress(); removeVisibility?.();
+		const onVisibility = () => {
+			if (document.hidden) { hiddenAt = Date.now(); stopPolling(); stopProgress(); stopRetry(); }
+			else { const wasHidden = hiddenAt ? Date.now() - hiddenAt : 0; hiddenAt = null; if (wasHidden > 30_000) fetchCurrentTrack(); startPolling(); startProgress(); }
+		};
+		document.addEventListener('visibilitychange', onVisibility);
+		removeVisibility = () => document.removeEventListener('visibilitychange', onVisibility);
+		fetchCurrentTrack(); if (!document.hidden) startPolling();
+	}
+	initTrackPolling();
+	document.addEventListener('astro:before-swap', () => { stopPolling(); stopProgress(); stopRetry(); removeVisibility?.(); });
 	const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
 	const stars = (rating: string | number) => { const value = Number(rating); return value ? '★'.repeat(Math.floor(value)) + (value % 1 ? '½' : '') : ''; };
-	fetch('https://letterboxd.kirkr.xyz/kirkr101/rss/').then((r) => { if (!r.ok) throw new Error(`Films request failed: ${r.status}`); return r.text(); }).then((xml) => { const doc = new DOMParser().parseFromString(xml, 'text/xml'); if (doc.querySelector('parsererror')) throw new Error('Films feed could not be parsed'); const films = [...doc.querySelectorAll('item')].slice(0, 3); if (films.length === 0) throw new Error('Films feed was empty'); const list = document.querySelector('[data-films-list]'); const loading = document.querySelector('[data-films-loading]'); if (!list) return; list.innerHTML = films.map((item) => { const title = item.querySelector('filmTitle')?.textContent || 'Untitled'; const year = item.querySelector('filmYear')?.textContent || ''; const rating = item.querySelector('memberRating')?.textContent || ''; const link = item.querySelector('link')?.textContent || '#'; const description = item.querySelector('description')?.textContent || ''; const poster = new DOMParser().parseFromString(description, 'text/html').querySelector('img')?.getAttribute('src') || ''; return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="group min-w-0 no-underline"><div class="aspect-[2/3] overflow-hidden rounded-sm border border-bd bg-card-bg"><img src="${poster}" alt="${escapeHtml(title)}" class="h-full w-full object-cover" loading="lazy" onerror="this.style.opacity='0'" /></div><div class="mt-2 truncate font-serif text-[16px] text-ink-90 group-hover:underline">${escapeHtml(title)}</div><div class="mt-1 flex justify-between gap-2 font-mono text-[10px] text-ink-50"><span>${escapeHtml(year)}</span><span class="text-ink-70">${escapeHtml(stars(rating))}</span></div></a>`; }).join(''); loading?.classList.add('hidden'); list.classList.remove('hidden'); }).catch(() => { document.querySelector('[data-films-loading]')?.classList.add('hidden'); document.querySelector('[data-films-error]')?.classList.remove('hidden'); });
-	fetch('https://hardcover.kirkr.xyz').then((r) => { if (!r.ok) throw new Error(`Books request failed: ${r.status}`); return r.json(); }).then((data) => { const list = document.querySelector('[data-books-list]'); const loading = document.querySelector('[data-books-loading]'); if (!list) return; const books = [...(data.currently_reading || []).map((item: any) => ({ ...item, inProgress: true })), ...(data.previously_read || []).map((item: any) => ({ ...item, inProgress: false }))].slice(0, 3); if (books.length === 0) throw new Error('Books feed was empty'); list.innerHTML = books.map((item: any) => { const book = item.book; const rating = item.user_book?.rating; const progress = item.inProgress && item.progress?.pages_read != null && item.progress?.total_pages != null ? `${item.progress.pages_read} / ${item.progress.total_pages}` : ''; const title = book.title || 'Untitled'; const cover = book.cover_url || ''; const link = `https://hardcover.app/books/${book.slug}?referrer_id=120657`; return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="group min-w-0 no-underline"><div class="aspect-[2/3] overflow-hidden rounded-sm border border-bd bg-card-bg"><img src="${cover}" alt="${escapeHtml(title)}" class="h-full w-full object-cover" loading="lazy" onerror="this.style.opacity='0'" /></div><div class="mt-2 truncate font-serif text-[16px] text-ink-90 group-hover:underline">${escapeHtml(title)}</div><div class="mt-1 flex justify-between gap-2 font-mono text-[10px] text-ink-50"><span class="truncate">${escapeHtml(book.authors?.[0] || '')}</span><span class="shrink-0 text-ink-70">${escapeHtml(stars(rating))}</span></div>${progress ? `<div class="mt-1 font-mono text-[10px] text-ink-50">${escapeHtml(progress)}</div>` : ''}</a>`; }).join(''); loading?.classList.add('hidden'); list.classList.remove('hidden'); }).catch(() => { document.querySelector('[data-books-loading]')?.classList.add('hidden'); document.querySelector('[data-books-error]')?.classList.remove('hidden'); });
+	const filmsCache = readCache<string>('current-films-cache', FILMS_CACHE_TTL);
+	(filmsCache ? Promise.resolve(filmsCache) : fetch('https://letterboxd.kirkr.xyz/kirkr101/rss/').then((r) => { if (!r.ok) throw new Error(`Films request failed: ${r.status}`); return r.text(); }).then((xml) => { writeCache('current-films-cache', xml); return xml; })).then((xml) => { const doc = new DOMParser().parseFromString(xml, 'text/xml'); if (doc.querySelector('parsererror')) throw new Error('Films feed could not be parsed'); const films = [...doc.querySelectorAll('item')].slice(0, 3); if (films.length === 0) throw new Error('Films feed was empty'); const list = document.querySelector('[data-films-list]'); const loading = document.querySelector('[data-films-loading]'); if (!list) return; list.innerHTML = films.map((item) => { const title = item.querySelector('filmTitle')?.textContent || 'Untitled'; const year = item.querySelector('filmYear')?.textContent || ''; const rating = item.querySelector('memberRating')?.textContent || ''; const link = item.querySelector('link')?.textContent || '#'; const description = item.querySelector('description')?.textContent || ''; const poster = new DOMParser().parseFromString(description, 'text/html').querySelector('img')?.getAttribute('src') || ''; return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="group min-w-0 no-underline"><div class="aspect-[2/3] overflow-hidden rounded-sm border border-bd bg-card-bg"><img src="${poster}" alt="${escapeHtml(title)}" class="h-full w-full object-cover" loading="lazy" onerror="this.style.opacity='0'" /></div><div class="mt-2 truncate font-serif text-[16px] text-ink-90 group-hover:underline">${escapeHtml(title)}</div><div class="mt-1 flex justify-between gap-2 font-mono text-[10px] text-ink-50"><span>${escapeHtml(year)}</span><span class="text-ink-70">${escapeHtml(stars(rating))}</span></div></a>`; }).join(''); loading?.classList.add('hidden'); list.classList.remove('hidden'); }).catch(() => { document.querySelector('[data-films-loading]')?.classList.add('hidden'); document.querySelector('[data-films-error]')?.classList.remove('hidden'); });
+	const booksCache = readCache<any>('current-books-cache', BOOKS_CACHE_TTL);
+	(booksCache ? Promise.resolve(booksCache) : fetch('https://hardcover.kirkr.xyz').then((r) => { if (!r.ok) throw new Error(`Books request failed: ${r.status}`); return r.json(); }).then((data) => { writeCache('current-books-cache', data); return data; })).then((data) => { const list = document.querySelector('[data-books-list]'); const loading = document.querySelector('[data-books-loading]'); if (!list) return; const books = [...(data.currently_reading || []).map((item: any) => ({ ...item, inProgress: true })), ...(data.previously_read || []).map((item: any) => ({ ...item, inProgress: false }))].slice(0, 3); if (books.length === 0) throw new Error('Books feed was empty'); list.innerHTML = books.map((item: any) => { const book = item.book; const rating = item.user_book?.rating; const progress = item.inProgress && item.progress?.pages_read != null && item.progress?.total_pages != null ? `${item.progress.pages_read} / ${item.progress.total_pages}` : ''; const title = book.title || 'Untitled'; const cover = book.cover_url || ''; const link = `https://hardcover.app/books/${book.slug}?referrer_id=120657`; return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="group min-w-0 no-underline"><div class="aspect-[2/3] overflow-hidden rounded-sm border border-bd bg-card-bg"><img src="${cover}" alt="${escapeHtml(title)}" class="h-full w-full object-cover" loading="lazy" onerror="this.style.opacity='0'" /></div><div class="mt-2 truncate font-serif text-[16px] text-ink-90 group-hover:underline">${escapeHtml(title)}</div><div class="mt-1 flex justify-between gap-2 font-mono text-[10px] text-ink-50"><span class="truncate">${escapeHtml(book.authors?.[0] || '')}</span><span class="shrink-0 text-ink-70">${escapeHtml(stars(rating))}</span></div>${progress ? `<div class="mt-1 font-mono text-[10px] text-ink-50">${escapeHtml(progress)}</div>` : ''}</a>`; }).join(''); loading?.classList.add('hidden'); list.classList.remove('hidden'); }).catch(() => { document.querySelector('[data-books-loading]')?.classList.add('hidden'); document.querySelector('[data-books-error]')?.classList.remove('hidden'); });
 </script>
