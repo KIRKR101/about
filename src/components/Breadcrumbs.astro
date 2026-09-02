@@ -6,6 +6,7 @@ interface Props {
 
 const { pathname, title } = Astro.props;
 const segments = pathname.split('/').filter(Boolean);
+const isPhotographyDetail = segments[0] === 'photography' && segments.length >= 3;
 const labels: Record<string, string> = {
 	projects: 'Projects',
 	writings: 'Writings',
@@ -17,7 +18,13 @@ const labels: Record<string, string> = {
 	writing: 'Writings',
 };
 
-const items = segments.map((segment, index) => ({
+const items = isPhotographyDetail
+	? [
+			{ label: 'Photography', href: '/photography' },
+			{ label: segments[1]!.replace(/-/g, ' '), href: `/photography/${segments[1]}` },
+			{ label: 'photo', href: pathname }
+		]
+	: segments.map((segment, index) => ({
 	label:
 		index === segments.length - 1 && (segments.length > 1 || !labels[segment])
 			? title.replace(/\s*\|\s*kirkr\.xyz$/, '')

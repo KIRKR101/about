@@ -5,7 +5,7 @@ export const artGroupSlug = (name: string) => name.toLowerCase().replace(/&/g, '
 const artGroupThumbnailIds: Record<string, string> = {
 	'Dutch Golden Age': 'the-little-street',
 	'Traditional & Romantic': 'mountain-landscape-in-tirol-with-chamois',
-	'The Hague School': 'portrait-of-a-wounded-knil-soldier',
+	'The Hague School': 'bosrand-aan-het-water',
 	'Modern & Symbolist': 'arbeiterstadt',
 	'Japanese Woodblock Prints': 'het-drijvende-paviljoen-te-katada-in-de-sneeuw'
 };

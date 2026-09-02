@@ -16,7 +16,7 @@ const images = photographyData[city as string] ?? [];
 		<main class="w-full max-w-[600px]">
 			<div class="flex items-end justify-between gap-4 py-4"><div><h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">{city}<span class="opacity-40">.</span></h1></div></div>
 			<div class="mb-10 h-px bg-bd"></div>
-			<div class="columns-1 gap-5 sm:columns-2">{images.map((image) => <figure class="mb-5 break-inside-avoid"><a href={`/photography/${city.toLowerCase().replace(/\s+/g, '-')}/${image.id}`} class="block"><img src={image.url} srcset={image.srcset} sizes="(max-width: 640px) 100vw, 50vw" alt={`Photo from ${city}`} style={`aspect-ratio: ${image.aspectRatio}`} class="h-auto w-full rounded-sm border border-bd object-cover transition-opacity hover:opacity-90" loading="lazy" /></a></figure>)}</div>
+			<div class="columns-1 gap-5 sm:columns-2">{images.map((image) => <figure class="mb-5 break-inside-avoid"><a href={`/photography/${city.toLowerCase().replace(/\s+/g, '-')}/${image.id}`} class="block"><img src={image.url} srcset={image.srcset.replaceAll('w_800', 'w_600')} sizes="(max-width: 640px) 100vw, 50vw" alt={`Photo from ${city}`} style={`aspect-ratio: ${image.aspectRatio}`} class="h-auto w-full rounded-sm border border-bd object-cover transition-opacity hover:opacity-90" loading="lazy" /></a></figure>)}</div>
 			<Footer />
 		</main>
 	</div>
