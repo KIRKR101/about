@@ -7,8 +7,7 @@ void photographyMarkdown;
 
 const cities = Object.entries(photographyData).map(([name, images]) => ({
 	name,
-	image: images[0],
-	count: images.length
+	image: images[0]
 }));
 const slugify = (value: string) => value.toLowerCase().replace(/\s+/g, '-');
 
@@ -35,14 +34,12 @@ if (Astro.locals.prefersMarkdown) {
 			<div class="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-2">
 				{
 					cities.map(
-						({ name, image, count }) =>
+						({ name, image }) =>
 							image && (
-								<a href={`/photography/${slugify(name)}`} class="group no-underline">
+												<a href={`/photography/${slugify(name)}`} class="group no-underline">
 									<div class="aspect-[3/4] overflow-hidden rounded-sm border border-bd bg-card-bg">
 										<img
-											src={image.url}
-											srcset={image.srcset}
-											sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+											src={image.url.replace('/image/upload/', '/image/upload/w_400/')}
 											alt={`Photography from ${name}`}
 											class="h-full w-full object-cover"
 											loading="lazy"
@@ -50,9 +47,6 @@ if (Astro.locals.prefersMarkdown) {
 									</div>
 									<div class="mt-3 font-serif text-[25px] text-ink-90 group-hover:underline group-hover:underline-offset-4">
 										{name}
-									</div>
-									<div class="mt-1 font-mono text-[10px] tracking-wider text-ink-50 uppercase">
-										{count} photographs
 									</div>
 								</a>
 							)

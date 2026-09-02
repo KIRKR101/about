@@ -1,0 +1,61 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Footer from '../../../components/Footer.astro';
+import { photographyData } from '../../../lib/photography-list';
+import { photographyExif } from '../../../lib/photography-exif';
+
+export const prerender = true;
+
+const slugify = (value: string) => value.toLowerCase().replace(/\s+/g, '-');
+
+export function getStaticPaths() {
+	return Object.entries(photographyData).flatMap(([city, images]) =>
+		images.map((image) => ({
+			params: { city: slugify(city), id: image.id },
+			props: { city, image }
+		}))
+	);
+}
+
+const { city, image } = Astro.props;
+const exif = photographyExif[image.id] ?? [];
+---
+
+<Layout title={`${image.id} · ${city} Photography | kirkr.xyz`} description={`A photograph from ${city}.`}>
+	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
+		<main class="w-full max-w-[600px]">
+			<div class="py-4">
+				<div class="mb-2 font-mono text-[10px] tracking-wider text-ink-50 uppercase">
+					<a href={`/photography/${slugify(city)}`} class="hover:text-ink">{city} Photography</a> / photograph
+				</div>
+				<h1 class="font-serif text-[42px] leading-tight tracking-[-1px] text-ink">{image.id}<span class="opacity-40">.</span></h1>
+			</div>
+			<div class="mb-8 h-px bg-bd"></div>
+			<img
+				src={image.url}
+				srcset={image.srcset}
+				sizes="(max-width: 640px) 100vw, 600px"
+				alt={`Photo from ${city}`}
+				style={`aspect-ratio: ${image.aspectRatio}`}
+				class="h-auto max-h-[80vh] w-full rounded-sm border border-bd object-contain"
+				fetchpriority="high"
+			/>
+			<div class="mt-6 border-t border-bd pt-5">
+				<div class="mb-4 font-mono text-[11px] tracking-wider text-ink-70 uppercase">EXIF</div>
+				{exif.length > 0 ? (
+					<dl class="grid grid-cols-2 gap-x-6 gap-y-2 font-mono text-[11px] text-ink-70">
+						{exif.map(([label, value]) => (
+							<>
+								<dt class="text-ink-50">{label}</dt>
+								<dd>{value}</dd>
+							</>
+						))}
+					</dl>
+				) : (
+					<p class="font-mono text-[11px] text-ink-50">No EXIF data available.</p>
+				)}
+			</div>
+			<Footer />
+		</main>
+	</div>
+</Layout>

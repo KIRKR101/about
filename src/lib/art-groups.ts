@@ -2,6 +2,12 @@ import { artData } from './art-data';
 
 export const artGroupNames = ['Dutch Golden Age', 'Traditional & Romantic', 'The Hague School', 'Modern & Symbolist', 'Japanese Woodblock Prints'];
 export const artGroupSlug = (name: string) => name.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+export const artThumbnail = (url: string) =>
+	url.includes('wikimedia.org')
+		? url
+		: url.replace(/\/(\d+),\/0\/default\.webp$/, (_, width) =>
+			Number(width) > 600 ? '/400,/0/default.webp' : `/${width},/0/default.webp`,
+		);
 
 const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const hague = ['Mauve', 'Israels', 'Breitner', 'Apol', 'Gabriel', 'Witsen'].map(normalize);

@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Footer from '../../components/Footer.astro';
-import { getArtGroups, artGroupSlug } from '../../lib/art-groups';
+import { getArtGroups, artGroupSlug, artThumbnail } from '../../lib/art-groups';
 
 export const prerender = true;
 export function getStaticPaths() {
@@ -29,7 +29,7 @@ const group = getArtGroups().find((item) => item.name === name);
 						<figure class="mb-5 break-inside-avoid">
 							<a href={`/art/${artGroupSlug(name)}/${id}`} class="group block no-underline">
 								<img
-									src={artwork.thumbnail}
+															src={artThumbnail(artwork.thumbnail)}
 									alt={artwork.title}
 									style={`aspect-ratio: ${artwork.aspectRatio}`}
 									class="h-auto w-full rounded-sm border border-bd object-cover"

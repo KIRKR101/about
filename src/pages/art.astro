@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
 import { artMarkdown } from '../lib/markdown-helpers';
-import { getArtGroups, artGroupSlug } from '../lib/art-groups';
+import { getArtGroups, artGroupSlug, artThumbnail } from '../lib/art-groups';
 // Keep the markdown representation available to content-negotiating clients.
 void artMarkdown;
 
@@ -41,7 +41,7 @@ if (Astro.locals.prefersMarkdown)
 								<>
 									<div class="aspect-[3/4] overflow-hidden rounded-sm border border-bd bg-card-bg">
 										<img
-											src={artwork.thumbnail}
+											src={artThumbnail(artwork.thumbnail)}
 											alt={name}
 											class="h-full w-full object-cover"
 											loading="lazy"
