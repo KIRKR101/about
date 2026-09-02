@@ -1,17 +1,15 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import Footer from '../../../components/Footer.astro';
-import { photographyData } from '../../../lib/photography-list';
+import { photographyData, photographySlug } from '../../../lib/photography-list';
 import { photographyExif } from '../../../lib/photography-exif';
 
 export const prerender = true;
 
-const slugify = (value: string) => value.toLowerCase().replace(/\s+/g, '-');
-
 export function getStaticPaths() {
 	return Object.entries(photographyData).flatMap(([city, images]) =>
 		images.map((image) => ({
-			params: { city: slugify(city), id: image.id },
+			params: { city: photographySlug(city), id: image.id },
 			props: { city, image }
 		}))
 	);
@@ -26,7 +24,7 @@ const exif = photographyExif[image.id] ?? [];
 		<main class="w-full max-w-[600px]">
 			<div class="py-4">
 				<div class="mb-2 font-mono text-[10px] tracking-wider text-ink-50 uppercase">
-					<a href={`/photography/${slugify(city)}`} class="hover:text-ink">{city} Photography</a> / photograph
+					<a href={`/photography/${photographySlug(city)}`} class="hover:text-ink">{city} Photography</a> / photograph
 				</div>
 				<h1 class="font-serif text-[42px] leading-tight tracking-[-1px] text-ink">{image.id}<span class="opacity-40">.</span></h1>
 			</div>

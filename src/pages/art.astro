@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
 import { artMarkdown } from '../lib/markdown-helpers';
-import { getArtGroups, artGroupSlug, artThumbnail } from '../lib/art-groups';
+import { getArtGroups, artGroupSlug, artThumbnail, getArtGroupThumbnail } from '../lib/art-groups';
 // Keep the markdown representation available to content-negotiating clients.
 void artMarkdown;
 
@@ -35,13 +35,13 @@ if (Astro.locals.prefersMarkdown)
 			<div class="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-2">
 				{
 					groups.map(({ name, entries }) => {
-						const [, artwork] = entries[0]!;
+						const thumbnail = getArtGroupThumbnail(name, entries);
 						return (
 							<a href={`/art/${artGroupSlug(name)}`} class="group no-underline">
 								<>
 									<div class="aspect-[3/4] overflow-hidden rounded-sm border border-bd bg-card-bg">
 										<img
-											src={artThumbnail(artwork.thumbnail)}
+											src={artThumbnail(thumbnail)}
 											alt={name}
 											class="h-full w-full object-cover"
 											loading="lazy"

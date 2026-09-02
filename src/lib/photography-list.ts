@@ -5,6 +5,8 @@ export interface PhotographyImage {
 	srcset: string;
 }
 
+export const photographySlug = (city: string) => city.toLowerCase().replace(/\s+/g, '-');
+
 export const photographyData: Record<string, PhotographyImage[]> = {
 	Amsterdam: [
 		{
