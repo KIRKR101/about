@@ -9,7 +9,7 @@ export async function getStaticPaths() {
 	const projects = await getCollection('projects');
 	return projects.map((entry: CollectionEntry<'projects'>) => ({
 		params: { slug: entry.id },
-		props: { entry },
+		props: { entry }
 	}));
 }
 
@@ -44,7 +44,12 @@ const preprocessed = preprocessMarkdown(entry.body ?? '');
 htmlContent = renderMarkdown(preprocessed);
 // Prepend TL;DR description (mirrors ProjectLayout.svelte) — escape to match Svelte auto-escaping
 function esc(s: string) {
-	return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+	return s
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
 }
 htmlContent = `<p>TL;DR: ${esc(description)}</p>\n` + htmlContent;
 const notFound = false;
@@ -109,10 +114,10 @@ const notFound = false;
 						set:html={htmlContent}
 					/>
 
-					<!-- Lightbox for carousel images — matches Lightbox.svelte 1:1 -->
+					{/* Lightbox for carousel images — matches Lightbox.svelte 1:1 */}
 					<div
 						data-carousel-lightbox
-						class="fixed inset-0 z-60 hidden bg-[#0b0b0b]/95 select-none transition-opacity duration-300 ease-in-out outline-none"
+						class="fixed inset-0 z-60 hidden bg-[#0b0b0b]/95 transition-opacity duration-300 ease-in-out outline-none select-none"
 						role="dialog"
 						aria-modal="true"
 						tabindex="-1"
@@ -124,7 +129,13 @@ const notFound = false;
 							class="absolute top-4 right-4 z-50 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 md:top-6 md:right-6 md:h-11 md:w-11"
 							aria-label="Close lightbox"
 						>
-							<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+							<svg
+								class="h-5 w-5"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="1.5"
+							>
 								<path d="M18 6L6 18M6 6l12 12" />
 							</svg>
 						</button>
@@ -134,7 +145,13 @@ const notFound = false;
 							class="absolute top-1/2 left-3 z-50 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 md:left-6 md:h-14 md:w-14"
 							aria-label="Previous image"
 						>
-							<svg class="h-5 w-5 md:h-6 md:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<svg
+								class="h-5 w-5 md:h-6 md:w-6"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+							>
 								<path d="M15 18l-6-6 6-6" />
 							</svg>
 						</button>
@@ -144,17 +161,35 @@ const notFound = false;
 							class="absolute top-1/2 right-3 z-50 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-200 hover:bg-white/10 md:right-6 md:h-14 md:w-14"
 							aria-label="Next image"
 						>
-							<svg class="h-5 w-5 md:h-6 md:w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<svg
+								class="h-5 w-5 md:h-6 md:w-6"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+							>
 								<path d="M9 18l6-6-6-6" />
 							</svg>
 						</button>
 						<div class="absolute inset-x-1 top-2 bottom-2 flex [touch-action:pinch-zoom] items-center justify-center">
-							<img data-carousel-lb-image src="" alt="" class="max-h-full max-w-full object-contain transition-all duration-300" draggable="false" />
+							<img
+								data-carousel-lb-image
+								src=""
+								alt=""
+								class="max-h-full max-w-full object-contain transition-all duration-300"
+								draggable="false"
+							/>
 						</div>
 						<div class="pointer-events-none absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent px-4 pt-20 pb-6 md:px-6 md:pt-28 md:pb-8">
 							<div class="mx-auto w-full max-w-[780px] text-center">
-								<div data-carousel-lb-title class="font-serif text-[22px] leading-tight tracking-tight text-white/95 md:text-[30px]" />
-								<div data-carousel-lb-counter class="mt-2 font-mono text-[10px] tracking-[0.18em] text-white/40 uppercase md:mt-3" />
+								<div
+									data-carousel-lb-title
+									class="font-serif text-[22px] leading-tight tracking-tight text-white/95 md:text-[30px]"
+								/>
+								<div
+									data-carousel-lb-counter
+									class="mt-2 font-mono text-[10px] tracking-[0.18em] text-white/40 uppercase md:mt-3"
+								/>
 							</div>
 						</div>
 					</div>
@@ -185,7 +220,7 @@ const notFound = false;
 		});
 		article.addEventListener('click', (e) => {
 			const link = (e.target as Element).closest(
-				'.footnote-backref, .data-footnote-backref, .footnote-ref',
+				'.footnote-backref, .data-footnote-backref, .footnote-ref'
 			) as HTMLAnchorElement | null;
 			if (!link) return;
 			const href = link.getAttribute('href');
@@ -196,7 +231,10 @@ const notFound = false;
 			const tr = target.getBoundingClientRect();
 			const isVisible = tr.top >= 0 && tr.bottom <= window.innerHeight;
 			if (!isVisible) {
-				window.scrollTo({ top: window.scrollY + tr.top - 80, behavior: 'instant' as ScrollBehavior });
+				window.scrollTo({
+					top: window.scrollY + tr.top - 80,
+					behavior: 'instant' as ScrollBehavior
+				});
 			}
 			history.replaceState(history.state, '', '#' + href.slice(1));
 			const anim = target.id.startsWith('fnref-') ? 'fnref-flash' : 'fn-flash';
@@ -217,7 +255,11 @@ const notFound = false;
 						const stored = localStorage.getItem(CACHE_KEY);
 						if (!stored) return null;
 						const parsed = JSON.parse(stored);
-						if (parsed && Array.isArray(parsed.repositories) && typeof parsed.timestamp === 'number') {
+						if (
+							parsed &&
+							Array.isArray(parsed.repositories) &&
+							typeof parsed.timestamp === 'number'
+						) {
 							if (Date.now() - parsed.timestamp > CACHE_TTL) {
 								localStorage.removeItem(CACHE_KEY);
 								return null;
@@ -230,13 +272,22 @@ const notFound = false;
 					}
 				}
 				function findRepo(repos: any[], url: string) {
-					const norm = (u: string) => u.replace(/^https?:\/\//, '').replace(/\/+$/, '').replace(/\.git$/, '').toLowerCase();
+					const norm = (u: string) =>
+						u
+							.replace(/^https?:\/\//, '')
+							.replace(/\/+$/, '')
+							.replace(/\.git$/, '')
+							.toLowerCase();
 					const target = norm(url);
 					return repos.find((r) => norm(r.url) === target)?.lastCommitDate ?? null;
 				}
 				function formatDate(d: string) {
 					try {
-						return new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(d));
+						return new Intl.DateTimeFormat('en-GB', {
+							day: '2-digit',
+							month: 'short',
+							year: 'numeric'
+						}).format(new Date(d));
 					} catch {
 						return d;
 					}
@@ -254,7 +305,10 @@ const notFound = false;
 						.then((data) => {
 							if (!data?.repositories) return;
 							try {
-								localStorage.setItem(CACHE_KEY, JSON.stringify({ repositories: data.repositories, timestamp: Date.now() }));
+								localStorage.setItem(
+									CACHE_KEY,
+									JSON.stringify({ repositories: data.repositories, timestamp: Date.now() })
+								);
 							} catch {}
 							const date = findRepo(data.repositories, github);
 							if (date) {
@@ -277,7 +331,10 @@ const notFound = false;
 			function decode(s: string | null) {
 				if (!s) return null;
 				// Handle both &quot; and &#39; / &amp; from SSR escaping
-				return s.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
+				return s
+					.replace(/&quot;/g, '"')
+					.replace(/&#39;/g, "'")
+					.replace(/&amp;/g, '&');
 			}
 			try {
 				const dec = decode(rawImages);
@@ -319,7 +376,8 @@ const notFound = false;
 				btn.setAttribute('aria-label', `View image 1 in lightbox`);
 				const newImg = document.createElement('img');
 				newImg.setAttribute('data-carousel-image', '');
-				newImg.className = 'm-0 h-full w-full object-contain transition-all duration-300 group-hover:brightness-105';
+				newImg.className =
+					'm-0 h-full w-full object-contain transition-all duration-300 group-hover:brightness-105';
 				newImg.loading = 'lazy';
 				(newImg as any).decoding = 'async';
 				newImg.src = images[0]!;
@@ -348,7 +406,8 @@ const notFound = false;
 						'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6" /></svg>';
 					counter = document.createElement('div');
 					counter.setAttribute('data-carousel-counter', '');
-					counter.className = 'absolute right-3 bottom-3 font-mono text-[10px] tracking-[0.18em] text-white/40 select-none';
+					counter.className =
+						'absolute right-3 bottom-3 font-mono text-[10px] tracking-[0.18em] text-white/40 select-none';
 					counter.textContent = `1 / ${images.length}`;
 					wrap.appendChild(prevBtn);
 					wrap.appendChild(nextBtn);
@@ -368,7 +427,10 @@ const notFound = false;
 				if (!img || !openBtn || !captionEl) return;
 				img.src = images[activeIndex]!;
 				img.alt = captions[activeIndex] || `Image ${activeIndex + 1}`;
-				openBtn.setAttribute('aria-label', `View image ${activeIndex + 1} in lightbox: ${captions[activeIndex] || ''}`);
+				openBtn.setAttribute(
+					'aria-label',
+					`View image ${activeIndex + 1} in lightbox: ${captions[activeIndex] || ''}`
+				);
 				captionEl.textContent = captions[activeIndex] || '';
 				(captionEl as HTMLElement).style.display = captions[activeIndex] ? '' : 'none';
 				if (counter) counter.textContent = `${activeIndex + 1} / ${images.length}`;
@@ -440,7 +502,11 @@ const notFound = false;
 			lbNext?.addEventListener('click', lbGoNext);
 			lbPrev?.addEventListener('click', lbGoPrev);
 			lb?.addEventListener('click', (e) => {
-				if (!(e.target as Element).closest('img, button, [data-carousel-lb-title], [data-carousel-lb-counter]')) {
+				if (
+					!(e.target as Element).closest(
+						'img, button, [data-carousel-lb-title], [data-carousel-lb-counter]'
+					)
+				) {
 					closeLb();
 				}
 			});

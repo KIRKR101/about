@@ -57,32 +57,34 @@ const formatDate = (date: string) =>
 						class="grid grid-cols-2 gap-px border border-bd bg-bd font-sans text-[13px] text-ink-80 sm:grid-cols-4"
 						aria-label="Main navigation"
 					>
-						{navigation.map((link) => (
-							<a
-								href={link.href}
-								{...(link.external && { target: '_blank', rel: 'noopener noreferrer' })}
-								class="flex min-w-0 flex-wrap items-center justify-start gap-2 bg-bg px-3 py-2.5 text-left transition-colors hover:text-ink hover:underline"
-							>
-								<svg
-									width="14"
-									height="14"
-									viewBox="0 0 16 16"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
-									aria-hidden="true"
-									class="text-ink-30"
+						{
+							navigation.map((link) => (
+								<a
+									href={link.href}
+									{...(link.external && { target: '_blank', rel: 'noopener noreferrer' })}
+									class="flex min-w-0 flex-wrap items-center justify-start gap-2 bg-bg px-3 py-2.5 text-left transition-colors hover:text-ink hover:underline"
 								>
-									<path
-										d="M12 10V4m0 0H6m6 0l-7.833 7.833"
-										stroke="currentColor"
-										stroke-width="1"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									></path>
-								</svg>
-								<span class="min-w-0 break-words">{link.label}</span>
-							</a>
-						))}
+									<svg
+										width="14"
+										height="14"
+										viewBox="0 0 16 16"
+										fill="none"
+										xmlns="http://www.w3.org/2000/svg"
+										aria-hidden="true"
+										class="text-ink-30"
+									>
+										<path
+											d="M12 10V4m0 0H6m6 0l-7.833 7.833"
+											stroke="currentColor"
+											stroke-width="1"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+									</svg>
+									<span class="min-w-0 break-words">{link.label}</span>
+								</a>
+							))
+						}
 					</nav>
 				</div>
 			</section>
@@ -93,8 +95,9 @@ const formatDate = (date: string) =>
 					<a
 						href="/writings"
 						class="group mt-4 inline-flex cursor-pointer items-center gap-1.5 self-start font-mono text-[11px] tracking-wider text-ink-70 uppercase transition-colors duration-150 hover:text-ink"
-						>[+]</a
 					>
+						[+]
+					</a>
 				</div>
 				<div class="flex flex-col">
 					{
@@ -138,8 +141,9 @@ const formatDate = (date: string) =>
 					<a
 						href="/projects"
 						class="group mt-4 inline-flex cursor-pointer items-center gap-1.5 self-start font-mono text-[11px] tracking-wider text-ink-70 uppercase transition-colors duration-150 hover:text-ink"
-						>[+]</a
 					>
+						[+]
+					</a>
 				</div>
 				<div class="flex flex-col">
 					{

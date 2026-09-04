@@ -15,7 +15,7 @@ const labels: Record<string, string> = {
 	art: 'Art',
 	photography: 'Photography',
 	project: 'Projects',
-	writing: 'Writings',
+	writing: 'Writings'
 };
 
 const items = isPhotographyDetail
@@ -25,34 +25,46 @@ const items = isPhotographyDetail
 			{ label: 'photo', href: pathname }
 		]
 	: segments.map((segment, index) => ({
-	label:
-		index === segments.length - 1 && (segments.length > 1 || !labels[segment])
-			? title.replace(/\s*\|\s*kirkr\.xyz$/, '')
-			: (labels[segment] ?? segment.replace(/-/g, ' ')),
-	href:
-		index === 0 && segment === 'project'
-			? '/projects'
-			: index === 0 && segment === 'writing'
-				? '/writings'
-				: `/${segments.slice(0, index + 1).join('/')}`,
-}));
+			label:
+				index === segments.length - 1 && (segments.length > 1 || !labels[segment])
+					? title.replace(/\s*\|\s*kirkr\.xyz$/, '')
+					: (labels[segment] ?? segment.replace(/-/g, ' ')),
+			href:
+				index === 0 && segment === 'project'
+					? '/projects'
+					: index === 0 && segment === 'writing'
+						? '/writings'
+						: `/${segments.slice(0, index + 1).join('/')}`
+		}));
 ---
 
-
-<nav aria-label="Breadcrumb" class="overflow-hidden font-sans text-[11px] tracking-wider text-ink-70 uppercase">
+<nav
+	aria-label="Breadcrumb"
+	class="overflow-hidden font-sans text-[11px] tracking-wider text-ink-70 uppercase"
+>
 	<ol class="flex min-w-0 flex-nowrap items-center gap-2">
-		<li class="shrink-0"><a href="/" class="transition-colors hover:text-ink">Home</a></li>
-		{items.map((item, index) => (
-			<>
-				<li aria-hidden="true" class="shrink-0 text-ink-30">/</li>
-				<li class:list={[index === items.length - 1 ? 'min-w-0 truncate' : 'shrink-0']}>
-					{index === items.length - 1 ? (
-						<span aria-current="page" class="block truncate text-ink-90">{item.label}</span>
-					) : (
-						<a href={item.href} class="transition-colors hover:text-ink">{item.label}</a>
-					)}
-				</li>
-			</>
-		))}
+		<li class="shrink-0">
+			<a href="/" class="transition-colors hover:text-ink">Home</a>
+		</li>
+		{
+			items.map((item, index) => (
+				<>
+					<li aria-hidden="true" class="shrink-0 text-ink-30">
+						/
+					</li>
+					<li class:list={[index === items.length - 1 ? 'min-w-0 truncate' : 'shrink-0']}>
+						{index === items.length - 1 ? (
+							<span aria-current="page" class="block truncate text-ink-90">
+								{item.label}
+							</span>
+						) : (
+							<a href={item.href} class="transition-colors hover:text-ink">
+								{item.label}
+							</a>
+						)}
+					</li>
+				</>
+			))
+		}
 	</ol>
 </nav>

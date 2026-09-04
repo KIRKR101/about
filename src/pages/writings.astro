@@ -19,7 +19,7 @@ const allWritings = writingsCollection
 		file: entry.id,
 		title: entry.data.title,
 		date: entry.data.date,
-		snippet: entry.data.snippet,
+		snippet: entry.data.snippet
 	}))
 	.sort(
 		(a: (typeof allWritings)[number], b: (typeof allWritings)[number]) =>
@@ -40,7 +40,7 @@ const groupedWritings = (() => {
 function formatShortDate(dateString: string) {
 	try {
 		return new Intl.DateTimeFormat('en-GB', { month: 'short', day: '2-digit' }).format(
-			new Date(dateString),
+			new Date(dateString)
 		);
 	} catch {
 		return dateString;

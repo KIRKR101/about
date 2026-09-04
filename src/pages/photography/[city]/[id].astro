@@ -19,7 +19,10 @@ const { city, image } = Astro.props;
 const exif = photographyExif[image.id] ?? [];
 ---
 
-<Layout title={`${image.id} · ${city} Photography | kirkr.xyz`} description={`A photograph from ${city}.`}>
+<Layout
+	title={`${image.id} · ${city} Photography | kirkr.xyz`}
+	description={`A photograph from ${city}.`}
+>
 	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
 		<main class="w-full max-w-[600px]">
 			<div class="mb-8 h-px bg-bd"></div>
@@ -34,18 +37,20 @@ const exif = photographyExif[image.id] ?? [];
 			/>
 			<div class="mt-6 border-t border-bd pt-5">
 				<div class="mb-4 font-mono text-[11px] tracking-wider text-ink-70 uppercase">EXIF</div>
-				{exif.length > 0 ? (
-					<dl class="grid grid-cols-2 gap-x-6 gap-y-2 font-mono text-[11px] text-ink-70">
-						{exif.map(([label, value]) => (
-							<>
-								<dt class="text-ink-50">{label}</dt>
-								<dd class="text-right">{value}</dd>
-							</>
-						))}
-					</dl>
-				) : (
-					<p class="font-mono text-[11px] text-ink-50">No EXIF data available.</p>
-				)}
+				{
+					exif.length > 0 ? (
+						<dl class="grid grid-cols-2 gap-x-6 gap-y-2 font-mono text-[11px] text-ink-70">
+							{exif.map(([label, value]) => (
+								<>
+									<dt class="text-ink-50">{label}</dt>
+									<dd class="text-right">{value}</dd>
+								</>
+							))}
+						</dl>
+					) : (
+						<p class="font-mono text-[11px] text-ink-50">No EXIF data available.</p>
+					)
+				}
 			</div>
 			<Footer />
 		</main>

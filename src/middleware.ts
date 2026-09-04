@@ -5,22 +5,23 @@ const PRODUCES = ['text/html', 'text/markdown'];
 type AcceptEntry = { type: string; q: number; specificity: number };
 
 function parseAccept(header: string): AcceptEntry[] {
-	return header
-		.split(',')
-		.map((raw) => {
-			const parts = raw.trim().split(';').map((s) => s.trim());
-			const type = parts[0]!.toLowerCase();
-			let q = 1;
-			for (const param of parts.slice(1)) {
-				const [name, value] = param.split('=').map((s) => s.trim());
-				if (name === 'q') {
-					const parsed = Number(value);
-					if (!Number.isNaN(parsed)) q = Math.max(0, Math.min(1, parsed));
-				}
+	return header.split(',').map((raw) => {
+		const parts = raw
+			.trim()
+			.split(';')
+			.map((s) => s.trim());
+		const type = parts[0]!.toLowerCase();
+		let q = 1;
+		for (const param of parts.slice(1)) {
+			const [name, value] = param.split('=').map((s) => s.trim());
+			if (name === 'q') {
+				const parsed = Number(value);
+				if (!Number.isNaN(parsed)) q = Math.max(0, Math.min(1, parsed));
 			}
-			const specificity = type === '*/*' ? 0 : type.endsWith('/*') ? 1 : 2;
-			return { type, q, specificity };
-		});
+		}
+		const specificity = type === '*/*' ? 0 : type.endsWith('/*') ? 1 : 2;
+		return { type, q, specificity };
+	});
 }
 
 function matches(entry: AcceptEntry, candidate: string): boolean {

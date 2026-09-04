@@ -17,10 +17,7 @@ if (Astro.locals.prefersMarkdown) {
 }
 ---
 
-<Layout
-	title="Projects | kirkr.xyz"
-	description="Projects I've built."
->
+<Layout title="Projects | kirkr.xyz" description="Projects I've built.">
 	<link rel="preconnect" href="https://github.kirkr.xyz" crossorigin="anonymous" slot="head" />
 
 	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
@@ -36,10 +33,7 @@ if (Astro.locals.prefersMarkdown) {
 			<div class="pb-7">
 				<div class="mb-3 flex min-h-[16px] items-center justify-between">
 					<div class="flex items-center">
-						<div
-							data-contrib-loading
-							class="font-sans text-[11px] tracking-wide text-ink-70"
-						>
+						<div data-contrib-loading class="font-sans text-[11px] tracking-wide text-ink-70">
 							Loading contributions...
 						</div>
 						<div
@@ -65,8 +59,10 @@ if (Astro.locals.prefersMarkdown) {
 								stroke="currentColor"
 								stroke-width="2"
 								stroke-linecap="round"
-								stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg
+								stroke-linejoin="round"
 							>
+								<path d="m15 18-6-6 6-6"></path>
+							</svg>
 						</button>
 						<span
 							data-year-display
@@ -86,16 +82,15 @@ if (Astro.locals.prefersMarkdown) {
 								stroke="currentColor"
 								stroke-width="2"
 								stroke-linecap="round"
-								stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg
+								stroke-linejoin="round"
 							>
+								<path d="m9 18 6-6-6-6"></path>
+							</svg>
 						</button>
 					</div>
 				</div>
 
-				<div
-					class="contribution-graph relative min-w-0 [touch-action:pan-y]"
-					data-graph-container
-				>
+				<div class="contribution-graph relative min-w-0 [touch-action:pan-y]" data-graph-container>
 					<div
 						data-tooltip
 						class="pointer-events-none absolute z-20 hidden -translate-x-1/2 -translate-y-full"
@@ -108,13 +103,7 @@ if (Astro.locals.prefersMarkdown) {
 						</div>
 					</div>
 
-					<div
-						data-graph-grid
-						class="grid w-full gap-[3px]"
-						role="grid"
-						tabindex="-1"
-					>
-					</div>
+					<div data-graph-grid class="grid w-full gap-[3px]" role="grid" tabindex="-1"></div>
 				</div>
 			</div>
 
@@ -191,7 +180,7 @@ if (Astro.locals.prefersMarkdown) {
 		try {
 			localStorage.setItem(
 				'gh-contributions-cache',
-				JSON.stringify({ data: cache, timestamp: Date.now() }),
+				JSON.stringify({ data: cache, timestamp: Date.now() })
 			);
 		} catch {}
 	}
@@ -205,7 +194,7 @@ if (Astro.locals.prefersMarkdown) {
 			weekday: 'short',
 			day: 'numeric',
 			month: 'short',
-			year: 'numeric',
+			year: 'numeric'
 		});
 	}
 
@@ -279,7 +268,10 @@ if (Astro.locals.prefersMarkdown) {
 		const signal = currentFetch.signal;
 
 		try {
-			const url = year !== currentYear ? `https://github.kirkr.xyz/?year=${year}` : 'https://github.kirkr.xyz/';
+			const url =
+				year !== currentYear
+					? `https://github.kirkr.xyz/?year=${year}`
+					: 'https://github.kirkr.xyz/';
 			const res = await fetch(url, { signal });
 			if (!res.ok) return;
 			const data = await res.json();

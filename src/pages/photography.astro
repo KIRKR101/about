@@ -42,7 +42,7 @@ if (Astro.locals.prefersMarkdown) {
 					cities.map(
 						({ name, image }) =>
 							image && (
-											<a href={`/photography/${photographySlug(name)}`} class="group no-underline">
+								<a href={`/photography/${photographySlug(name)}`} class="group no-underline">
 									<div class="aspect-[3/4] overflow-hidden rounded-sm border border-bd bg-card-bg">
 										<img
 											src={image.url.replace('/image/upload/', '/image/upload/w_400/')}
