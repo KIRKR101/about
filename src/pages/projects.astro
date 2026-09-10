@@ -30,7 +30,7 @@ if (Astro.locals.prefersMarkdown) {
 
 			<div class="mb-4 h-px bg-bd"></div>
 
-			<div class="pb-7">
+			<div class="pb-7 sm:px-1.5">
 				<div class="mb-3 flex min-h-[16px] items-center justify-between">
 					<div class="flex items-center">
 						<div data-contrib-loading class="font-sans text-[11px] tracking-wide text-ink-70">
@@ -115,18 +115,28 @@ if (Astro.locals.prefersMarkdown) {
 						projects.map((project) => (
 							<a
 								href={`/project/${project.id}`}
-								class="group flex w-full flex-col rounded-sm border-b border-bd/30 py-3 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
+								class="group flex w-full flex-col rounded-sm border-b border-bd/40 py-2.5 no-underline transition-colors duration-100 ease-out last:border-0 hover:bg-ink/2 hover:duration-0 sm:px-1.5"
 							>
-								<div class="flex w-full items-baseline justify-between">
-									<span class="font-sans text-[14px] text-ink-70 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2">
-										{project.title}
-									</span>
-									<span class="shrink-0 font-mono text-[11px] tracking-wider text-ink-70 uppercase">
+								<div class="flex w-full items-baseline justify-between gap-4">
+									<div class="min-w-0 sm:flex sm:items-baseline">
+										<span class="font-sans text-[14px] text-ink-80 transition-colors duration-100 group-hover:text-ink hover:underline hover:decoration-ink/70 hover:underline-offset-2">
+											{project.title}
+										</span>
+										{project.shortDescription && (
+											<>
+												<span class="mx-1.5 hidden text-ink-50 sm:inline">—</span>
+												<span class="hidden truncate font-sans text-[13px] text-ink-70 sm:inline">
+													{project.shortDescription}
+												</span>
+											</>
+										)}
+									</div>
+									<span class="shrink-0 font-mono text-[10px] tracking-wider text-ink-50 uppercase">
 										{project.firstCommit}
 									</span>
 								</div>
 								{project.shortDescription && (
-									<span class="mt-2 line-clamp-2 font-sans text-[12px] leading-relaxed text-ink-70">
+									<span class="mt-2 line-clamp-2 font-sans text-[12px] leading-relaxed text-ink-70 sm:hidden">
 										{project.shortDescription}
 									</span>
 								)}
