@@ -202,6 +202,15 @@ pre::-webkit-scrollbar-corner {
 		margin-bottom: 1.25rem;
 		font-weight: 400;
 		letter-spacing: -0.01em;
+		line-height: 1.25;
+	}
+
+	.prose > :first-child {
+		margin-top: 0;
+	}
+
+	.prose h2 + h3 {
+		margin-top: 0;
 	}
 
 	.prose h1 {
@@ -292,14 +301,31 @@ pre::-webkit-scrollbar-corner {
 	.prose img + p em {
 		display: block;
 		text-align: center;
-		font-size: 0.8em;
+		font-size: 0.9em;
 		color: var(--color-ink-70);
 		margin-top: -0.5rem;
 		margin-bottom: 2.5rem;
 		font-style: normal;
-		font-family: var(--font-mono);
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
+		font-family: var(--font-sans);
+	}
+
+	/* Multi-image figures break out 12% beyond the main content width on desktop */
+	.prose .html-block {
+		width: 100%;
+		margin-left: 0;
+	}
+
+	@media (max-width: 639px) {
+		.prose .html-block > div[style*='display:flex'] {
+			flex-direction: column;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.prose .html-block {
+			width: 112%;
+			margin-left: -6%;
+		}
 	}
 
 	.prose hr {

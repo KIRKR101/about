@@ -1,7 +1,13 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { preprocessMarkdown, renderMarkdown } from '../../scripts/render-markdown';
+import {
+	preprocessMarkdown,
+	renderMarkdown,
+	extractHeadings,
+	getReadingMinutes
+} from '../../scripts/render-markdown';
 
 export const prerender = false;
 
@@ -43,6 +49,8 @@ let htmlContent = '';
 
 const preprocessed = preprocessMarkdown(entry.body ?? '');
 htmlContent = renderMarkdown(preprocessed);
+const headings = extractHeadings(preprocessed);
+const readingMinutes = getReadingMinutes(preprocessed);
 const notFound = false;
 
 function formatDate(dateString: string) {
@@ -87,11 +95,12 @@ function formatDate(dateString: string) {
 						<h1 class="font-serif text-[48px] leading-tight tracking-[-1px] text-ink">
 							{longTitle || title}
 						</h1>
-						{date && (
-							<div class="mt-3 flex items-center justify-between font-mono text-[11px] tracking-[0.1em] text-ink-70 uppercase">
-								<span>{formatDate(date)}</span>
-							</div>
-						)}
+						<div class="mt-3 flex items-center justify-between font-mono text-[11px] tracking-[0.1em] text-ink-70 uppercase">
+							{date ? <span>{formatDate(date)}</span> : <span />}
+							<span>
+								{readingMinutes} minute read
+							</span>
+						</div>
 					</div>
 
 					<div class="mb-8 h-px bg-bd" />
@@ -102,6 +111,9 @@ function formatDate(dateString: string) {
 						set:html={htmlContent}
 					/>
 				</main>
+				<aside class="fixed top-32 right-8 hidden w-60 xl:block">
+					<TableOfContents headings={headings} levels={3} />
+				</aside>
 			</div>
 		</Layout>
 	)

@@ -3,6 +3,67 @@ import footnote from 'markdown-it-footnote';
 
 const md = new MarkdownIt({ html: true, linkify: true, typographer: false }).use(footnote);
 
+export interface MarkdownHeading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
+function slugify(text: string): string {
+	return text
+		.toLowerCase()
+		.trim()
+		.replace(/[^\w\s-]/g, '')
+		.replace(/[\s_]+/g, '-')
+		.replace(/-+/g, '-')
+		.replace(/^-+|-+$/g, '');
+}
+
+function headingText(token: { children?: { type: string; content: string }[] | null }): string {
+	return (
+		token.children
+			?.filter((t) => t.type === 'text' || t.type === 'code_inline')
+			.map((t) => t.content)
+			.join('') ?? ''
+	);
+}
+
+// Assigns deterministic GitHub-style ids to every heading so TOC links resolve.
+// Runs on each parse (both render and heading extraction), so ids always match.
+md.core.ruler.push('heading_ids', (state) => {
+	const counts: Record<string, number> = {};
+	for (let i = 0; i < state.tokens.length; i++) {
+		const token = state.tokens[i]!;
+		if (token.type !== 'heading_open') continue;
+		const inline = state.tokens[i + 1];
+		const base = slugify(inline && inline.type === 'inline' ? headingText(inline) : '') || 'section';
+		let slug = base;
+		if (counts[base] !== undefined) {
+			counts[base]! += 1;
+			slug = `${base}-${counts[base]}`;
+		} else {
+			counts[base] = 0;
+		}
+		token.attrSet('id', slug);
+	}
+});
+
+export function extractHeadings(content: string): MarkdownHeading[] {
+	const tokens = md.parse(content, {});
+	const headings: MarkdownHeading[] = [];
+	for (let i = 0; i < tokens.length; i++) {
+		const token = tokens[i]!;
+		if (token.type !== 'heading_open') continue;
+		const inline = tokens[i + 1];
+		headings.push({
+			depth: Number(token.tag.slice(1)),
+			slug: token.attrGet('id') ?? '',
+			text: inline && inline.type === 'inline' ? headingText(inline) : ''
+		});
+	}
+	return headings;
+}
+
 export function preprocessMarkdown(content: string, _fileName?: string): string {
 	void _fileName;
 	let transformed = content;
@@ -83,8 +144,8 @@ export function preprocessMarkdown(content: string, _fileName?: string): string 
 			? `<div data-carousel-counter class="absolute right-3 bottom-3 font-mono text-[10px] tracking-[0.18em] text-white/40 select-none">${1} / ${images.length}</div>`
 			: '';
 		const figcaption = firstCaption
-			? `<figcaption data-carousel-caption class="mt-3 text-center font-mono text-[11px] leading-relaxed text-ink-70">${escapeHtmlAttr(firstCaption)}</figcaption>`
-			: `<figcaption data-carousel-caption class="mt-3 text-center font-mono text-[11px] leading-relaxed text-ink-70" style="display:none"></figcaption>`;
+			? `<figcaption data-carousel-caption class="mt-3 text-center font-sans text-[11px] leading-relaxed text-ink-70">${escapeHtmlAttr(firstCaption)}</figcaption>`
+			: `<figcaption data-carousel-caption class="mt-3 text-center font-sans text-[11px] leading-relaxed text-ink-70" style="display:none"></figcaption>`;
 
 		// Outer figure matches Carousel.svelte: <figure class="my-10"><div class="relative w-full overflow-hidden rounded-sm border border-bd bg-frame {height}">...</div>...</figure>
 		return `<figure class="my-10" data-carousel data-images="${escapeHtmlAttr(escapedImagesJson)}" data-captions="${escapeHtmlAttr(escapedCaptionsJson)}" data-height="${escapeHtmlAttr(h)}"><div class="relative w-full overflow-hidden rounded-sm border border-bd bg-frame ${h}"><button type="button" data-carousel-open class="group block h-full w-full cursor-zoom-in" aria-label="View image 1 in lightbox: ${escapeHtmlAttr(firstCaption)}"><img data-carousel-image class="m-0 h-full w-full object-contain transition-all duration-300 group-hover:brightness-105" src="${escapeHtmlAttr(images[0]!)}" alt="${escapeHtmlAttr(firstAlt)}" loading="lazy" decoding="async" /></button>${prevBtn}${nextBtn}${counter}</div>${figcaption}</figure>`;
@@ -171,6 +232,20 @@ export function renderMarkdown(markdown: string): string {
 	});
 
 	return html;
+}
+
+export function getReadingMinutes(content: string): number {
+	const text = content
+		.replace(/```[\s\S]*?```/g, ' ')
+		.replace(/`[^`]*`/g, ' ')
+		.replace(/<[^>]*>/g, ' ')
+		.replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+		.replace(/!\[\[[^\]]+\]\]/g, ' ')
+		.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+		.replace(/\[\^[^\]]+\]/g, ' ')
+		.replace(/[#>*_~|\-—–]/g, ' ');
+	const words = text.split(/\s+/).filter(Boolean).length;
+	return Math.max(1, Math.ceil(words / 200));
 }
 
 export function stripFrontmatter(mdContent: string): string {
