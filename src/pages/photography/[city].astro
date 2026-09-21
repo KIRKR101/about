@@ -15,6 +15,7 @@ const images = photographyData[city as string] ?? [];
 ---
 
 <Layout title={`${city} Photography | kirkr.xyz`} description={`Photography from ${city}.`}>
+	<link rel="preconnect" href="https://res.cloudinary.com" slot="head" />
 	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
 		<main class="w-full max-w-[600px]">
 			<div class="flex items-end justify-between gap-4 py-4">

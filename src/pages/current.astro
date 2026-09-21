@@ -40,7 +40,7 @@ import Footer from '../components/Footer.astro';
 							<div class="relative h-0.5 flex-1 bg-ink/10">
 								<div
 									data-track-progress-bar
-									class="absolute inset-y-0 left-0 h-full bg-ink/40"
+									class="absolute inset-y-0 left-0 h-full bg-ink/40 transition-[width] duration-1000 ease-linear"
 									style="width: 0%"
 								>
 								</div>
@@ -87,7 +87,7 @@ import Footer from '../components/Footer.astro';
 	let lastFetchTime = 0;
 	let isFetching = false;
 	let pollId: ReturnType<typeof setInterval> | undefined;
-	let progressFrame: number | undefined;
+	let progressId: ReturnType<typeof setInterval> | undefined;
 	let retryTimeout: ReturnType<typeof setTimeout> | undefined;
 	let hiddenAt: number | null = null;
 	let removeVisibility: (() => void) | undefined;
@@ -146,15 +146,21 @@ import Footer from '../components/Footer.astro';
 		} catch {}
 	};
 
+	const queryEls = () => ({
+		status: document.querySelector('[data-track-status]'),
+		image: document.querySelector('[data-track-image]') as HTMLImageElement | null,
+		title: document.querySelector('[data-track-title]'),
+		artist: document.querySelector('[data-track-artist]'),
+		wrap: document.querySelector('[data-track-progress-wrap]'),
+		bar: document.querySelector('[data-track-progress-bar]') as HTMLElement | null,
+		current: document.querySelector('[data-track-progress-current]'),
+		total: document.querySelector('[data-track-progress-total]')
+	});
+
+	let els = queryEls();
+
 	function updateTrack() {
-		const status = document.querySelector('[data-track-status]');
-		const image = document.querySelector('[data-track-image]') as HTMLImageElement | null;
-		const title = document.querySelector('[data-track-title]');
-		const artist = document.querySelector('[data-track-artist]');
-		const wrap = document.querySelector('[data-track-progress-wrap]');
-		const bar = document.querySelector('[data-track-progress-bar]') as HTMLElement | null;
-		const current = document.querySelector('[data-track-progress-current]');
-		const total = document.querySelector('[data-track-progress-total]');
+		const { status, image, title, artist, wrap, bar, current, total } = els;
 		const track =
 			dataSource === 'spotify' ? spotifyData : dataSource === 'lastfm' ? lastFmData : null;
 		if (!status || !title || !artist || !image) return;
@@ -214,24 +220,30 @@ import Footer from '../components/Footer.astro';
 		}
 	}
 
+	function tickProgress() {
+		if (!spotifyData?.isPlaying || !(spotifyData.duration > 0)) return;
+		localProgress = Math.min(
+			spotifyData.duration ?? 0,
+			(spotifyData.progress ?? 0) + Date.now() - lastFetchTime
+		);
+		const percent = Math.min(100, (localProgress / spotifyData.duration) * 100);
+		if (els.bar) els.bar.style.width = `${percent}%`;
+		if (els.current) els.current.textContent = formatTime(localProgress);
+		if (localProgress >= (spotifyData.duration ?? 0)) {
+			stopProgress();
+			if (retryTimeout === undefined) retryTimeout = setTimeout(fetchCurrentTrack, 500);
+		}
+	}
+
 	function stopProgress() {
-		if (progressFrame !== undefined) cancelAnimationFrame(progressFrame);
-		progressFrame = undefined;
+		if (progressId !== undefined) clearInterval(progressId);
+		progressId = undefined;
 	}
 	function startProgress() {
 		stopProgress();
-		if (!spotifyData?.isPlaying) return;
-		const tick = () => {
-			if (!spotifyData?.isPlaying) return;
-			localProgress = Math.min(
-				spotifyData.duration ?? 0,
-				(spotifyData.progress ?? 0) + Date.now() - lastFetchTime
-			);
-			updateTrack();
-			if (localProgress < (spotifyData.duration ?? 0)) progressFrame = requestAnimationFrame(tick);
-			else if (retryTimeout === undefined) retryTimeout = setTimeout(fetchCurrentTrack, 500);
-		};
-		progressFrame = requestAnimationFrame(tick);
+		if (!spotifyData?.isPlaying || !(spotifyData.duration > 0)) return;
+		tickProgress();
+		progressId = setInterval(tickProgress, 1000);
 	}
 
 	async function fetchSpotifyTrack() {
@@ -300,6 +312,7 @@ import Footer from '../components/Footer.astro';
 		retryTimeout = undefined;
 	}
 	function initTrackPolling() {
+		els = queryEls();
 		stopPolling();
 		stopProgress();
 		removeVisibility?.();
@@ -328,6 +341,9 @@ import Footer from '../components/Footer.astro';
 		stopProgress();
 		stopRetry();
 		removeVisibility?.();
+	});
+	document.addEventListener('astro:after-swap', () => {
+		initTrackPolling();
 	});
 	const escapeHtml = (value: string) =>
 		value.replace(

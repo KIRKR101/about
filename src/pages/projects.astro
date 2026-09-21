@@ -227,6 +227,7 @@ if (Astro.locals.prefersMarkdown) {
 			summary.classList.add('hidden');
 			grid.innerHTML = '';
 			grid.style.gridTemplateColumns = 'repeat(53, minmax(0, 1fr))';
+			const fragment = document.createDocumentFragment();
 			for (let wi = 0; wi < 53; wi++) {
 				const col = document.createElement('div');
 				col.className = 'grid grid-rows-7 gap-[3px]';
@@ -235,8 +236,9 @@ if (Astro.locals.prefersMarkdown) {
 					cell.className = 'aspect-square w-full animate-pulse rounded-[2px] bg-ink/5';
 					col.appendChild(cell);
 				}
-				grid.appendChild(col);
+				fragment.appendChild(col);
 			}
+			grid.appendChild(fragment);
 			return;
 		}
 
@@ -248,6 +250,7 @@ if (Astro.locals.prefersMarkdown) {
 		grid.innerHTML = '';
 		grid.style.gridTemplateColumns = `repeat(${weeks.length}, minmax(0, 1fr))`;
 
+		const fragment = document.createDocumentFragment();
 		for (const week of weeks) {
 			const col = document.createElement('div');
 			col.className = 'grid grid-rows-7 gap-[3px]';
@@ -262,8 +265,9 @@ if (Astro.locals.prefersMarkdown) {
 				btn.tabIndex = isMobile ? -1 : 0;
 				col.appendChild(btn);
 			}
-			grid.appendChild(col);
+			fragment.appendChild(col);
 		}
+		grid.appendChild(fragment);
 	}
 
 	async function fetchContributions(year: number) {

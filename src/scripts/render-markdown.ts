@@ -57,7 +57,7 @@ export function extractHeadings(content: string): MarkdownHeading[] {
 		const inline = tokens[i + 1];
 		headings.push({
 			depth: Number(token.tag.slice(1)),
-			slug: token.attrGet('id') ?? '',
+			slug: String(token.attrGet('id') ?? ''),
 			text: inline && inline.type === 'inline' ? headingText(inline) : ''
 		});
 	}
@@ -171,6 +171,15 @@ export function preprocessMarkdown(content: string, _fileName?: string): string 
 
 export function renderMarkdown(markdown: string): string {
 	let html = md.render(markdown);
+
+	// Defer offscreen article images: long articles must not eagerly fetch
+	// every full-resolution image. Carousel markup already sets these.
+	html = html.replace(/<img[^>]*>/g, (tag) => {
+		let out = tag;
+		if (!/\bloading=/.test(out)) out = out.replace('<img', '<img loading="lazy"');
+		if (!/\bdecoding=/.test(out)) out = out.replace('<img', '<img decoding="async"');
+		return out;
+	});
 
 	// Port markdown-it-footnote output 1:1 to match original Svelte/mdsvex + remark-footnotes
 	// Svelte output: <sup id="fnref-1"><a href="#fn-1" class="footnote-ref">1</a></sup>

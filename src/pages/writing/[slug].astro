@@ -11,14 +11,6 @@ import {
 
 export const prerender = false;
 
-export async function getStaticPaths() {
-	const writings = await getCollection('writings');
-	return writings.map((entry: CollectionEntry<'writings'>) => ({
-		params: { slug: entry.id },
-		props: { entry }
-	}));
-}
-
 let entry = (Astro.props as { entry?: CollectionEntry<'writings'> }).entry;
 if (!entry) {
 	const slug = (Astro.params as { slug?: string }).slug;

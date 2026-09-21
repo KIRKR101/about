@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import cloudflare from '@astrojs/cloudflare';
+import { cacheCloudflare } from '@astrojs/cloudflare/cache';
 import tailwindcss from '@tailwindcss/vite';
 import remarkFootnotes from 'remark-footnotes';
 import { unified } from '@astrojs/markdown-remark';
@@ -33,10 +34,17 @@ export default defineConfig({
 	outDir: './dist',
 	output: 'server',
 	adapter: cloudflare({
-		imageService: 'cloudflare'
+		imageService: 'passthrough'
 	}),
+	cache: {
+		provider: cacheCloudflare()
+	},
+	routeRules: {
+		'/': { maxAge: 300, swr: 300 },
+		'/[...path]': { maxAge: 300, swr: 300 }
+	},
 	build: {
-		inlineStylesheets: 'always'
+		inlineStylesheets: 'auto'
 	},
 	site: 'https://kirkr.xyz',
 	integrations: [mdx(), sitemap()],
