@@ -17,7 +17,6 @@ I'm a first year CompE student at Warwick. I enjoy C and TypeScript, and web tec
 
 - [Art](https://kirkr.xyz/art)
 - [Photography](https://kirkr.xyz/photography)
-- [Right now](https://kirkr.xyz/current)
 `;
 }
 
