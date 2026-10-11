@@ -23,21 +23,32 @@ import Footer from '../components/Footer.astro';
 				generally interested in classics, mainly of early-to-mid twentieth century Japanese novels
 				(e.g. Mishima, Matsumoto).
 			</p>
-			<figure class="mt-10">
-				<img
-					src="/friedrich-monk-by-the-sea.webp"
-					alt="The Monk by the Sea, by Caspar David Friedrich"
-					width="720"
-					height="458"
-					style="aspect-ratio: 720 / 458"
-					class="h-auto w-full rounded-sm object-cover"
-					loading="lazy"
-				/>
-				<figcaption class="mt-6 text-center font-mono text-[11px] leading-relaxed text-ink-70">
-					Caspar David Friedrich - The Monk by the Sea
-				</figcaption>
-			</figure>
-			<Footer />
+			<p class="mt-5 font-sans text-[15px] leading-[1.8] text-ink-80">
+				The best way to reach me is by email:
+				<a
+					href="mailto:theo@kirkr.xyz"
+					class="ml-1 font-mono text-[14px] text-ink underline decoration-ink/20 underline-offset-2 transition-colors hover:decoration-ink"
+				>
+					theo@kirkr.xyz
+				</a>
+			</p>
 		</main>
+		<figure class="mt-10 w-full max-w-[600px]">
+			<img
+				src="/friedrich-monk-by-the-sea.webp"
+				alt="The Monk by the Sea, by Caspar David Friedrich"
+				width="720"
+				height="458"
+				style="aspect-ratio: 720 / 458"
+				class="h-auto w-full rounded-sm object-cover"
+				loading="lazy"
+			/>
+			<figcaption class="mt-6 text-center font-mono text-[11px] leading-relaxed text-ink-70">
+				Caspar David Friedrich - The Monk by the Sea
+			</figcaption>
+		</figure>
+		<div class="w-full max-w-[600px]">
+			<Footer />
+		</div>
 	</div>
 </Layout>

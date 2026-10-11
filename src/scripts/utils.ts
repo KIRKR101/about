@@ -32,7 +32,6 @@ export function getContributionColor(count: number) {
 }
 
 const IIIF_WIDTHS: readonly number[] = [500, 800, 1200, 1600];
-const HARDCOVER_WIDTHS: readonly number[] = [150, 270, 400];
 
 export function isIiifUrl(url: string): boolean {
 	return /\/\d+,?\/0\/default\.(webp|jpg)$/.test(url);
@@ -43,21 +42,6 @@ export function getIiifSrcset(url: string): string {
 	return IIIF_WIDTHS.map((w: number) =>
 		url.replace(/\/\d+,?\/0\/default/, `/${w},/0/default`)
 	).join(', ');
-}
-
-export function getHardcoverSrcset(coverUrl: string): string {
-	if (!coverUrl) return '';
-	const base = 'https://production-img.hardcover.app/enlarge';
-	return HARDCOVER_WIDTHS.map((w) => {
-		const h = Math.round(w * 1.5);
-		const params = new URLSearchParams({
-			width: String(w),
-			height: String(h),
-			type: 'webp',
-			url: coverUrl
-		});
-		return `${base}?${params} ${w}w`;
-	}).join(', ');
 }
 
 interface LastCommitRepo {
