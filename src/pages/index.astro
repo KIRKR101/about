@@ -27,8 +27,6 @@ const writings: RecentWriting[] = (await getCollection('writings'))
 	)
 	.slice(0, 5);
 const recentProjects = projects.slice(0, 5);
-const linkCls =
-	'text-ink underline decoration-ink/20 underline-offset-[3px] transition-colors duration-100 hover:decoration-ink';
 const formatDate = (date: string) =>
 	new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(
 		new Date(date)
@@ -42,13 +40,34 @@ const formatDate = (date: string) =>
 				<p class="max-w-none font-sans text-[15px] leading-[1.7] text-ink-80 sm:text-[16px]">
 					I am a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech
 					more generally; this site is built on Astro. I am also interested in politics,
-					philosophy, economics, photography, and art — particularly Dutch. See my{' '}
-					<a href="/writings" class={linkCls}>writings</a>,{' '}
-					<a href="/projects" class={linkCls}>projects</a>,{' '}
-					<a href="/photography" class={linkCls}>photography</a>, and{' '}
-					<a href="/art" class={linkCls}>art</a> I enjoy. You can read more{' '}
-					<a href="/about" class={linkCls}>about</a> me here.
+					philosophy, economics, photography, and art — particularly Dutch.
 				</p>
+				<nav
+					aria-label="Main navigation"
+					class="mt-5 font-sans text-[11px] tracking-wider text-ink-70 uppercase"
+				>
+					<ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
+						<li>
+							<a href="/about" class="transition-colors underline-offset-4 hover:text-ink hover:underline">About</a>
+						</li>
+						<li aria-hidden="true" class="text-ink-30">/</li>
+						<li>
+							<a href="/writings" class="transition-colors underline-offset-4 hover:text-ink hover:underline">Writings</a>
+						</li>
+						<li aria-hidden="true" class="text-ink-30">/</li>
+						<li>
+							<a href="/projects" class="transition-colors underline-offset-4 hover:text-ink hover:underline">Projects</a>
+						</li>
+						<li aria-hidden="true" class="text-ink-30">/</li>
+						<li>
+							<a href="/photography" class="transition-colors underline-offset-4 hover:text-ink hover:underline">Photos</a>
+						</li>
+						<li aria-hidden="true" class="text-ink-30">/</li>
+						<li>
+							<a href="/art" class="transition-colors underline-offset-4 hover:text-ink hover:underline">Art</a>
+						</li>
+					</ol>
+				</nav>
 			</section>
 
 			<section class="py-4">

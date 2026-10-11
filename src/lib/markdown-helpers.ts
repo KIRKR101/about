@@ -4,7 +4,9 @@
 export function indexMarkdown(): string {
 	return `# kirkr.xyz
 
-I'm a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech more generally; this site is built on Astro. I'm also interested in politics, philosophy, economics, photography, and art — particularly Dutch. See my [writings](https://kirkr.xyz/writings), [projects](https://kirkr.xyz/projects), [photography](https://kirkr.xyz/photography), and [art](https://kirkr.xyz/art) I enjoy. You can read more [about](https://kirkr.xyz/about) me here.
+I'm a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech more generally; this site is built on Astro. I'm also interested in politics, philosophy, economics, photography, and art — particularly Dutch.
+
+About / Writings / Projects / Photos / Art: https://kirkr.xyz/about, https://kirkr.xyz/writings, https://kirkr.xyz/projects, https://kirkr.xyz/photography, https://kirkr.xyz/art
 `;
 }
 
