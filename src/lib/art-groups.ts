@@ -23,11 +23,10 @@ export const artGroupSlug = (name: string) =>
 const artGroupThumbnailIds: Record<ArtGroup, string> = {
 	'Dutch Golden Age': 'the-little-street',
 	'Neoclassical & Academic': 'met-438640-mountainous-landscape-at-vicovaro',
-	'Romantic Landscape': 'met-435857-landscape-with-a-cave',
+	'Romantic Landscape': 'abbey-in-the-oakwood',
 	'The Hague School': 'bosrand-aan-het-water',
 	'Realism & Barbizon': 'met-437847-road-in-the-woods',
-	'Impressionism & Post-Impressionism':
-		'met-437299-jalais-hill-pontoise',
+	'Impressionism & Post-Impressionism': 'met-437299-jalais-hill-pontoise',
 	'Modern & Symbolist': 'arbeiterstadt',
 	'Japanese Woodblock Prints': 'het-drijvende-paviljoen-te-katada-in-de-sneeuw'
 };
@@ -36,8 +35,8 @@ export const artThumbnail = (url: string) =>
 	url.includes('wikimedia.org')
 		? url
 		: url.replace(/\/(\d+),\/0\/default\.webp$/, (_, width) =>
-			Number(width) > 600 ? '/400,/0/default.webp' : `/${width},/0/default.webp`
-		);
+				Number(width) > 600 ? '/400,/0/default.webp' : `/${width},/0/default.webp`
+			);
 
 const normalize = (value: string) =>
 	value
@@ -66,7 +65,9 @@ const dutchGoldenAge = [
 	'Philips Wouwerman',
 	'Fabritius',
 	'Van Ruisdael',
-	'Werner van den Valckert'
+	'Werner van den Valckert',
+	'Dutch or Flemish 17th Century',
+	'Anonymous'
 ].map(normalize);
 
 const neoclassicalAndAcademic = [
@@ -83,12 +84,13 @@ const neoclassicalAndAcademic = [
 	'Christoffer Wilhelm Eckersberg',
 	'Constantin Hansen',
 	'Adam August Müller',
-	'Adrien Dauzats',
 	'Pierre Henri de Valenciennes',
 	'Simon Denis',
 	'Joseph Bidauld',
 	'Jean Alaux',
-	'Briton Riviere'
+	'Briton Riviere',
+	"Théodore Caruelle d'Aligny",
+	'Edouard Bertin'
 ].map(normalize);
 
 const romanticLandscape = [
@@ -99,22 +101,20 @@ const romanticLandscape = [
 	'Carl Rottmann',
 	'Edward Lear',
 	'Johan Christian Dahl',
-	"Théodore Caruelle d'Aligny",
-	'Henri-Joseph Harpignies',
-	'Edouard Bertin'
+	'Adrien Dauzats',
+	'British Painter'
 ].map(normalize);
 
 const hagueSchool = [
 	'Mauve',
-	'Israels',
+	'Jozef Israëls',
+	'Jozef Israels',
 	'Breitner',
 	'Apol',
 	'Gabriel',
 	'Witsen',
-	'Johan Barthold Jongkind',
 	'Jacob Maris',
-	'Nicolaas van der Waay',
-	'Frits Thaulow'
+	'Nicolaas van der Waay'
 ].map(normalize);
 
 const realismAndBarbizon = [
@@ -126,19 +126,25 @@ const realismAndBarbizon = [
 	'Camille Corot',
 	'Charles-François Daubigny',
 	'Théodore Rousseau',
-	'British Painter',
-	'John Brett'
+	'John Brett',
+	'Henri-Joseph Harpignies',
+	'Martín Rico y Ortega',
+	'Carolus-Duran',
+	'Giuseppe Abbati'
 ].map(normalize);
 
 const impressionism = [
 	'Alfred Sisley',
 	'Edouard Manet',
-	'Giuseppe Abbati',
 	'Gustave Caillebotte',
 	'Eugène Boudin',
 	'Camille Pissarro',
 	'Claude Monet',
-	'Georges Seurat'
+	'Georges Seurat',
+	'Isaac Israëls',
+	'Isaac Israels',
+	'Frits Thaulow',
+	'Johan Barthold Jongkind'
 ].map(normalize);
 
 const modernAndSymbolist = [
@@ -182,8 +188,7 @@ export function getArtGroups() {
 		.map((name) => ({
 			name,
 			entries: Object.entries(artData).filter(
-				([, artwork]) =>
-					getArtGroup(artwork.title, artwork.data as [string, string][]) === name
+				([, artwork]) => getArtGroup(artwork.title, artwork.data as [string, string][]) === name
 			)
 		}))
 		.filter((group) => group.entries.length > 0);
@@ -194,8 +199,6 @@ type ArtEntry = (typeof artData)[keyof typeof artData];
 export function getArtGroupThumbnail(name: string, entries: [string, ArtEntry][]) {
 	const preferredId = artGroupThumbnailIds[name as ArtGroup];
 	return (
-		entries.find(([id]) => id === preferredId)?.[1].thumbnail ??
-		entries[0]?.[1].thumbnail ??
-		''
+		entries.find(([id]) => id === preferredId)?.[1].thumbnail ?? entries[0]?.[1].thumbnail ?? ''
 	);
 }
