@@ -4,19 +4,7 @@
 export function indexMarkdown(): string {
 	return `# kirkr.xyz
 
-I'm a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech more generally; this site is built on Astro. I'm also interested in politics, philosophy, economics and art - particularly Dutch.
-
-## Navigation
-
-- [Projects](https://kirkr.xyz/projects)
-- [Writings](https://kirkr.xyz/writings)
-- [About](https://kirkr.xyz/about)
-- [GitHub](https://github.com/KIRKR101)
-
-## Collections
-
-- [Art](https://kirkr.xyz/art)
-- [Photography](https://kirkr.xyz/photography)
+I'm a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech more generally; this site is built on Astro. I'm also interested in politics, philosophy, economics, photography, and art — particularly Dutch. See my [writings](https://kirkr.xyz/writings), [projects](https://kirkr.xyz/projects), [photography](https://kirkr.xyz/photography), and [art](https://kirkr.xyz/art) I enjoy. You can read more [about](https://kirkr.xyz/about) me here.
 `;
 }
 

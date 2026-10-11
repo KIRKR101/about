@@ -27,14 +27,8 @@ const writings: RecentWriting[] = (await getCollection('writings'))
 	)
 	.slice(0, 5);
 const recentProjects = projects.slice(0, 5);
-const navigation = [
-	{ href: '/writings', label: 'Writings' },
-	{ href: '/projects', label: 'Projects' },
-	{ href: '/photography', label: 'Photography' },
-	{ href: '/art', label: 'Art' },
-	{ href: '/about', label: 'About' },
-	{ href: 'https://github.com/KIRKR101', label: 'GitHub', external: true }
-];
+const linkCls =
+	'text-ink underline decoration-ink/20 underline-offset-[3px] transition-colors duration-100 hover:decoration-ink';
 const formatDate = (date: string) =>
 	new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(
 		new Date(date)
@@ -46,45 +40,15 @@ const formatDate = (date: string) =>
 		<main class="relative z-10 w-full max-w-[600px]">
 			<section class="pb-4">
 				<p class="max-w-none font-sans text-[15px] leading-[1.7] text-ink-80 sm:text-[16px]">
-					I am a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech more
-					generally; this site is built on Astro. I am also interested in politics, philosophy,
-					economics, photography, and art — particularly Dutch.
+					I am a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech
+					more generally; this site is built on Astro. I am also interested in politics,
+					philosophy, economics, photography, and art — particularly Dutch. See my{' '}
+					<a href="/writings" class={linkCls}>writings</a>,{' '}
+					<a href="/projects" class={linkCls}>projects</a>,{' '}
+					<a href="/photography" class={linkCls}>photography</a>, and{' '}
+					<a href="/art" class={linkCls}>art</a> I enjoy. You can read more{' '}
+					<a href="/about" class={linkCls}>about</a> me here.
 				</p>
-				<div class="mt-7">
-					<nav
-						class="grid grid-cols-2 gap-px bg-bd p-px font-sans text-[13px] text-ink-80 sm:grid-cols-3"
-						aria-label="Main navigation"
-					>
-						{
-							navigation.map((link) => (
-								<a
-									href={link.href}
-									{...(link.external && { target: '_blank', rel: 'noopener noreferrer' })}
-									class="flex min-w-0 flex-wrap items-center justify-start gap-2 bg-bg px-3 py-2.5 text-left transition-colors hover:text-ink hover:underline"
-								>
-									<svg
-										width="14"
-										height="14"
-										viewBox="0 0 16 16"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-										aria-hidden="true"
-										class="text-ink-30"
-									>
-										<path
-											d="M12 10V4m0 0H6m6 0l-7.833 7.833"
-											stroke="currentColor"
-											stroke-width="1"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										/>
-									</svg>
-									<span class="min-w-0 break-words">{link.label}</span>
-								</a>
-							))
-						}
-					</nav>
-				</div>
 			</section>
 
 			<section class="py-4">
