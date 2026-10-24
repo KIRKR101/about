@@ -4,6 +4,7 @@ import Footer from '../components/Footer.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { projects } from '../lib/projects-data';
 import { indexMarkdown } from '../lib/markdown-helpers';
+import { SITE_DOMAIN } from '../lib/site';
 // @ts-ignore - used by the content-negotiation branch below
 void indexMarkdown;
 
@@ -33,14 +34,14 @@ const formatDate = (date: string) =>
 	);
 ---
 
-<Layout title="kirkr.xyz" description="Writing on computer engineering, and other interests.">
+<Layout title={SITE_DOMAIN} description="Writing on computer engineering, and other interests.">
 	<div class="relative flex min-h-dvh flex-col items-center justify-center px-6 py-8 md:py-16">
 		<main class="relative z-10 w-full max-w-[600px]">
 			<section class="pb-4">
 				<p class="max-w-none font-sans text-[15px] leading-[1.7] text-ink-80 sm:text-[16px]">
-					I am a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech
-					more generally; this site is built on Astro. I am also interested in politics,
-					philosophy, economics, photography, and art — particularly Dutch.
+					I am a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech more
+					generally; this site is built on Astro. I am also interested in politics, philosophy,
+					economics, photography, and art — particularly Dutch.
 				</p>
 				<nav
 					aria-label="Main navigation"
@@ -48,23 +49,41 @@ const formatDate = (date: string) =>
 				>
 					<ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
 						<li>
-							<a href="/about" class="transition-colors underline-offset-4 hover:text-ink hover:underline">About</a>
+							<a
+								href="/about"
+								class="underline-offset-4 transition-colors hover:text-ink hover:underline">About</a
+							>
 						</li>
 						<li aria-hidden="true" class="text-ink-30">/</li>
 						<li>
-							<a href="/writings" class="transition-colors underline-offset-4 hover:text-ink hover:underline">Writings</a>
+							<a
+								href="/writings"
+								class="underline-offset-4 transition-colors hover:text-ink hover:underline"
+								>Writings</a
+							>
 						</li>
 						<li aria-hidden="true" class="text-ink-30">/</li>
 						<li>
-							<a href="/projects" class="transition-colors underline-offset-4 hover:text-ink hover:underline">Projects</a>
+							<a
+								href="/projects"
+								class="underline-offset-4 transition-colors hover:text-ink hover:underline"
+								>Projects</a
+							>
 						</li>
 						<li aria-hidden="true" class="text-ink-30">/</li>
 						<li>
-							<a href="/photography" class="transition-colors underline-offset-4 hover:text-ink hover:underline">Photos</a>
+							<a
+								href="/photography"
+								class="underline-offset-4 transition-colors hover:text-ink hover:underline"
+								>Photos</a
+							>
 						</li>
 						<li aria-hidden="true" class="text-ink-30">/</li>
 						<li>
-							<a href="/art" class="transition-colors underline-offset-4 hover:text-ink hover:underline">Art</a>
+							<a
+								href="/art"
+								class="underline-offset-4 transition-colors hover:text-ink hover:underline">Art</a
+							>
 						</li>
 					</ol>
 				</nav>

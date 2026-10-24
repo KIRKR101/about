@@ -3,6 +3,7 @@ import Layout from '../../../layouts/Layout.astro';
 import Footer from '../../../components/Footer.astro';
 import { photographyData, photographySlug } from '../../../lib/photography-list';
 import { photographyExif } from '../../../lib/photography-exif';
+import { SITE_DOMAIN } from '../../../lib/site';
 
 export const prerender = true;
 
@@ -20,7 +21,7 @@ const exif = photographyExif[image.id] ?? [];
 ---
 
 <Layout
-	title={`${image.id} · ${city} Photography | kirkr.xyz`}
+	title={`${image.id} · ${city} Photography | ${SITE_DOMAIN}`}
 	description={`A photograph from ${city}.`}
 >
 	<link rel="preconnect" href="https://res.cloudinary.com" slot="head" />

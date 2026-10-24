@@ -7,6 +7,7 @@ import remarkFootnotes from 'remark-footnotes';
 import { unified } from '@astrojs/markdown-remark';
 import { fileURLToPath } from 'node:url';
 import { writeFileSync } from 'node:fs';
+import { SITE_URL } from './site.config.mjs';
 
 function sitemap() {
 	return {
@@ -20,7 +21,8 @@ function sitemap() {
 					.filter((pathname) => pathname !== '/404' && pathname !== '/404/');
 				const urls = [...new Set(paths)]
 					.sort()
-					.map((pathname) => `\t<url>\n\t\t<loc>https://kirkr.xyz${pathname}</loc>\n\t</url>`);
+					.map((pathname) => (pathname.startsWith('/') ? pathname : `/${pathname}`))
+					.map((pathname) => `\t<url>\n\t\t<loc>${SITE_URL}${pathname}</loc>\n\t</url>`);
 				const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`;
 				writeFileSync(fileURLToPath(new URL('sitemap.xml', dir)), xml);
 			}
@@ -46,7 +48,7 @@ export default defineConfig({
 	build: {
 		inlineStylesheets: 'auto'
 	},
-	site: 'https://kirkr.xyz',
+	site: SITE_URL,
 	integrations: [mdx(), sitemap()],
 	vite: {
 		plugins: [tailwindcss()],

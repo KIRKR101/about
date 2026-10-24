@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Footer from '../../components/Footer.astro';
 import { getArtGroups, artGroupSlug, artThumbnail } from '../../lib/art-groups';
+import { SITE_DOMAIN } from '../../lib/site';
 
 export const prerender = true;
 export function getStaticPaths() {
@@ -14,7 +15,7 @@ const { name } = Astro.props;
 const group = getArtGroups().find((item) => item.name === name);
 ---
 
-<Layout title={`${name} | kirkr.xyz`} description={`A collection of ${name}.`}>
+<Layout title={`${name} | ${SITE_DOMAIN}`} description={`A collection of ${name}.`}>
 	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
 		<main class="w-full max-w-[600px]">
 			<div class="py-4">

@@ -1,6 +1,5 @@
 // Reusable Spotify and Last.fm now-playing logic, retained for future UI integration.
-const SPOTIFY_API_URL = 'https://spotify.kirkr.xyz/api/now-playing';
-const LASTFM_API_URL = 'https://lastfm.kirkr.xyz/api/lastfm-track';
+import { SPOTIFY_API_URL, LASTFM_API_URL } from '../lib/site';
 type SpotifyImage = { url: string; width: number };
 type SpotifyTrack = {
 	title?: string;

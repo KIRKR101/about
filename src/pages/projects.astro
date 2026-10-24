@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
 import { projects } from '../lib/projects-data';
 import { projectsMarkdown } from '../lib/markdown-helpers';
+import { SITE_DOMAIN, GITHUB_API_BASE } from '../lib/site';
 // @ts-ignore - false positive
 void projectsMarkdown;
 
@@ -17,8 +18,8 @@ if (Astro.locals.prefersMarkdown) {
 }
 ---
 
-<Layout title="Projects | kirkr.xyz" description="Projects I've built.">
-	<link rel="preconnect" href="https://github.kirkr.xyz" crossorigin="anonymous" slot="head" />
+<Layout title={`Projects | ${SITE_DOMAIN}`} description="Projects I've built.">
+	<link rel="preconnect" href={GITHUB_API_BASE} crossorigin="anonymous" slot="head" />
 
 	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
 		<main class="w-full max-w-[600px]">
@@ -152,6 +153,8 @@ if (Astro.locals.prefersMarkdown) {
 </Layout>
 
 <script>
+	import { GITHUB_API_BASE } from '../lib/site';
+
 	const CACHE_TTL = 60 * 60 * 1000;
 	const currentYear = new Date().getFullYear();
 	let selectedYear = currentYear;
@@ -283,9 +286,7 @@ if (Astro.locals.prefersMarkdown) {
 
 		try {
 			const url =
-				year !== currentYear
-					? `https://github.kirkr.xyz/?year=${year}`
-					: 'https://github.kirkr.xyz/';
+				year !== currentYear ? `${GITHUB_API_BASE}/?year=${year}` : `${GITHUB_API_BASE}/`;
 			const res = await fetch(url, { signal });
 			if (!res.ok) return;
 			const data = await res.json();

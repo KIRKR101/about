@@ -1,12 +1,14 @@
 // Helpers to generate markdown for content-negotiation.
 // Each page imports its helper and returns Response when Astro.locals.prefersMarkdown.
 
+import { SITE_DOMAIN, SITE_URL } from './site';
+
 export function indexMarkdown(): string {
-	return `# kirkr.xyz
+	return `# ${SITE_DOMAIN}
 
 I'm a first year CompE student at Warwick. I enjoy C and TypeScript, and web tech more generally; this site is built on Astro. I'm also interested in politics, philosophy, economics, photography, and art — particularly Dutch.
 
-About / Writings / Projects / Photos / Art: https://kirkr.xyz/about, https://kirkr.xyz/writings, https://kirkr.xyz/projects, https://kirkr.xyz/photography, https://kirkr.xyz/art
+About / Writings / Projects / Photos / Art: ${SITE_URL}/about, ${SITE_URL}/writings, ${SITE_URL}/projects, ${SITE_URL}/photography, ${SITE_URL}/art
 `;
 }
 
@@ -23,7 +25,7 @@ export function writingsMarkdown(
 	for (const y of years) {
 		out += `## ${y}\n\n`;
 		for (const w of groups[y]!) {
-			out += `- [${w.title}](https://kirkr.xyz/writing/${w.file}) — ${w.snippet ?? ''} (${w.date})\n`;
+			out += `- [${w.title}](${SITE_URL}/writing/${w.file}) — ${w.snippet ?? ''} (${w.date})\n`;
 		}
 		out += `\n`;
 	}
@@ -35,7 +37,7 @@ export function projectsMarkdown(
 ): string {
 	let out = `# Projects\n\n`;
 	for (const p of projects) {
-		out += `- [${p.title}](https://kirkr.xyz/project/${p.id}) — ${p.shortDescription ?? ''} (${p.firstCommit})\n`;
+		out += `- [${p.title}](${SITE_URL}/project/${p.id}) — ${p.shortDescription ?? ''} (${p.firstCommit})\n`;
 	}
 	return out;
 }
@@ -57,12 +59,12 @@ export function photographyMarkdown(cities: string[]): string {
 	let out = `# Photography\n\n`;
 	for (const c of cities) {
 		const slug = c.toLowerCase().replace(/\s+/g, '-');
-		out += `- [${c}](https://kirkr.xyz/photography/${slug})\n`;
+		out += `- [${c}](${SITE_URL}/photography/${slug})\n`;
 	}
 	out += `\nImages load from Cloudinary, grouped by city.\n`;
 	return out;
 }
 
 export function notFoundMarkdown(): string {
-	return `# 404 — Not Found\n\nThe page you're looking for doesn't exist.\n\n- [Home](https://kirkr.xyz/)\n- [Writings](https://kirkr.xyz/writings)\n- [Projects](https://kirkr.xyz/projects)\n- Sitemap: https://kirkr.xyz/sitemap.xml\n- Full text: https://kirkr.xyz/llms-full.txt\n`;
+	return `# 404 — Not Found\n\nThe page you're looking for doesn't exist.\n\n- [Home](${SITE_URL}/)\n- [Writings](${SITE_URL}/writings)\n- [Projects](${SITE_URL}/projects)\n- Sitemap: ${SITE_URL}/sitemap.xml\n- Full text: ${SITE_URL}/llms-full.txt\n`;
 }

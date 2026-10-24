@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { preprocessMarkdown, renderMarkdown } from '../../scripts/render-markdown';
+import { SITE_DOMAIN } from '../../lib/site';
 
 export const prerender = false;
 
@@ -49,7 +50,7 @@ const notFound = false;
 
 {
 	notFound ? (
-		<Layout title="Not found | kirkr.xyz">
+		<Layout title={`Not found | ${SITE_DOMAIN}`}>
 			<div class="flex min-h-full flex-col items-center justify-start px-6 pt-[20vh] pb-6 lg:pt-[24vh] lg:pb-16">
 				<main class="w-full max-w-[600px] pl-6 md:pl-10">
 					<div class="font-sans text-[11px] tracking-[0.1em] text-ink-70 uppercase">Error 404</div>
@@ -69,7 +70,7 @@ const notFound = false;
 			</div>
 		</Layout>
 	) : (
-		<Layout title={`${title} | kirkr.xyz`} description={description || title}>
+		<Layout title={`${title} | ${SITE_DOMAIN}`} description={description || title}>
 			<div class="flex min-h-0 flex-col items-center px-6 py-6 font-sans md:py-16">
 				<main class="w-full max-w-[600px]">
 					<div class="py-4">
@@ -192,6 +193,8 @@ const notFound = false;
 }
 
 <script>
+	import { GITHUB_API_BASE } from '../../lib/site';
+
 	function initProject() {
 		const article = document.querySelector('[data-project-article]') as HTMLElement | null;
 		if (!article) return;
@@ -292,7 +295,7 @@ const notFound = false;
 						lastCommitEl.classList.remove('hidden');
 					}
 				} else {
-					fetch('https://github.kirkr.xyz/api/last-commit')
+					fetch(`${GITHUB_API_BASE}/api/last-commit`)
 						.then((r) => (r.ok ? r.json() : null))
 						.then((data) => {
 							if (!data?.repositories) return;

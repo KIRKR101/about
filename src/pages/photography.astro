@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
 import { photographyData, photographySlug } from '../lib/photography-list';
 import { photographyMarkdown } from '../lib/markdown-helpers';
+import { SITE_DOMAIN } from '../lib/site';
 void photographyMarkdown;
 
 const thumbnailIds: Record<string, string> = {
@@ -26,7 +27,7 @@ if (Astro.locals.prefersMarkdown) {
 ---
 
 <Layout
-	title="Photography | kirkr.xyz"
+	title={`Photography | ${SITE_DOMAIN}`}
 	description="A collection of photography from various cities."
 >
 	<link rel="preconnect" href="https://res.cloudinary.com" slot="head" />

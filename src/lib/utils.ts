@@ -1,3 +1,5 @@
+import { GITHUB_API_BASE } from './site';
+
 const dateFormatter = new Intl.DateTimeFormat('en-GB', {
 	day: '2-digit',
 	month: 'short',
@@ -101,7 +103,7 @@ export async function getLastCommitDate(repoUrl: string): Promise<string | null>
 	if (cached) return findRepo(cached, repoUrl);
 
 	try {
-		const res = await fetch('https://github.kirkr.xyz/api/last-commit');
+		const res = await fetch(`${GITHUB_API_BASE}/api/last-commit`);
 		if (!res.ok) return null;
 
 		const data: { repositories: LastCommitRepo[] | null } = await res.json();
