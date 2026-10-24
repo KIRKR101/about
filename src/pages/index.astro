@@ -4,7 +4,7 @@ import Footer from '../components/Footer.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { projects } from '../lib/projects-data';
 import { indexMarkdown } from '../lib/markdown-helpers';
-import { SITE_DOMAIN } from '../lib/site';
+import { SITE_TITLE } from '../lib/site';
 // @ts-ignore - used by the content-negotiation branch below
 void indexMarkdown;
 
@@ -34,7 +34,7 @@ const formatDate = (date: string) =>
 	);
 ---
 
-<Layout title={SITE_DOMAIN} description="Writing on computer engineering, and other interests.">
+<Layout title={SITE_TITLE} description="Writing on computer engineering, and other interests.">
 	<div class="relative flex min-h-dvh flex-col items-center justify-center px-6 py-8 md:py-16">
 		<main class="relative z-10 w-full max-w-[600px]">
 			<section class="pb-4">

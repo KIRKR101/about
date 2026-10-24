@@ -1,7 +1,7 @@
 ---
 import '../app.css';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import { SITE_DOMAIN, SITE_URL } from '../lib/site';
+import { SITE_TITLE, SITE_URL } from '../lib/site';
 
 interface Props {
 	title?: string;
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const {
-	title = SITE_DOMAIN,
+	title = SITE_TITLE,
 	description = 'Writing on computer engineering, and other interests.',
 	ogTitle,
 	ogDescription,

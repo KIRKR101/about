@@ -15,6 +15,9 @@
 /** The bare domain the site is served from. */
 export const SITE_DOMAIN = 'theokirk.com';
 
+/** Human-readable site name for page titles. */
+export const SITE_TITLE = 'Theo Kirk';
+
 /** Absolute origin built from the domain. */
 export const SITE_URL = `https://${SITE_DOMAIN}`;
 

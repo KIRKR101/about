@@ -8,7 +8,7 @@ import {
 	extractHeadings,
 	getReadingMinutes
 } from '../../scripts/render-markdown';
-import { SITE_DOMAIN } from '../../lib/site';
+import { SITE_TITLE } from '../../lib/site';
 
 export const prerender = false;
 
@@ -61,7 +61,7 @@ function formatDate(dateString: string) {
 
 {
 	notFound ? (
-		<Layout title={`Not found | ${SITE_DOMAIN}`}>
+		<Layout title={`Not found | ${SITE_TITLE}`}>
 			<div class="flex min-h-full flex-col items-center justify-start px-6 pt-[20vh] pb-6 lg:pt-[24vh] lg:pb-16">
 				<main class="w-full max-w-[600px] pl-6 md:pl-10">
 					<div class="font-sans text-[11px] tracking-[0.1em] text-ink-70 uppercase">Error 404</div>
@@ -82,7 +82,7 @@ function formatDate(dateString: string) {
 		</Layout>
 	) : (
 		<Layout
-			title={`${title} | ${SITE_DOMAIN}`}
+			title={`${title} | ${SITE_TITLE}`}
 			description={snippet || 'Read writings and articles.'}
 		>
 			<div class="flex min-h-0 flex-col items-center px-6 py-6 font-sans md:py-16">

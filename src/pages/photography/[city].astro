@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Footer from '../../components/Footer.astro';
 import { photographyData } from '../../lib/photography-list';
-import { SITE_DOMAIN } from '../../lib/site';
+import { SITE_TITLE } from '../../lib/site';
 
 export const prerender = true;
 export function getStaticPaths() {
@@ -15,7 +15,7 @@ const { city } = Astro.props;
 const images = photographyData[city as string] ?? [];
 ---
 
-<Layout title={`${city} Photography | ${SITE_DOMAIN}`} description={`Photography from ${city}.`}>
+<Layout title={`${city} Photography | ${SITE_TITLE}`} description={`Photography from ${city}.`}>
 	<link rel="preconnect" href="https://res.cloudinary.com" slot="head" />
 	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
 		<main class="w-full max-w-[600px]">

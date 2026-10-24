@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
 import { projects } from '../lib/projects-data';
 import { projectsMarkdown } from '../lib/markdown-helpers';
-import { SITE_DOMAIN, GITHUB_API_BASE } from '../lib/site';
+import { SITE_TITLE, GITHUB_API_BASE } from '../lib/site';
 // @ts-ignore - false positive
 void projectsMarkdown;
 
@@ -18,7 +18,7 @@ if (Astro.locals.prefersMarkdown) {
 }
 ---
 
-<Layout title={`Projects | ${SITE_DOMAIN}`} description="Projects I've built.">
+<Layout title={`Projects | ${SITE_TITLE}`} description="Projects I've built.">
 	<link rel="preconnect" href={GITHUB_API_BASE} crossorigin="anonymous" slot="head" />
 
 	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
