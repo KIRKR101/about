@@ -13,7 +13,7 @@
 //   - Project subdomains (e.g. wasmagick.) in src/lib/projects-data.ts.
 
 /** The bare domain the site is served from. */
-export const SITE_DOMAIN = 'kirkr.xyz';
+export const SITE_DOMAIN = 'theokirk.com';
 
 /** Absolute origin built from the domain. */
 export const SITE_URL = `https://${SITE_DOMAIN}`;
