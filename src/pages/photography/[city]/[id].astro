@@ -3,7 +3,6 @@ import Layout from '../../../layouts/Layout.astro';
 import Footer from '../../../components/Footer.astro';
 import { photographyData, photographySlug } from '../../../lib/photography-list';
 import { photographyExif } from '../../../lib/photography-exif';
-import { SITE_TITLE } from '../../../lib/site';
 
 export const prerender = true;
 
@@ -20,10 +19,7 @@ const { city, image } = Astro.props;
 const exif = photographyExif[image.id] ?? [];
 ---
 
-<Layout
-	title={`${image.id} · ${city} Photography | ${SITE_TITLE}`}
-	description={`A photograph from ${city}.`}
->
+<Layout title={`${image.id} · ${city} Photography`} description={`A photograph from ${city}.`}>
 	<link rel="preconnect" href="https://res.cloudinary.com" slot="head" />
 	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
 		<main class="w-full max-w-[600px]">

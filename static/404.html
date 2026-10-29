@@ -9,7 +9,7 @@
 		<link rel="preload" href="/fonts/geist/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
 		<link
 			rel="preload"
-			href="/fonts/instrument-serif/instrument-serif-latin-regular.woff2"
+			href="/fonts/literata/literata-latin-opsz-normal.woff2"
 			as="font"
 			type="font/woff2"
 			crossorigin
@@ -38,9 +38,9 @@
 				font-display: swap;
 			}
 			@font-face {
-				font-family: 'Instrument Serif';
-				src: url('/fonts/instrument-serif/instrument-serif-latin-regular.woff2') format('woff2');
-				font-weight: 400;
+				font-family: 'Literata';
+				src: url('/fonts/literata/literata-latin-opsz-normal.woff2') format('woff2');
+				font-weight: 200 900;
 				font-style: normal;
 				font-display: swap;
 			}
@@ -51,6 +51,7 @@
 				--ink: #0a0a0b;
 				--bd: rgba(0, 0, 0, 0.1);
 				--ink-30: rgba(10, 10, 11, 0.55);
+				--ink-40: rgba(10, 10, 11, 0.65);
 				--ink-70: rgba(10, 10, 11, 0.88);
 				--ink-90: rgba(10, 10, 11, 0.97);
 				--focus: rgba(0, 0, 0, 0.4);
@@ -61,6 +62,7 @@
 				--ink: #ffffff;
 				--bd: rgba(255, 255, 255, 0.08);
 				--ink-30: rgba(255, 255, 255, 0.4);
+				--ink-40: rgba(255, 255, 255, 0.5);
 				--ink-70: rgba(255, 255, 255, 0.78);
 				--ink-90: rgba(255, 255, 255, 0.94);
 				--focus: rgba(255, 255, 255, 0.4);
@@ -118,8 +120,7 @@
 			}
 
 			/* = font-sans text-[11px] tracking-[0.1em] text-ink-70 uppercase */
-			.label,
-			.home-link {
+			.label {
 				font-size: 11px;
 				letter-spacing: 0.1em;
 				text-transform: uppercase;
@@ -129,7 +130,7 @@
 			/* = mt-3 font-serif text-[26px] leading-tight text-ink-90 */
 			.title {
 				margin-top: 0.75rem;
-				font-family: 'Instrument Serif', Georgia, serif;
+				font-family: 'Literata', Georgia, serif;
 				font-style: normal;
 				font-weight: 400;
 				font-size: 26px;
@@ -156,14 +157,29 @@
 				color: var(--ink);
 			}
 
-			/* = mt-6 ... no-underline hover:text-ink */
+			/* = mt-8 group inline-flex cursor-pointer items-center gap-1.5 font-sans
+			   text-[13px] font-medium text-ink no-underline transition-colors duration-150 */
 			.home-link {
-				display: inline-block;
-				margin-top: 1.5rem;
+				display: inline-flex;
+				margin-top: 2rem;
+				align-items: center;
+				gap: 0.375rem;
+				font-family: inherit;
+				font-size: 13px;
+				font-weight: 500;
+				color: var(--ink-70);
 				text-decoration: none;
 				transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 			}
 			.home-link:hover {
+				color: var(--ink);
+			}
+			/* = text-ink-70 transition-colors duration-150 group-hover:text-ink (svg icon) */
+			.home-link svg {
+				color: var(--ink-70);
+				transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+			}
+			.home-link:hover svg {
 				color: var(--ink);
 			}
 
@@ -244,19 +260,26 @@
 				<div class="label">Error 404</div>
 				<div class="title">Page not found</div>
 				<div class="body-text">
-					The page you're looking for doesn't exist or has been moved.
-				</div>
-				<div class="body-text">
-					Browse the site index at
-					<a href="/llms.txt">/llms.txt</a>
-					or the full page list at
-					<a href="/sitemap.xml">/sitemap.xml</a>.
-					The text of every page is also available as
+					The page you're looking for doesn't exist or has been moved. Browse the site index at
+					<a href="/llms.txt">/llms.txt</a> or the full page list at
+					<a href="/sitemap.xml">/sitemap.xml</a>. The text of every page is also available as
 					<a href="/llms-full.txt">/llms-full.txt</a>.
 				</div>
-				<div class="home-link-wrap">
-					<a href="/" class="home-link">Return home</a>
-				</div>
+				<a href="/" class="home-link">
+					<svg
+						width="12"
+						height="12"
+						viewBox="0 0 256 256"
+						fill="currentColor"
+						xmlns="http://www.w3.org/2000/svg"
+						aria-hidden="true"
+					>
+						<path
+							d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"
+						/>
+					</svg>
+					Return home
+				</a>
 
 				<footer>
 					<div class="footer-rule"></div>

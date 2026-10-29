@@ -25,7 +25,7 @@ const items = isPhotographyDetail
 	: segments.map((segment, index) => ({
 			label:
 				index === segments.length - 1 && (segments.length > 1 || !labels[segment])
-					? title.replace(/\s*\|\s*kirkr\.xyz$/, '')
+					? title
 					: (labels[segment] ?? segment.replace(/-/g, ' ')),
 			href:
 				index === 0 && segment === 'project'
