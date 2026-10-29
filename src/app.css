@@ -273,6 +273,7 @@ pre::-webkit-scrollbar-corner {
 	.prose a {
 		color: inherit;
 		text-decoration: underline;
+		text-decoration-thickness: 1px;
 		text-underline-offset: 3px;
 		text-decoration-color: var(--color-ink-70);
 		transition: all 0.1s ease;
@@ -286,6 +287,8 @@ pre::-webkit-scrollbar-corner {
 	.prose a[target='_blank']::after {
 		content: ' ↗';
 		font-size: 0.75em;
+		font-family: var(--font-sans);
+		font-weight: 550;
 	}
 
 	.prose blockquote {
