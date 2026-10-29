@@ -60,8 +60,9 @@
 :root {
 	color-scheme: light;
 
-	--bg: #fafafa;
-	--ink: #0a0a0b;
+	--bg: #fafaf9;
+	--ink: #101010;
+	--link: #101010;
 
 	--bd: rgba(0, 0, 0, 0.1);
 	--prog: rgba(10, 10, 11, 0.65);
@@ -75,27 +76,28 @@
 	--ink-80: rgba(10, 10, 11, 0.92);
 	--ink-90: rgba(10, 10, 11, 0.97);
 
-	--art-bg: #ececee;
-	--card-bg: #e4e4e6;
-	--frame-bg: #ececee;
+	--art-bg: #ededeb;
+	--card-bg: #e5e5e3;
+	--frame-bg: #ededeb;
 	--tooltip-bg: #ffffff;
-	--code-bg: rgba(0, 0, 0, 0.05);
+	--code-bg: rgba(16, 16, 16, 0.05);
 	--focus: rgba(0, 0, 0, 0.4);
-	--contribution-0: #e4e4e6;
-	--contribution-1: #cacacd;
-	--contribution-2: #b0b0b4;
-	--contribution-3: #96969b;
-	--contribution-4: #7c7c82;
-	--contribution-5: #626269;
-	--contribution-6: #484850;
-	--contribution-7: #414147;
+	--contribution-0: #e5e5e3;
+	--contribution-1: #cbcbca;
+	--contribution-2: #b2b2b1;
+	--contribution-3: #999998;
+	--contribution-4: #80807f;
+	--contribution-5: #676766;
+	--contribution-6: #4e4e4d;
+	--contribution-7: #474746;
 }
 
 .dark {
 	color-scheme: dark;
 
-	--bg: #0a0a0b;
-	--ink: #ffffff;
+	--bg: #0c0c0c;
+	--ink: #fcfcfa;
+	--link: #fcfcfa;
 
 	--bd: rgba(255, 255, 255, 0.08);
 	--prog: rgba(255, 255, 255, 0.55);
@@ -109,10 +111,10 @@
 	--ink-80: rgba(255, 255, 255, 0.85);
 	--ink-90: rgba(255, 255, 255, 0.94);
 
-	--art-bg: #1a1a1c;
-	--card-bg: #141416;
-	--frame-bg: #0d0d0e;
-	--tooltip-bg: #1a1a1c;
+	--art-bg: #1c1c1c;
+	--card-bg: #151515;
+	--frame-bg: #101010;
+	--tooltip-bg: #1c1c1c;
 	--code-bg: rgba(255, 255, 255, 0.06);
 	--focus: rgba(255, 255, 255, 0.4);
 	--contribution-0: #1a1a1c;
@@ -142,6 +144,7 @@
 	--color-ink-70: var(--ink-70);
 	--color-ink-80: var(--ink-80);
 	--color-ink-90: var(--ink-90);
+	--color-link: var(--link);
 	--color-bd: var(--bd);
 	--color-prog: var(--prog);
 	--color-rail: var(--rail);
@@ -222,10 +225,15 @@ pre::-webkit-scrollbar-corner {
 /* Markdown Content Styling */
 @layer components {
 	.prose {
-		color: var(--color-ink-80);
+		color: var(--color-ink-90);
 		font-family: var(--font-serif);
 		font-size: 1.125rem;
 		line-height: 1.8;
+	}
+
+	.dark .prose {
+		color: #f0f0f0;
+		font-weight: 450;
 	}
 
 	.prose p {
