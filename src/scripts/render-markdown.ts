@@ -36,7 +36,8 @@ md.core.ruler.push('heading_ids', (state) => {
 		const token = state.tokens[i]!;
 		if (token.type !== 'heading_open') continue;
 		const inline = state.tokens[i + 1];
-		const base = slugify(inline && inline.type === 'inline' ? headingText(inline) : '') || 'section';
+		const base =
+			slugify(inline && inline.type === 'inline' ? headingText(inline) : '') || 'section';
 		let slug = base;
 		if (counts[base] !== undefined) {
 			counts[base]! += 1;
