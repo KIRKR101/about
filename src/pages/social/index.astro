@@ -1,0 +1,48 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const cards: { title: string; image: string; page: string; section: string }[] = [];
+
+const add = (section: string, title: string, image: string, page: string) =>
+	cards.push({ section, title, image, page });
+
+for (const entry of await getCollection('writings')) {
+	add('Writing', entry.data.longTitle ?? entry.data.title, `/social/writing/${entry.id}.webp`, `/writing/${entry.id}`);
+}
+
+for (const entry of await getCollection('projects')) {
+	add('Project', entry.data.title, `/social/project/${entry.id}.webp`, `/project/${entry.id}`);
+}
+
+const sections = [...new Set(cards.map(({ section }) => section))];
+---
+
+<Layout title="Social card preview" description="Preview writing and project social cards.">
+	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-5 py-8 md:py-16">
+		<main class="w-full max-w-[1100px]">
+			<header class="mb-10">
+				<p class="font-mono text-[11px] tracking-widest text-ink-50 uppercase">Social cards</p>
+				<h1 class="mt-2 font-serif text-[40px] leading-tight tracking-tight text-ink">Preview</h1>
+				<p class="mt-2 font-sans text-sm text-ink-70">{cards.length} writing and project cards · click a card to open its page</p>
+			</header>
+
+			{sections.map((section) => (
+				<section class="mb-12" aria-label={`${section} social cards`}>
+					<h2 class="mb-4 border-b border-bd pb-2 font-mono text-xs tracking-wide text-ink-70 uppercase">{section}</h2>
+					<div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+						{cards.filter((card) => card.section === section).map((card) => (
+							<a href={card.page} class="group overflow-hidden rounded-sm border border-bd no-underline">
+								<img src={card.image} alt={`${card.title} social card`} width="1200" height="630" loading="lazy" class="aspect-[1200/630] w-full object-cover" />
+								<div class="flex items-center justify-between gap-3 px-3 py-2.5">
+									<span class="truncate font-sans text-sm text-ink-90 group-hover:underline">{card.title}</span>
+									<span class="shrink-0 font-mono text-[10px] text-ink-50">Open page ↗</span>
+								</div>
+							</a>
+						))}
+					</div>
+				</section>
+			))}
+		</main>
+	</div>
+</Layout>

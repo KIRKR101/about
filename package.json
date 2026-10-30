@@ -7,8 +7,8 @@
 		"node": ">=22.19.0"
 	},
 	"scripts": {
-		"dev": "astro dev",
-		"build": "node scripts/generate-llms-full.mjs && astro build",
+		"dev": "node scripts/generate-social-cards.mjs && astro dev",
+		"build": "node scripts/generate-llms-full.mjs && node scripts/generate-social-cards.mjs && astro build",
 		"preview": "astro preview",
 		"prepare": "echo ''",
 		"check": "astro check",

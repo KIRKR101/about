@@ -89,7 +89,12 @@ function formatDate(dateString: string) {
 			</div>
 		</Layout>
 	) : (
-		<Layout title={`${title}`} description={snippet || 'Read writings and articles.'}>
+		<Layout
+			title={`${title}`}
+			description={snippet || 'Read writings and articles.'}
+			ogImage={`/social/writing/${entry.id}.webp`}
+			ogType="article"
+		>
 			<div class="flex min-h-0 flex-col items-center px-6 py-6 font-sans md:py-16">
 				<main class="w-full max-w-[600px]">
 					<div class="py-4">

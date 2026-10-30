@@ -8,7 +8,7 @@ export function getStaticPaths() {
 	return getArtGroups().flatMap((group) =>
 		group.entries.map(([id, artwork]) => ({
 			params: { school: artGroupSlug(group.name), slug: id },
-			props: { group: group.name, artwork }
+			props: { artwork }
 		}))
 	);
 }
@@ -16,7 +16,10 @@ const { artwork } = Astro.props;
 const artist = artwork.data.find(([key]) => key === 'artist')?.[1];
 ---
 
-<Layout title={`${artwork.title}`} description={artwork.description}>
+<Layout
+	title={`${artwork.title}`}
+	description={artwork.description}
+>
 	<div class="flex min-h-[calc(100dvh-4rem)] flex-col items-center px-6 py-6 md:py-16">
 		<main class="w-full max-w-[600px]">
 			<div class="py-4">

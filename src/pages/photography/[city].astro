@@ -1,12 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Footer from '../../components/Footer.astro';
-import { photographyData } from '../../lib/photography-list';
+import { photographyData, photographySlug } from '../../lib/photography-list';
 
 export const prerender = true;
 export function getStaticPaths() {
 	return Object.keys(photographyData).map((city) => ({
-		params: { city: city.toLowerCase().replace(/\s+/g, '-') },
+		params: { city: photographySlug(city) },
 		props: { city }
 	}));
 }
