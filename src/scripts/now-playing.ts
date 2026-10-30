@@ -25,7 +25,8 @@ type LastFmTrack = {
 	isPlaying?: boolean;
 	duration?: number;
 	images?:
-		SpotifyImage[] | Partial<Record<'small' | 'medium' | 'large' | 'extralarge' | 'mega', string>>;
+		| SpotifyImage[]
+		| Partial<Record<'small' | 'medium' | 'large' | 'extralarge' | 'mega', string>>;
 };
 let spotifyData: SpotifyTrack | null = null;
 let lastFmData: LastFmTrack | null = null;
