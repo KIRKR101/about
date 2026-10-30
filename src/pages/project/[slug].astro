@@ -114,7 +114,7 @@ const notFound = false;
 					{/* Lightbox for carousel images (shared overlay; JS toggles data-open) */}
 					<div
 						data-carousel-lightbox
-						class="ease-out-soft invisible fixed inset-0 z-60 flex scale-[0.98] bg-[#0b0b0b]/95 opacity-0 transition-[opacity,visibility,scale] duration-200 outline-none select-none data-[open]:visible data-[open]:scale-100 data-[open]:opacity-100 motion-reduce:transition-none"
+						class="ease-out-soft invisible fixed inset-0 z-60 flex scale-[0.98] bg-[#0b0b0b]/95 opacity-0 transition-[opacity,visibility,scale] duration-100 outline-none select-none data-[open]:visible data-[open]:scale-100 data-[open]:opacity-100 motion-reduce:transition-none"
 						role="dialog"
 						aria-modal="true"
 						tabindex="-1"
@@ -123,7 +123,7 @@ const notFound = false;
 						<button
 							type="button"
 							data-carousel-lb-close
-							class="absolute top-4 right-4 z-50 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-[background-color,opacity,scale] duration-200 ease-out hover:bg-white/10 focus-visible:outline-white/60 active:scale-95 md:top-6 md:right-6 md:h-11 md:w-11"
+							class="absolute top-4 right-4 z-50 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-[background-color,opacity,scale] duration-100 ease-out hover:bg-white/10 focus-visible:outline-white/60 active:scale-95 md:top-6 md:right-6 md:h-11 md:w-11"
 							aria-label="Close lightbox"
 						>
 							<svg
@@ -139,7 +139,7 @@ const notFound = false;
 						<button
 							type="button"
 							data-carousel-lb-prev
-							class="absolute top-1/2 left-3 z-50 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-[background-color,opacity,scale] duration-200 ease-out hover:bg-white/10 focus-visible:outline-white/60 active:scale-95 md:left-6 md:h-14 md:w-14"
+							class="absolute top-1/2 left-3 z-50 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-[background-color,opacity,scale] duration-100 ease-out hover:bg-white/10 focus-visible:outline-white/60 active:scale-95 md:left-6 md:h-14 md:w-14"
 							aria-label="Previous image"
 						>
 							<svg
@@ -155,7 +155,7 @@ const notFound = false;
 						<button
 							type="button"
 							data-carousel-lb-next
-							class="absolute top-1/2 right-3 z-50 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-[background-color,opacity,scale] duration-200 ease-out hover:bg-white/10 focus-visible:outline-white/60 active:scale-95 md:right-6 md:h-14 md:w-14"
+							class="absolute top-1/2 right-3 z-50 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-[background-color,opacity,scale] duration-100 ease-out hover:bg-white/10 focus-visible:outline-white/60 active:scale-95 md:right-6 md:h-14 md:w-14"
 							aria-label="Next image"
 						>
 							<svg
@@ -173,7 +173,7 @@ const notFound = false;
 								data-carousel-lb-image
 								src=""
 								alt=""
-								class="max-h-full max-w-full object-contain transition-opacity duration-200 ease-out motion-reduce:transition-none"
+								class="max-h-full max-w-full object-contain transition-opacity duration-100 ease-out motion-reduce:transition-none"
 								draggable="false"
 							/>
 						</div>
@@ -550,7 +550,7 @@ const notFound = false;
 					prevBtn.type = 'button';
 					prevBtn.setAttribute('data-carousel-prev', '');
 					prevBtn.className =
-						'absolute top-1/2 left-3 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-[background-color,opacity,scale] duration-200 ease-out hover:bg-white/10 active:scale-95 md:h-11 md:w-11';
+						'absolute top-1/2 left-3 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-[background-color,opacity,scale] duration-100 ease-out hover:bg-white/10 active:scale-95 md:h-11 md:w-11';
 					prevBtn.setAttribute('aria-label', 'Previous image');
 					prevBtn.innerHTML =
 						'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6" /></svg>';
@@ -558,7 +558,7 @@ const notFound = false;
 					nextBtn.type = 'button';
 					nextBtn.setAttribute('data-carousel-next', '');
 					nextBtn.className =
-						'absolute top-1/2 right-3 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-[background-color,opacity,scale] duration-200 ease-out hover:bg-white/10 active:scale-95 md:h-11 md:w-11';
+						'absolute top-1/2 right-3 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-[background-color,opacity,scale] duration-100 ease-out hover:bg-white/10 active:scale-95 md:h-11 md:w-11';
 					nextBtn.setAttribute('aria-label', 'Next image');
 					nextBtn.innerHTML =
 						'<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6" /></svg>';

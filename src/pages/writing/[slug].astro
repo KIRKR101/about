@@ -105,6 +105,46 @@ function formatDate(dateString: string) {
 					<div class="mb-8 h-px bg-bd" />
 
 					<article data-writing-article class="prose max-w-none" set:html={htmlContent} />
+
+					{/* Lightbox for prose images (single shared overlay; JS toggles data-open) */}
+					<div
+						data-writing-lightbox
+						class="ease-out-soft invisible fixed inset-0 z-60 flex scale-[0.98] bg-[#0b0b0b]/95 opacity-0 transition-[opacity,visibility,scale] duration-100 outline-none select-none data-[open]:visible data-[open]:scale-100 data-[open]:opacity-100 motion-reduce:transition-none"
+						role="dialog"
+						aria-modal="true"
+						tabindex="-1"
+					>
+						<div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.04),transparent_60%)]" />
+						<button
+							type="button"
+							data-writing-lightbox-close
+							class="absolute top-4 right-4 z-50 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-[background-color,opacity,scale] duration-100 ease-out hover:bg-white/10 focus-visible:outline-white/60 active:scale-95 md:top-6 md:right-6 md:h-11 md:w-11"
+							aria-label="Close lightbox"
+						>
+							<svg
+								class="h-5 w-5"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="1.5"
+							>
+								<path d="M18 6L6 18M6 6l12 12" />
+							</svg>
+						</button>
+						<div class="absolute inset-x-1 top-2 bottom-2 flex [touch-action:pinch-zoom] items-center justify-center">
+							<img
+								data-writing-lightbox-image
+								src=""
+								alt=""
+								class="max-h-full max-w-full object-contain"
+								draggable="false"
+							/>
+						</div>
+						<div
+							data-writing-lightbox-caption
+							class="pointer-events-none absolute inset-x-6 bottom-6 text-center font-sans text-[13px] leading-relaxed text-white/70 empty:hidden"
+						/>
+					</div>
 				</main>
 				<aside class="fixed top-32 right-8 hidden w-60 xl:block">
 					<TableOfContents headings={headings} levels={3} />
@@ -163,6 +203,78 @@ function formatDate(dateString: string) {
 			(target as HTMLElement).style.animation = 'none';
 			void (target as HTMLElement).offsetWidth;
 			(target as HTMLElement).style.animation = `${anim} 2s ease-out forwards`;
+		});
+
+		// Image lightbox — click an article image to view it fullscreen
+		const lightbox = document.querySelector('[data-writing-lightbox]') as HTMLElement | null;
+		const lightboxImg = document.querySelector(
+			'[data-writing-lightbox-image]'
+		) as HTMLImageElement | null;
+		const lightboxCaption = document.querySelector(
+			'[data-writing-lightbox-caption]'
+		) as HTMLElement | null;
+		const lightboxClose = document.querySelector(
+			'[data-writing-lightbox-close]'
+		) as HTMLButtonElement | null;
+		let lightboxTrigger: HTMLElement | null = null;
+
+		const zoomable = (img: Element) => article.contains(img) && !img.closest('a');
+		const isOpen = () => !!lightbox?.hasAttribute('data-open');
+
+		function openLightbox(image: HTMLImageElement) {
+			if (!lightbox || !lightboxImg) return;
+			lightboxImg.src = image.currentSrc || image.src;
+			lightboxImg.alt = image.alt;
+			if (lightboxCaption) lightboxCaption.textContent = image.alt || '';
+			lightboxTrigger = image;
+			lightbox.setAttribute('data-open', '');
+			// Pad for scrollbar, hide overflow
+			const sw = window.innerWidth - document.documentElement.clientWidth;
+			if (sw > 0) document.body.style.paddingRight = `${sw}px`;
+			document.body.style.overflow = 'hidden';
+			lightboxClose?.focus();
+		}
+
+		function closeLightbox() {
+			if (lightbox) lightbox.removeAttribute('data-open');
+			document.body.style.overflow = '';
+			document.body.style.paddingRight = '';
+			lightboxTrigger?.focus();
+			lightboxTrigger = null;
+		}
+
+		// Zoomable cursor + keyboard access (native markdown <img> is not interactive)
+		article.querySelectorAll('img').forEach((img) => {
+			const el = img as HTMLElement;
+			if (!zoomable(img)) return;
+			el.style.cursor = 'zoom-in';
+			el.setAttribute('tabindex', '0');
+			el.setAttribute('role', 'button');
+			el.setAttribute('aria-label', img.alt ? `Zoom image: ${img.alt}` : 'Zoom image');
+		});
+
+		article.addEventListener('click', (e) => {
+			const img = (e.target as Element).closest('img');
+			if (!img || !zoomable(img)) return;
+			e.preventDefault();
+			openLightbox(img as HTMLImageElement);
+		});
+
+		article.addEventListener('keydown', (e) => {
+			if (e.key !== 'Enter' && e.key !== ' ') return;
+			const target = e.target as Element;
+			if (target.tagName !== 'IMG' || !zoomable(target)) return;
+			e.preventDefault();
+			openLightbox(target as HTMLImageElement);
+		});
+
+		lightboxClose?.addEventListener('click', closeLightbox);
+		lightbox?.addEventListener('click', (e) => {
+			if ((e.target as Element).closest('img, button, [data-writing-lightbox-caption]')) return;
+			closeLightbox();
+		});
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && isOpen()) closeLightbox();
 		});
 	}
 
