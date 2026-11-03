@@ -81,6 +81,10 @@ function appendVaryAccept(headers: Headers): void {
 }
 
 export const onRequest = defineMiddleware(async (ctx, next) => {
+	// API routes negotiate their own response types; the HTML/markdown content
+	// negotiation below only applies to pages.
+	if (ctx.url.pathname.startsWith('/api/')) return next();
+
 	const raw = ctx.request.headers.get('accept');
 	// Strict per RFC 9110: if client sends Accept but nothing we produce is acceptable (q>0), return 406
 	if (raw !== null && raw.trim() !== '') {

@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
+import NowPlaying from '../components/NowPlaying.astro';
 import { SITE_EMAIL } from '../lib/site';
 ---
 
@@ -33,6 +34,7 @@ import { SITE_EMAIL } from '../lib/site';
 					{SITE_EMAIL}
 				</a>
 			</p>
+			<NowPlaying />
 		</main>
 		<figure class="mt-10 w-full max-w-[600px]">
 			<img

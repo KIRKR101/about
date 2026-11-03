@@ -1,36 +1,42 @@
-// Reusable Spotify and Last.fm now-playing logic, retained for future UI integration.
-import { SPOTIFY_API_URL, LASTFM_API_URL } from '../lib/site';
-type SpotifyImage = { url: string; width: number };
-type SpotifyTrack = {
-	title?: string;
-	artist?: string;
-	album?: string;
-	songUrl?: string;
-	externalUrl?: string;
-	trackUrl?: string;
-	artistUrl?: string;
-	isPlaying?: boolean;
-	duration?: number;
-	progress?: number;
-	images?: SpotifyImage[];
+// Now-playing widget for src/components/NowPlaying.astro.
+//
+// Data comes from the same-origin /api/now-playing route, which talks to the
+// Spotify proxy and falls back to Last.fm server-side. Polling and the progress
+// ticker pause while the tab is hidden.
+type TrackImage = { url: string; width: number };
+type NowPlaying = {
+	source: 'spotify' | 'lastfm';
+	title: string;
+	artist: string;
+	album: string | null;
+	url: string | null;
+	artistUrl: string | null;
+	isPlaying: boolean;
+	duration: number | null;
+	progress: number | null;
+	images: TrackImage[];
 };
-type LastFmTrack = {
-	title?: string;
-	artist?: string;
-	album?: string;
-	songUrl?: string;
-	externalUrl?: string;
-	trackUrl?: string;
-	artistUrl?: string;
-	isPlaying?: boolean;
-	duration?: number;
-	images?:
-		| SpotifyImage[]
-		| Partial<Record<'small' | 'medium' | 'large' | 'extralarge' | 'mega', string>>;
+
+type Elements = {
+	root: HTMLElement;
+	status: Element | null;
+	cover: HTMLAnchorElement | null;
+	image: HTMLImageElement | null;
+	placeholder: Element | null;
+	title: Element | null;
+	artist: Element | null;
+	progress: HTMLElement | null;
+	wrap: HTMLElement | null;
+	bar: HTMLElement | null;
+	current: Element | null;
+	total: Element | null;
 };
-let spotifyData: SpotifyTrack | null = null;
-let lastFmData: LastFmTrack | null = null;
-let dataSource: 'spotify' | 'lastfm' | null = null;
+
+const POLL_INTERVAL = 30_000;
+const LINK_CLASS =
+	'underline decoration-transparent underline-offset-2 transition-[text-decoration-color] duration-100 hover:decoration-current';
+
+let currentTrack: NowPlaying | null = null;
 let localProgress = 0;
 let lastFetchTime = 0;
 let isFetching = false;
@@ -39,34 +45,29 @@ let progressId: ReturnType<typeof setInterval> | undefined;
 let retryTimeout: ReturnType<typeof setTimeout> | undefined;
 let hiddenAt: number | null = null;
 let removeVisibility: (() => void) | undefined;
+let els: Elements | null = null;
+let renderedKey: string | null = null;
+let requestVersion = 0;
 
 const formatTime = (milliseconds: number) => {
-	const seconds = Math.max(0, Math.floor(milliseconds / 1000));
+	const value = Number.isFinite(milliseconds) ? milliseconds : 0;
+	const seconds = Math.max(0, Math.floor(value / 1000));
 	return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 };
-const spotifyImageSet = (images: SpotifyImage[] = []) =>
+
+const imageSet = (images: TrackImage[]) =>
 	[...images]
 		.sort((a, b) => a.width - b.width)
 		.map((image) => `${image.url} ${image.width}w`)
 		.join(', ');
-const spotifyImage = (images: SpotifyImage[] = []) => {
+
+const coverImage = (images: TrackImage[]) => {
 	const sorted = [...images].sort((a, b) => a.width - b.width);
 	return sorted.find((image) => image.width >= 128)?.url ?? sorted[0]?.url ?? '';
 };
-const lastFmImageSet = (images: Record<string, string> = {}) => {
-	const widths: Record<string, string> = {
-		small: '34w',
-		medium: '64w',
-		large: '174w',
-		extralarge: '300w',
-		mega: '500w'
-	};
-	return Object.entries(images)
-		.filter(([size, url]) => url && widths[size])
-		.map(([size, url]) => `${url} ${widths[size]}`)
-		.join(', ');
-};
-const setExternalContent = (element: Element, text: string, href?: string) => {
+
+const setLink = (element: Element | null, text: string, href?: string) => {
+	if (!element) return;
 	element.textContent = '';
 	if (!href) {
 		element.textContent = text;
@@ -76,97 +77,173 @@ const setExternalContent = (element: Element, text: string, href?: string) => {
 	link.href = href;
 	link.target = '_blank';
 	link.rel = 'noopener noreferrer';
-	link.className = 'text-inherit no-underline transition-colors hover:text-ink-70';
+	link.className = LINK_CLASS;
 	link.textContent = text;
 	element.append(link);
 };
 
-const queryEls = () => ({
-	status: document.querySelector('[data-track-status]'),
-	image: document.querySelector('[data-track-image]') as HTMLImageElement | null,
-	title: document.querySelector('[data-track-title]'),
-	artist: document.querySelector('[data-track-artist]'),
-	wrap: document.querySelector('[data-track-progress-wrap]'),
-	bar: document.querySelector('[data-track-progress-bar]') as HTMLElement | null,
-	current: document.querySelector('[data-track-progress-current]'),
-	total: document.querySelector('[data-track-progress-total]')
-});
+const setProgressAria = (element: Element | null, elapsed: number, duration: number) => {
+	if (!element) return;
+	element.setAttribute('aria-valuemax', String(Math.round(duration / 1000)));
+	element.setAttribute('aria-valuenow', String(Math.round(elapsed / 1000)));
+	element.setAttribute('aria-valuetext', `${formatTime(elapsed)} of ${formatTime(duration)}`);
+};
 
-let els = queryEls();
+function queryEls(): Elements | null {
+	const root = document.querySelector<HTMLElement>('[data-now-playing]');
+	if (!root) return null;
+	return {
+		root,
+		status: root.querySelector('[data-track-status-text]'),
+		cover: root.querySelector<HTMLAnchorElement>('[data-track-cover]'),
+		image: root.querySelector<HTMLImageElement>('[data-track-image]'),
+		placeholder: root.querySelector('[data-track-placeholder]'),
+		title: root.querySelector('[data-track-title]'),
+		artist: root.querySelector('[data-track-artist]'),
+		progress: root.querySelector<HTMLElement>('[data-track-progress]'),
+		wrap: root.querySelector<HTMLElement>('[data-track-progress-wrap]'),
+		bar: root.querySelector<HTMLElement>('[data-track-progress-bar]'),
+		current: root.querySelector('[data-track-progress-current]'),
+		total: root.querySelector('[data-track-progress-total]')
+	};
+}
+
+function paintProgress() {
+	const elements = els;
+	if (!elements) return;
+	const duration = currentTrack?.duration ?? 0;
+	const show = Boolean(currentTrack?.isPlaying && duration > 0);
+	if (elements.wrap) {
+		elements.wrap.classList.toggle('hidden', !show);
+		elements.wrap.classList.toggle('flex', show);
+	}
+	if (!show) return;
+	const percent = Math.min(100, (localProgress / duration) * 100);
+	if (elements.bar) elements.bar.style.width = `${percent}%`;
+	if (elements.current) elements.current.textContent = formatTime(localProgress);
+	if (elements.total) elements.total.textContent = formatTime(duration);
+	setProgressAria(elements.progress, localProgress, duration);
+}
 
 function updateTrack() {
-	const { status, image, title, artist, wrap, bar, current, total } = els;
-	const track =
-		dataSource === 'spotify' ? spotifyData : dataSource === 'lastfm' ? lastFmData : null;
-	if (!status || !title || !artist || !image) return;
+	const elements = els;
+	if (!elements) return;
+	const { root, status, cover, image, placeholder, title, artist } = elements;
+
+	const track = currentTrack;
+
 	if (!track) {
-		status.textContent = 'Listening';
-		title.textContent = 'Nothing playing';
-		artist.textContent = 'Music unavailable';
-		image.classList.add('hidden');
-		wrap?.classList.add('hidden');
-		wrap?.classList.remove('flex');
-		return;
-	}
-	const spotify = dataSource === 'spotify';
-	status.textContent = spotify && track.isPlaying ? 'Now playing' : 'Last listen';
-	setExternalContent(
-		title,
-		track.title || 'Unknown track',
-		track.songUrl || track.externalUrl || track.trackUrl
-	);
-	setExternalContent(
-		artist,
-		[track.artist, track.album].filter(Boolean).join(' · ') || '—',
-		track.artistUrl
-	);
-	const imageUrl = Array.isArray(track.images)
-		? spotifyImage(track.images)
-		: (track.images?.medium ??
-			track.images?.small ??
-			track.images?.large ??
-			track.images?.extralarge ??
-			'');
-	if (imageUrl) {
-		image.src = imageUrl;
-		image.alt = track.title || '';
-		image.classList.remove('hidden');
-		if (spotify && Array.isArray(track.images) && track.images.length) {
-			image.srcset = spotifyImageSet(track.images);
-			image.sizes = '128px';
-		} else if (!spotify && track.images && !Array.isArray(track.images)) {
-			image.srcset = lastFmImageSet(track.images);
-			image.sizes = '128px';
-		} else {
+		root.dataset['state'] = 'idle';
+		if (status) status.textContent = 'Connection';
+		setLink(title, 'Nothing playing');
+		setLink(artist, 'Music unavailable');
+		if (cover) {
+			cover.removeAttribute('href');
+			cover.removeAttribute('aria-label');
+			cover.classList.remove('cursor-pointer');
+		}
+		if (image) {
+			image.classList.add('hidden');
 			image.removeAttribute('srcset');
 			image.removeAttribute('sizes');
 		}
+		placeholder?.classList.remove('hidden');
+		paintProgress();
+		return;
 	}
-	if (spotify && track.isPlaying && (track.duration ?? 0) > 0) {
-		wrap?.classList.remove('hidden');
-		wrap?.classList.add('flex');
-		const percent = Math.min(100, (localProgress / (track.duration ?? 0)) * 100);
-		if (bar) bar.style.width = `${percent}%`;
-		if (current) current.textContent = formatTime(localProgress);
-		if (total) total.textContent = formatTime(track.duration ?? 0);
+
+	root.dataset['state'] = track.isPlaying ? 'playing' : 'paused';
+	if (status) status.textContent = track.isPlaying ? '' : 'Last played';
+
+	setLink(title, track.title, track.url ?? undefined);
+	setLink(artist, track.artist, track.artistUrl ?? undefined);
+	const imageUrl = coverImage(track.images);
+	if (image) {
+		if (imageUrl) {
+			image.src = imageUrl;
+			image.alt = `Cover art for ${track.title} by ${track.artist}`;
+			image.classList.remove('hidden');
+			placeholder?.classList.add('hidden');
+			if (track.images.length > 0) {
+				image.srcset = imageSet(track.images);
+				image.sizes = '80px';
+			} else {
+				image.removeAttribute('srcset');
+				image.removeAttribute('sizes');
+			}
+		} else {
+			image.classList.add('hidden');
+			image.removeAttribute('srcset');
+			image.removeAttribute('sizes');
+			placeholder?.classList.remove('hidden');
+		}
+	}
+
+	if (cover) {
+		if (track.url) {
+			cover.href = track.url;
+			cover.target = '_blank';
+			cover.rel = 'noopener noreferrer';
+			cover.setAttribute(
+				'aria-label',
+				`Open ${track.title} by ${track.artist} on ${track.source === 'spotify' ? 'Spotify' : 'Last.fm'}`
+			);
+			cover.classList.add('cursor-pointer');
+		} else {
+			cover.removeAttribute('href');
+			cover.removeAttribute('aria-label');
+			cover.classList.remove('cursor-pointer');
+		}
+	}
+
+	paintProgress();
+}
+
+const trackKey = (track: NowPlaying | null) =>
+	track
+		? [track.source, track.title, track.artist, track.album, track.isPlaying, track.url].join('|')
+		: 'idle';
+
+function renderIfChanged() {
+	const key = trackKey(currentTrack);
+	const bar = els?.bar;
+	// Each poll is an authoritative progress correction, even when track identity
+	// is unchanged. Snap to that value, then resume the one-second linear updates.
+	if (bar) bar.style.transitionProperty = 'none';
+	if (key === renderedKey) {
+		paintProgress();
 	} else {
-		wrap?.classList.add('hidden');
-		wrap?.classList.remove('flex');
+		renderedKey = key;
+		updateTrack();
+	}
+	if (bar) {
+		// Commit the new width while transitions are disabled. Restore the CSS
+		// transition on the next frame so subsequent playback ticks stay smooth.
+		void bar.offsetWidth;
+		requestAnimationFrame(() => {
+			bar.style.removeProperty('transition-property');
+		});
 	}
 }
 
 function tickProgress() {
-	if (!spotifyData?.isPlaying || !((spotifyData.duration ?? 0) > 0)) return;
-	localProgress = Math.min(
-		spotifyData.duration ?? 0,
-		(spotifyData.progress ?? 0) + Date.now() - lastFetchTime
-	);
-	const percent = Math.min(100, (localProgress / (spotifyData.duration ?? 0)) * 100);
-	if (els.bar) els.bar.style.width = `${percent}%`;
-	if (els.current) els.current.textContent = formatTime(localProgress);
-	if (localProgress >= (spotifyData.duration ?? 0)) {
+	if (!currentTrack?.isPlaying) return;
+	const duration = currentTrack.duration ?? 0;
+	if (duration <= 0) return;
+	localProgress = Math.min(duration, (currentTrack.progress ?? 0) + Date.now() - lastFetchTime);
+	const percent = Math.min(100, (localProgress / duration) * 100);
+	const elements = els;
+	if (elements?.bar) elements.bar.style.width = `${percent}%`;
+	if (elements?.current) elements.current.textContent = formatTime(localProgress);
+	setProgressAria(elements?.progress ?? null, localProgress, duration);
+	if (localProgress >= duration) {
 		stopProgress();
-		if (retryTimeout === undefined) retryTimeout = setTimeout(fetchCurrentTrack, 500);
+		if (retryTimeout === undefined) {
+			retryTimeout = setTimeout(() => {
+				retryTimeout = undefined;
+				fetchNowPlaying();
+			}, 500);
+		}
 	}
 }
 
@@ -174,83 +251,82 @@ function stopProgress() {
 	if (progressId !== undefined) clearInterval(progressId);
 	progressId = undefined;
 }
+
 function startProgress() {
 	stopProgress();
-	if (!spotifyData?.isPlaying || !((spotifyData.duration ?? 0) > 0)) return;
+	if (!currentTrack?.isPlaying) return;
+	if (!((currentTrack.duration ?? 0) > 0)) return;
 	tickProgress();
 	progressId = setInterval(tickProgress, 1000);
 }
 
-async function fetchSpotifyTrack() {
+async function fetchNowPlaying() {
 	if (isFetching) return;
 	isFetching = true;
+	const version = requestVersion;
 	try {
-		const response = await fetch(SPOTIFY_API_URL);
-		if (!response.ok) throw new Error(`Spotify ${response.status}`);
-		const data = (await response.json()) as SpotifyTrack;
-		if (data.isPlaying === false && !data.title) {
-			retryTimeout = setTimeout(fetchSpotifyTrack, 30_000);
-			return;
+		const response = await fetch('/api/now-playing', { cache: 'no-store' });
+		if (!response.ok) throw new Error(`Now playing ${response.status}`);
+		const data = (await response.json()) as NowPlaying;
+		if (
+			!data ||
+			(typeof data.source !== 'string' || !['spotify', 'lastfm'].includes(data.source)) ||
+			typeof data.title !== 'string' ||
+			!data.title.trim() ||
+			typeof data.artist !== 'string' ||
+			!data.artist.trim() ||
+			typeof data.isPlaying !== 'boolean' ||
+			!Array.isArray(data.images)
+		) {
+			throw new Error('Invalid response');
 		}
-		if (data.isPlaying === undefined) throw new Error('Invalid Spotify response');
-		if (retryTimeout !== undefined) {
-			clearTimeout(retryTimeout);
-			retryTimeout = undefined;
-		}
-		spotifyData = data;
-		localProgress = data.progress ?? 0;
+		if (version !== requestVersion) return;
+		currentTrack = data;
+		localProgress = Number.isFinite(data.progress) ? Math.max(0, data.progress ?? 0) : 0;
 		lastFetchTime = Date.now();
-		dataSource = 'spotify';
-		updateTrack();
+		renderIfChanged();
 		startProgress();
 	} catch {
-		try {
-			const response = await fetch(LASTFM_API_URL);
-			if (!response.ok) throw new Error(`Last.fm ${response.status}`);
-			lastFmData = (await response.json()) as LastFmTrack;
-			dataSource = 'lastfm';
-		} catch {
-			dataSource = null;
-		}
-		stopProgress();
-		updateTrack();
+		// Keep the last known track visible during a transient network or API error.
 	} finally {
 		isFetching = false;
 	}
 }
 
-async function fetchLastFmTrack() {
-	try {
-		const response = await fetch(LASTFM_API_URL);
-		if (!response.ok) throw new Error(`Last.fm ${response.status}`);
-		lastFmData = (await response.json()) as LastFmTrack;
-		dataSource = 'lastfm';
-		updateTrack();
-	} catch {
-		dataSource = null;
-		updateTrack();
-	}
-}
-function fetchCurrentTrack() {
-	if (dataSource === 'lastfm') fetchLastFmTrack();
-	else fetchSpotifyTrack();
-}
 function startPolling() {
-	if (pollId === undefined) pollId = setInterval(fetchCurrentTrack, 30_000);
+	if (pollId === undefined) pollId = setInterval(fetchNowPlaying, POLL_INTERVAL);
 }
+
 function stopPolling() {
 	if (pollId !== undefined) clearInterval(pollId);
 	pollId = undefined;
 }
+
 function stopRetry() {
 	if (retryTimeout !== undefined) clearTimeout(retryTimeout);
 	retryTimeout = undefined;
 }
+
 function initTrackPolling() {
-	els = queryEls();
+	requestVersion++;
 	stopPolling();
 	stopProgress();
+	stopRetry();
 	removeVisibility?.();
+	removeVisibility = undefined;
+
+	els = queryEls();
+	if (!els) return;
+	renderedKey = null;
+
+	const image = els.image;
+	if (image) {
+		image.onerror = () => {
+			image.classList.add('hidden');
+			els?.placeholder?.classList.remove('hidden');
+		};
+	}
+
 	const onVisibility = () => {
 		if (document.hidden) {
 			hiddenAt = Date.now();
@@ -260,23 +336,26 @@ function initTrackPolling() {
 		} else {
 			const wasHidden = hiddenAt ? Date.now() - hiddenAt : 0;
 			hiddenAt = null;
-			if (wasHidden > 30_000) fetchCurrentTrack();
+			if (wasHidden > POLL_INTERVAL) fetchNowPlaying();
 			startPolling();
 			startProgress();
 		}
 	};
 	document.addEventListener('visibilitychange', onVisibility);
 	removeVisibility = () => document.removeEventListener('visibilitychange', onVisibility);
-	fetchCurrentTrack();
+
+	fetchNowPlaying();
 	if (!document.hidden) startPolling();
 }
+
 initTrackPolling();
 document.addEventListener('astro:before-swap', () => {
+	requestVersion++;
 	stopPolling();
 	stopProgress();
 	stopRetry();
 	removeVisibility?.();
+	removeVisibility = undefined;
+	els = null;
 });
-document.addEventListener('astro:after-swap', () => {
-	initTrackPolling();
-});
+document.addEventListener('astro:after-swap', initTrackPolling);
