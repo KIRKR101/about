@@ -15,10 +15,14 @@ type NowPlaying = {
 	duration: number | null;
 	progress: number | null;
 	images: TrackImage[];
+	next_poll_ms?: number;
+	stale?: boolean;
 };
 
 type Elements = {
 	root: HTMLElement;
+	skeleton: HTMLElement | null;
+	content: HTMLElement | null;
 	status: Element | null;
 	cover: HTMLAnchorElement | null;
 	image: HTMLImageElement | null;
@@ -32,22 +36,25 @@ type Elements = {
 	total: Element | null;
 };
 
-const POLL_INTERVAL = 30_000;
+const POLL_INTERVAL = 15_000;
 const LINK_CLASS =
 	'underline decoration-transparent underline-offset-2 transition-[text-decoration-color] duration-100 hover:decoration-current';
 
 let currentTrack: NowPlaying | null = null;
 let localProgress = 0;
-let lastFetchTime = 0;
+let progressBase = 0;
+let progressAnchor = 0;
 let isFetching = false;
-let pollId: ReturnType<typeof setInterval> | undefined;
+let pollId: ReturnType<typeof setTimeout> | undefined;
 let progressId: ReturnType<typeof setInterval> | undefined;
 let retryTimeout: ReturnType<typeof setTimeout> | undefined;
 let hiddenAt: number | null = null;
 let removeVisibility: (() => void) | undefined;
+let removeWakeListeners: (() => void) | undefined;
 let els: Elements | null = null;
 let renderedKey: string | null = null;
 let requestVersion = 0;
+let failures = 0;
 
 const formatTime = (milliseconds: number) => {
 	const value = Number.isFinite(milliseconds) ? milliseconds : 0;
@@ -94,6 +101,8 @@ function queryEls(): Elements | null {
 	if (!root) return null;
 	return {
 		root,
+		skeleton: root.querySelector<HTMLElement>('[data-track-skeleton]'),
+		content: root.querySelector<HTMLElement>('[data-track-content]'),
 		status: root.querySelector('[data-track-status-text]'),
 		cover: root.querySelector<HTMLAnchorElement>('[data-track-cover]'),
 		image: root.querySelector<HTMLImageElement>('[data-track-image]'),
@@ -119,7 +128,7 @@ function paintProgress() {
 	}
 	if (!show) return;
 	const percent = Math.min(100, (localProgress / duration) * 100);
-	if (elements.bar) elements.bar.style.width = `${percent}%`;
+	if (elements.bar) elements.bar.style.transform = `scaleX(${percent / 100})`;
 	if (elements.current) elements.current.textContent = formatTime(localProgress);
 	if (elements.total) elements.total.textContent = formatTime(duration);
 	setProgressAria(elements.progress, localProgress, duration);
@@ -129,6 +138,8 @@ function updateTrack() {
 	const elements = els;
 	if (!elements) return;
 	const { root, status, cover, image, placeholder, title, artist } = elements;
+	elements.skeleton?.classList.add('hidden');
+	elements.content?.classList.remove('hidden');
 
 	const track = currentTrack;
 
@@ -207,8 +218,8 @@ const trackKey = (track: NowPlaying | null) =>
 function renderIfChanged() {
 	const key = trackKey(currentTrack);
 	const bar = els?.bar;
-	// Each poll is an authoritative progress correction, even when track identity
-	// is unchanged. Snap to that value, then resume the one-second linear updates.
+	// The response already applies the 2-second drift threshold. Keep its chosen
+	// progress anchor while the bar continues to interpolate locally.
 	if (bar) bar.style.transitionProperty = 'none';
 	if (key === renderedKey) {
 		paintProgress();
@@ -217,7 +228,7 @@ function renderIfChanged() {
 		updateTrack();
 	}
 	if (bar) {
-		// Commit the new width while transitions are disabled. Restore the CSS
+		// Commit the new transform while transitions are disabled. Restore the CSS
 		// transition on the next frame so subsequent playback ticks stay smooth.
 		void bar.offsetWidth;
 		requestAnimationFrame(() => {
@@ -230,10 +241,10 @@ function tickProgress() {
 	if (!currentTrack?.isPlaying) return;
 	const duration = currentTrack.duration ?? 0;
 	if (duration <= 0) return;
-	localProgress = Math.min(duration, (currentTrack.progress ?? 0) + Date.now() - lastFetchTime);
+	localProgress = Math.min(duration, progressBase + performance.now() - progressAnchor);
 	const percent = Math.min(100, (localProgress / duration) * 100);
 	const elements = els;
-	if (elements?.bar) elements.bar.style.width = `${percent}%`;
+	if (elements?.bar) elements.bar.style.transform = `scaleX(${percent / 100})`;
 	if (elements?.current) elements.current.textContent = formatTime(localProgress);
 	setProgressAria(elements?.progress ?? null, localProgress, duration);
 	if (localProgress >= duration) {
@@ -270,7 +281,8 @@ async function fetchNowPlaying() {
 		const data = (await response.json()) as NowPlaying;
 		if (
 			!data ||
-			(typeof data.source !== 'string' || !['spotify', 'lastfm'].includes(data.source)) ||
+			typeof data.source !== 'string' ||
+			!['spotify', 'lastfm'].includes(data.source) ||
 			typeof data.title !== 'string' ||
 			!data.title.trim() ||
 			typeof data.artist !== 'string' ||
@@ -281,24 +293,64 @@ async function fetchNowPlaying() {
 			throw new Error('Invalid response');
 		}
 		if (version !== requestVersion) return;
+		const receivedProgress = Number.isFinite(data.progress) ? Math.max(0, data.progress ?? 0) : 0;
+		const sameTrack =
+			currentTrack !== null &&
+			trackKey(currentTrack).split('|').slice(0, 4).join('|') ===
+				trackKey(data).split('|').slice(0, 4).join('|');
+		const now = performance.now();
+		const predictedProgress = currentTrack?.isPlaying
+			? Math.min(
+					progressBase + now - progressAnchor,
+					currentTrack.duration ?? Number.POSITIVE_INFINITY
+				)
+			: localProgress;
 		currentTrack = data;
-		localProgress = Number.isFinite(data.progress) ? Math.max(0, data.progress ?? 0) : 0;
-		lastFetchTime = Date.now();
+		localProgress =
+			sameTrack && data.isPlaying && Math.abs(receivedProgress - predictedProgress) < 2000
+				? predictedProgress
+				: receivedProgress;
+		progressBase = localProgress;
+		progressAnchor = now;
+		failures = 0;
 		renderIfChanged();
 		startProgress();
 	} catch {
 		// Keep the last known track visible during a transient network or API error.
+		if (!document.hidden) {
+			pollId = setTimeout(
+				() => {
+					pollId = undefined;
+					void fetchNowPlaying();
+				},
+				Math.min(60_000, 2_000 * 2 ** failures++) + Math.random() * 250
+			);
+		}
 	} finally {
 		isFetching = false;
+	}
+	if (!document.hidden && pollId === undefined) {
+		const duration = currentTrack?.duration ?? 0;
+		const remaining = duration > 0 ? duration - localProgress + 400 : Infinity;
+		const recommended = currentTrack?.stale
+			? 30_000
+			: (currentTrack?.next_poll_ms ?? POLL_INTERVAL);
+		pollId = setTimeout(
+			() => {
+				pollId = undefined;
+				void fetchNowPlaying();
+			},
+			Math.max(1000, Math.min(recommended, remaining)) + Math.random() * 250
+		);
 	}
 }
 
 function startPolling() {
-	if (pollId === undefined) pollId = setInterval(fetchNowPlaying, POLL_INTERVAL);
+	if (pollId === undefined && !document.hidden) void fetchNowPlaying();
 }
 
 function stopPolling() {
-	if (pollId !== undefined) clearInterval(pollId);
+	if (pollId !== undefined) clearTimeout(pollId);
 	pollId = undefined;
 }
 
@@ -314,6 +366,8 @@ function initTrackPolling() {
 	stopRetry();
 	removeVisibility?.();
 	removeVisibility = undefined;
+	removeWakeListeners?.();
+	removeWakeListeners = undefined;
 
 	els = queryEls();
 	if (!els) return;
@@ -336,13 +390,26 @@ function initTrackPolling() {
 		} else {
 			const wasHidden = hiddenAt ? Date.now() - hiddenAt : 0;
 			hiddenAt = null;
-			if (wasHidden > POLL_INTERVAL) fetchNowPlaying();
+			if (wasHidden > POLL_INTERVAL) void fetchNowPlaying();
 			startPolling();
 			startProgress();
 		}
 	};
 	document.addEventListener('visibilitychange', onVisibility);
 	removeVisibility = () => document.removeEventListener('visibilitychange', onVisibility);
+	const onOnline = () => {
+		failures = 0;
+		void fetchNowPlaying();
+	};
+	const onFocus = () => {
+		if (performance.now() - progressAnchor > POLL_INTERVAL) void fetchNowPlaying();
+	};
+	window.addEventListener('online', onOnline);
+	window.addEventListener('focus', onFocus);
+	removeWakeListeners = () => {
+		window.removeEventListener('online', onOnline);
+		window.removeEventListener('focus', onFocus);
+	};
 
 	fetchNowPlaying();
 	if (!document.hidden) startPolling();
@@ -356,6 +423,8 @@ document.addEventListener('astro:before-swap', () => {
 	stopRetry();
 	removeVisibility?.();
 	removeVisibility = undefined;
+	removeWakeListeners?.();
+	removeWakeListeners = undefined;
 	els = null;
 });
 document.addEventListener('astro:after-swap', initTrackPolling);

@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { LASTFM_API_URL, SPOTIFY_API_URL } from '../../lib/site';
+import { LASTFM_API_URL, SITE_URL, SPOTIFY_API_URL } from '../../lib/site';
 
 // Same-origin now-playing feed.
 //
@@ -51,7 +51,26 @@ export type NowPlaying = {
 	duration: number | null;
 	progress: number | null;
 	images: TrackImage[];
+	next_poll_ms?: number;
+	stale?: boolean;
 };
+
+const SAMPLE_KEY = `${SITE_URL}/__cache/now-playing-sample`;
+const LAST_KEY = `${SITE_URL}/__cache/now-playing-last`;
+
+function ttlFor(track: NowPlaying): number {
+	if (!track.title) return 30;
+	if (!track.isPlaying) return 15;
+	if (track.duration === null || track.progress === null) return 5;
+	const remaining = (track.duration - track.progress) / 1000;
+	return remaining < 2 ? 0 : Math.min(Math.floor(remaining), 15);
+}
+
+function cacheEntry(track: NowPlaying, ttl: number) {
+	return new Response(JSON.stringify({ ...track, sampled_at: Date.now() }), {
+		headers: { 'Content-Type': 'application/json', 'Cache-Control': `public, max-age=${ttl}` }
+	});
+}
 
 const LASTFM_WIDTHS: Record<LastFmImageSize, number> = {
 	small: 34,
@@ -91,8 +110,10 @@ const lastFmImages = (images: Partial<Record<LastFmImageSize, string>> = {}): Tr
 const firstUrl = (...urls: (string | undefined)[]) => urls.find(Boolean) ?? null;
 
 const validTrack = (track: { title?: unknown; artist?: unknown }) =>
-	typeof track.title === 'string' && track.title.trim().length > 0 &&
-	typeof track.artist === 'string' && track.artist.trim().length > 0;
+	typeof track.title === 'string' &&
+	track.title.trim().length > 0 &&
+	typeof track.artist === 'string' &&
+	track.artist.trim().length > 0;
 
 const fromSpotify = (track: SpotifyTrack): NowPlaying => ({
 	source: 'spotify',
@@ -120,11 +141,7 @@ const fromLastFm = (track: LastFmTrack): NowPlaying => ({
 	images: lastFmImages(track.images)
 });
 
-const json = (
-	body: unknown,
-	status = 200,
-	cache = 'no-store'
-) =>
+const json = (body: unknown, status = 200, cache = 'no-store') =>
 	new Response(JSON.stringify(body), {
 		status,
 		headers: {
@@ -134,20 +151,60 @@ const json = (
 		}
 	});
 
-export const GET: APIRoute = async () => {
+async function sampleUpstream(): Promise<NowPlaying> {
 	try {
 		const track = await fetchJson<SpotifyTrack>(SPOTIFY_API_URL);
 		if (typeof track.isPlaying !== 'boolean' || !validTrack(track))
 			throw new Error('Invalid Spotify response');
-		if (track.isPlaying === false && !track.title) throw new Error('Spotify is idle');
-		return json(fromSpotify(track));
+		return fromSpotify(track);
 	} catch {
-		try {
-			const track = await fetchJson<LastFmTrack>(LASTFM_API_URL);
-			if (!validTrack(track)) throw new Error('Invalid Last.fm response');
-			return json(fromLastFm(track));
-		} catch {
-			return json({ error: 'unavailable' }, 503, 'no-store');
-		}
+		const track = await fetchJson<LastFmTrack>(LASTFM_API_URL);
+		if (!validTrack(track)) throw new Error('Invalid Last.fm response');
+		return fromLastFm(track);
 	}
+}
+
+export const GET: APIRoute = async () => {
+	const cache = (caches as CacheStorage & { default: Cache }).default;
+	let sample: (NowPlaying & { sampled_at: number }) | undefined;
+	let stale = false;
+	try {
+		const hit = await cache.match(SAMPLE_KEY);
+		if (hit) sample = await hit.json();
+		else {
+			const track = await sampleUpstream();
+			const ttl = ttlFor(track);
+			sample = { ...track, sampled_at: Date.now() };
+			if (ttl > 0) await cache.put(SAMPLE_KEY, cacheEntry(track, ttl));
+			await cache.put(LAST_KEY, cacheEntry(track, 600));
+		}
+	} catch {
+		const last = await cache.match(LAST_KEY);
+		if (!last) return json({ error: 'unavailable' }, 503);
+		sample = await last.json();
+		stale = true;
+	}
+	if (!sample) return json({ error: 'unavailable' }, 503);
+	const age = Date.now() - sample.sampled_at;
+	const progress =
+		sample.isPlaying && sample.progress !== null && sample.duration !== null
+			? Math.min(sample.progress + age, sample.duration)
+			: sample.progress;
+	const expiredStaleTrack =
+		stale && sample.duration !== null && progress !== null && progress >= sample.duration;
+	return json({
+		...sample,
+		isPlaying: expiredStaleTrack ? false : sample.isPlaying,
+		progress,
+		next_poll_ms: stale
+			? 30_000
+			: sample.isPlaying && sample.duration !== null && progress !== null
+				? Math.max(1000, Math.min(15_000, sample.duration - progress + 400))
+				: sample.isPlaying
+					? 15_000
+					: sample.title
+						? 15_000
+						: 30_000,
+		stale
+	});
 };

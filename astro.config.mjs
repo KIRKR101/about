@@ -42,9 +42,6 @@ export default defineConfig({
 		provider: cacheCloudflare()
 	},
 	routeRules: {
-		// The now-playing feed changes while the page is open, so it gets a much
-		// shorter cache window than the page shell that polls it.
-		'/api/now-playing': { maxAge: 10, swr: 20 },
 		'/': { maxAge: 300, swr: 300 },
 		'/[...path]': { maxAge: 300, swr: 300 }
 	},
