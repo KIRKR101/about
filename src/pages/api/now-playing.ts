@@ -164,13 +164,16 @@ async function sampleUpstream(): Promise<NowPlaying> {
 	}
 }
 
-export const GET: APIRoute = async () => {
-	const cache = (caches as CacheStorage & { default: Cache }).default;
+export const GET: APIRoute = async ({ cache }) => {
+	// This endpoint maintains its own short-lived upstream sample cache below.
+	// Do not also cache the HTTP response under the catch-all route rule.
+	cache.set(false);
+	const sampleCache = (caches as CacheStorage & { default: Cache }).default;
 	let sample: (NowPlaying & { sampled_at: number }) | undefined;
 	let stale = false;
 	let cacheAvailable = true;
 	try {
-		const hit = await cache.match(SAMPLE_KEY);
+		const hit = await sampleCache.match(SAMPLE_KEY);
 		if (hit) sample = await hit.json();
 	} catch {
 		cacheAvailable = false;
@@ -182,15 +185,15 @@ export const GET: APIRoute = async () => {
 			if (cacheAvailable) {
 				const ttl = ttlFor(track);
 				try {
-					if (ttl > 0) await cache.put(SAMPLE_KEY, cacheEntry(track, ttl));
-					await cache.put(LAST_KEY, cacheEntry(track, 600));
+					if (ttl > 0) await sampleCache.put(SAMPLE_KEY, cacheEntry(track, ttl));
+					await sampleCache.put(LAST_KEY, cacheEntry(track, 600));
 				} catch {
 					// Cache writes are best-effort; keep serving the fresh upstream sample.
 				}
 			}
 		} catch {
 			try {
-				const last = await cache.match(LAST_KEY);
+				const last = await sampleCache.match(LAST_KEY);
 				if (last) {
 					sample = await last.json();
 					stale = true;
