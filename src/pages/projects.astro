@@ -7,6 +7,13 @@ import { GITHUB_API_BASE } from '../lib/site';
 // @ts-ignore - false positive
 void projectsMarkdown;
 
+// The GitHub calendar always spans 53 weeks for a full year, so the server can
+// render the skeleton at exactly the size of the real graph. This keeps the
+// placeholder from collapsing or resizing once the data arrives.
+const SKELETON_WEEKS = 53;
+const SKELETON_DAYS = 7;
+const currentYear = new Date().getFullYear();
+
 if (Astro.locals.prefersMarkdown) {
 	return new Response(projectsMarkdown(projects), {
 		status: 200,
@@ -33,14 +40,27 @@ if (Astro.locals.prefersMarkdown) {
 
 			<div class="pb-7 sm:px-1.5">
 				<div class="mb-3 flex min-h-[16px] items-center justify-between">
-					<div class="flex items-center">
-						<div data-contrib-loading class="font-sans text-[11px] tracking-wide text-ink-70">
-							Loading contributions...
+					<div class="flex items-center gap-2">
+						<div
+							data-contrib-loading
+							class="contrib-skeleton-bar h-2.5 w-[150px] rounded-[2px]"
+							aria-hidden="true"
+						>
 						</div>
+						<span data-contrib-status role="status" class="sr-only">Loading contributions</span>
 						<div
 							data-contrib-summary
 							class="hidden font-sans text-[11px] tracking-wide text-ink-70"
+							aria-live="polite"
+							aria-atomic="true"
 						>
+							<span data-contrib-summary-text></span><button
+								type="button"
+								data-contrib-retry
+								class="ml-1.5 hidden cursor-pointer underline decoration-ink/40 underline-offset-2 transition-colors hover:decoration-ink"
+							>
+								Retry
+							</button>
 						</div>
 					</div>
 
@@ -67,10 +87,13 @@ if (Astro.locals.prefersMarkdown) {
 						</button>
 						<span
 							data-year-display
-							class="w-10 text-center font-sans text-[11px] font-medium text-ink-70"></span>
+							class="w-10 text-center font-sans text-[11px] font-medium text-ink-70"
+							>{currentYear}</span
+						>
 						<button
 							type="button"
 							data-year-next
+							disabled
 							class="flex h-5 w-5 cursor-pointer items-center justify-center rounded-sm text-ink-70 transition-colors hover:bg-ink/10 hover:text-ink disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink-70"
 							aria-label="Next year"
 						>
@@ -104,7 +127,26 @@ if (Astro.locals.prefersMarkdown) {
 						</div>
 					</div>
 
-					<div data-graph-grid class="grid w-full gap-[3px]" role="grid" tabindex="-1"></div>
+					<div
+						data-graph-grid
+						class="contrib-skeleton-grid grid w-full gap-[3px]"
+						style={`grid-template-columns: repeat(${SKELETON_WEEKS}, minmax(0, 1fr))`}
+						role="grid"
+						aria-label="GitHub contribution activity"
+						aria-busy="true"
+						aria-hidden="true"
+						tabindex="-1"
+					>
+						{
+							Array.from({ length: SKELETON_WEEKS }, () => (
+								<div class="grid grid-rows-7 gap-[3px]">
+									{Array.from({ length: SKELETON_DAYS }, () => (
+										<div data-skeleton class="contrib-skeleton-cell" />
+									))}
+								</div>
+							))
+						}
+					</div>
 				</div>
 			</div>
 
@@ -156,9 +198,27 @@ if (Astro.locals.prefersMarkdown) {
 	import { GITHUB_API_BASE } from '../lib/site';
 
 	const CACHE_TTL = 60 * 60 * 1000;
+	const SKELETON_WEEKS = 53;
+	const SKELETON_DAYS = 7;
 	const currentYear = new Date().getFullYear();
 	let selectedYear = currentYear;
 	let isMobile = false;
+	let skeletonHtml = '';
+
+	// The skeleton is rendered on the server, so capture it before the grid is
+	// replaced with real data and reuse it when switching years.
+	function getSkeletonHtml(grid: HTMLElement) {
+		if (skeletonHtml) return skeletonHtml;
+
+		if (grid.querySelector('[data-skeleton]')) {
+			skeletonHtml = grid.innerHTML;
+		} else {
+			const cell = '<div data-skeleton class="contrib-skeleton-cell"></div>';
+			const column = `<div class="grid grid-rows-7 gap-[3px]">${cell.repeat(SKELETON_DAYS)}</div>`;
+			skeletonHtml = column.repeat(SKELETON_WEEKS);
+		}
+		return skeletonHtml;
+	}
 
 	function getContributionColor(count: number) {
 		if (count === 0) return 'var(--contribution-0)';
@@ -211,43 +271,79 @@ if (Astro.locals.prefersMarkdown) {
 		});
 	}
 
+	function renderSkeleton(
+		grid: HTMLElement,
+		summary: HTMLElement,
+		loading: HTMLElement,
+		retry: HTMLButtonElement | null,
+		status: HTMLElement | null
+	) {
+		if (!grid.classList.contains('contrib-skeleton-grid')) {
+			grid.innerHTML = getSkeletonHtml(grid);
+			grid.style.gridTemplateColumns = `repeat(${SKELETON_WEEKS}, minmax(0, 1fr))`;
+		}
+		grid.classList.add('contrib-skeleton-grid');
+		grid.classList.remove('contrib-skeleton-idle');
+		grid.setAttribute('aria-busy', 'true');
+		grid.setAttribute('aria-hidden', 'true');
+		loading.classList.remove('hidden');
+		summary.classList.add('hidden');
+		retry?.classList.add('hidden');
+		if (status) status.textContent = 'Loading contributions';
+	}
+
+	function renderError(year: number) {
+		const grid = document.querySelector('[data-graph-grid]') as HTMLElement | null;
+		const summary = document.querySelector('[data-contrib-summary]') as HTMLElement | null;
+		const summaryText = document.querySelector('[data-contrib-summary-text]') as HTMLElement | null;
+		const loading = document.querySelector('[data-contrib-loading]') as HTMLElement | null;
+		const retry = document.querySelector('[data-contrib-retry]') as HTMLButtonElement | null;
+		const status = document.querySelector('[data-contrib-status]') as HTMLElement | null;
+
+		if (!grid || !summary || !summaryText || !loading) return;
+
+		// Keep the skeleton's footprint so a failed request can't collapse the
+		// layout, but stop the shimmer: it isn't loading anymore.
+		renderSkeleton(grid, summary, loading, retry, status);
+		grid.classList.add('contrib-skeleton-idle');
+		grid.setAttribute('aria-busy', 'false');
+		loading.classList.add('hidden');
+		summary.classList.remove('hidden');
+		summaryText.textContent = `Couldn't load ${year} contributions`;
+		retry?.classList.remove('hidden');
+		if (status) status.textContent = '';
+	}
+
 	function renderGraph(contributions: any, year: number) {
 		const grid = document.querySelector('[data-graph-grid]') as HTMLElement | null;
 		const summary = document.querySelector('[data-contrib-summary]') as HTMLElement | null;
+		const summaryText = document.querySelector('[data-contrib-summary-text]') as HTMLElement | null;
 		const loading = document.querySelector('[data-contrib-loading]') as HTMLElement | null;
+		const retry = document.querySelector('[data-contrib-retry]') as HTMLButtonElement | null;
+		const status = document.querySelector('[data-contrib-status]') as HTMLElement | null;
 		const display = document.querySelector('[data-year-display]') as HTMLElement | null;
 		const prevBtn = document.querySelector('[data-year-prev]') as HTMLButtonElement | null;
 		const nextBtn = document.querySelector('[data-year-next]') as HTMLButtonElement | null;
 
-		if (!grid || !summary || !loading) return;
+		if (!grid || !summary || !summaryText || !loading) return;
 
 		if (display) display.textContent = String(year);
 		if (prevBtn) prevBtn.disabled = year <= 2024;
 		if (nextBtn) nextBtn.disabled = year >= currentYear;
 
 		if (!contributions) {
-			loading.classList.remove('hidden');
-			summary.classList.add('hidden');
-			grid.innerHTML = '';
-			grid.style.gridTemplateColumns = 'repeat(53, minmax(0, 1fr))';
-			const fragment = document.createDocumentFragment();
-			for (let wi = 0; wi < 53; wi++) {
-				const col = document.createElement('div');
-				col.className = 'grid grid-rows-7 gap-[3px]';
-				for (let di = 0; di < 7; di++) {
-					const cell = document.createElement('div');
-					cell.className = 'aspect-square w-full animate-pulse rounded-[2px] bg-ink/5';
-					col.appendChild(cell);
-				}
-				fragment.appendChild(col);
-			}
-			grid.appendChild(fragment);
+			renderSkeleton(grid, summary, loading, retry, status);
 			return;
 		}
 
+		grid.classList.remove('contrib-skeleton-grid', 'contrib-skeleton-idle');
+		grid.removeAttribute('aria-hidden');
+		grid.setAttribute('aria-busy', 'false');
 		loading.classList.add('hidden');
 		summary.classList.remove('hidden');
-		summary.textContent = `${(contributions.totalContributions ?? 0).toLocaleString()} contributions in ${year}`;
+		retry?.classList.add('hidden');
+		if (status) status.textContent = '';
+		summaryText.textContent = `${(contributions.totalContributions ?? 0).toLocaleString()} contributions in ${year}`;
 
 		const weeks = contributions.weeks || [];
 		grid.innerHTML = '';
@@ -287,14 +383,22 @@ if (Astro.locals.prefersMarkdown) {
 		try {
 			const url = year !== currentYear ? `${GITHUB_API_BASE}/?year=${year}` : `${GITHUB_API_BASE}/`;
 			const res = await fetch(url, { signal });
-			if (!res.ok) return;
+			if (!res.ok) {
+				renderError(year);
+				return;
+			}
 			const data = await res.json();
+			if (!data.contributions) {
+				renderError(year);
+				return;
+			}
 			contributionsCache[year] = data.contributions;
 			saveCache(contributionsCache);
 			renderGraph(data.contributions, year);
 		} catch (e) {
 			if (e instanceof DOMException && e.name === 'AbortError') return;
 			console.error('Error fetching contributions:', e);
+			renderError(year);
 		}
 	}
 
@@ -308,6 +412,7 @@ if (Astro.locals.prefersMarkdown) {
 		if (display) display.textContent = String(selectedYear);
 		const prevBtn = document.querySelector('[data-year-prev]') as HTMLButtonElement | null;
 		const nextBtn = document.querySelector('[data-year-next]') as HTMLButtonElement | null;
+		const retryBtn = document.querySelector('[data-contrib-retry]') as HTMLButtonElement | null;
 		prevBtn?.addEventListener('click', () => {
 			if (selectedYear > 2024) {
 				selectedYear--;
@@ -319,6 +424,9 @@ if (Astro.locals.prefersMarkdown) {
 				selectedYear++;
 				fetchContributions(selectedYear);
 			}
+		});
+		retryBtn?.addEventListener('click', () => {
+			fetchContributions(selectedYear);
 		});
 
 		// Tooltip
@@ -337,7 +445,7 @@ if (Astro.locals.prefersMarkdown) {
 			const count = Number(target.getAttribute('data-count') ?? 0);
 			if (!day) return;
 			tooltipCount.textContent =
-				count === 0 ? 'No contributions' : `${count} contribution${count !== 1 ? 's' : ''}`;
+				count === 0 ? 'No contributions ' : `${count} contribution${count !== 1 ? 's' : ''} `;
 			tooltipDate.textContent = formatContribDate(day);
 			tooltip.style.left = `${clampedX}px`;
 			tooltip.style.top = `${rect.top - parentRect.top - 6}px`;

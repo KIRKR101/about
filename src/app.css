@@ -545,3 +545,66 @@ pre::-webkit-scrollbar-corner {
 		display: none;
 	}
 }
+
+/* GitHub contribution graph skeleton */
+.contrib-skeleton-grid,
+.contrib-skeleton-bar {
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+}
+
+.contrib-skeleton-cell,
+.contrib-skeleton-bar {
+	background-color: var(--contribution-0);
+}
+
+.contrib-skeleton-cell {
+	aspect-ratio: 1;
+	width: 100%;
+	border-radius: 2px;
+}
+
+/* One composited sweep for the whole grid rather than animating every cell. */
+.contrib-skeleton-grid::after,
+.contrib-skeleton-bar::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 60%;
+	background-image: linear-gradient(
+		90deg,
+		transparent,
+		color-mix(in srgb, var(--ink) 7%, transparent),
+		transparent
+	);
+	pointer-events: none;
+	animation: contrib-skeleton-sweep 1.6s ease-in-out infinite;
+}
+
+/* Failed request: keep the footprint, stop the animation. */
+.contrib-skeleton-grid.contrib-skeleton-idle::after {
+	display: none;
+}
+
+.contrib-skeleton-grid.contrib-skeleton-idle .contrib-skeleton-cell {
+	opacity: 0.6;
+}
+
+@keyframes contrib-skeleton-sweep {
+	from {
+		transform: translateX(-110%);
+	}
+	to {
+		transform: translateX(200%);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.contrib-skeleton-grid::after,
+	.contrib-skeleton-bar::after {
+		display: none;
+	}
+}
