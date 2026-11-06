@@ -168,21 +168,37 @@ export const GET: APIRoute = async () => {
 	const cache = (caches as CacheStorage & { default: Cache }).default;
 	let sample: (NowPlaying & { sampled_at: number }) | undefined;
 	let stale = false;
+	let cacheAvailable = true;
 	try {
 		const hit = await cache.match(SAMPLE_KEY);
 		if (hit) sample = await hit.json();
-		else {
-			const track = await sampleUpstream();
-			const ttl = ttlFor(track);
-			sample = { ...track, sampled_at: Date.now() };
-			if (ttl > 0) await cache.put(SAMPLE_KEY, cacheEntry(track, ttl));
-			await cache.put(LAST_KEY, cacheEntry(track, 600));
-		}
 	} catch {
-		const last = await cache.match(LAST_KEY);
-		if (!last) return json({ error: 'unavailable' }, 503);
-		sample = await last.json();
-		stale = true;
+		cacheAvailable = false;
+	}
+	if (!sample) {
+		try {
+			const track = await sampleUpstream();
+			sample = { ...track, sampled_at: Date.now() };
+			if (cacheAvailable) {
+				const ttl = ttlFor(track);
+				try {
+					if (ttl > 0) await cache.put(SAMPLE_KEY, cacheEntry(track, ttl));
+					await cache.put(LAST_KEY, cacheEntry(track, 600));
+				} catch {
+					// Cache writes are best-effort; keep serving the fresh upstream sample.
+				}
+			}
+		} catch {
+			try {
+				const last = await cache.match(LAST_KEY);
+				if (last) {
+					sample = await last.json();
+					stale = true;
+				}
+			} catch {
+				// The upstream and cache are both unavailable.
+			}
+		}
 	}
 	if (!sample) return json({ error: 'unavailable' }, 503);
 	const age = Date.now() - sample.sampled_at;

@@ -455,8 +455,9 @@ function initTrackPolling() {
 		} else {
 			const wasHidden = hiddenAt ? Date.now() - hiddenAt : 0;
 			hiddenAt = null;
+			stopPolling();
 			if (wasHidden > POLL_INTERVAL) void fetchNowPlaying();
-			startPolling();
+			else startPolling();
 			startProgress();
 		}
 	};
@@ -464,10 +465,14 @@ function initTrackPolling() {
 	removeVisibility = () => document.removeEventListener('visibilitychange', onVisibility);
 	const onOnline = () => {
 		failures = 0;
+		stopPolling();
 		void fetchNowPlaying();
 	};
 	const onFocus = () => {
-		if (performance.now() - progressAnchor > POLL_INTERVAL) void fetchNowPlaying();
+		if (performance.now() - progressAnchor > POLL_INTERVAL) {
+			stopPolling();
+			void fetchNowPlaying();
+		}
 	};
 	window.addEventListener('online', onOnline);
 	window.addEventListener('focus', onFocus);
