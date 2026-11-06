@@ -148,7 +148,7 @@ function paintProgress() {
 		setProgressAria(elements.progress, localProgress, duration);
 	}
 	const hoverDuration = currentTrack?.duration ?? 0;
-	const hoverShow = hoverDuration > 0;
+	const hoverShow = Boolean(currentTrack?.isPlaying && hoverDuration > 0);
 	elements.hoverWrap?.classList.toggle('hidden', !hoverShow);
 	elements.hoverWrap?.classList.toggle('flex', hoverShow);
 	if (hoverShow) {
