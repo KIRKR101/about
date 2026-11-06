@@ -60,7 +60,7 @@ const LAST_KEY = `${SITE_URL}/__cache/now-playing-last`;
 
 function ttlFor(track: NowPlaying): number {
 	if (!track.title) return 30;
-	if (!track.isPlaying) return 15;
+	if (!track.isPlaying) return 60;
 	if (track.duration === null || track.progress === null) return 5;
 	const remaining = (track.duration - track.progress) / 1000;
 	return remaining < 2 ? 0 : Math.min(Math.floor(remaining), 15);
@@ -219,7 +219,7 @@ export const GET: APIRoute = async () => {
 				: sample.isPlaying
 					? 15_000
 					: sample.title
-						? 15_000
+						? 60_000
 						: 30_000,
 		stale
 	});
