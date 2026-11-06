@@ -34,6 +34,13 @@ type Elements = {
 	bar: HTMLElement | null;
 	current: Element | null;
 	total: Element | null;
+	hoverCover: HTMLImageElement | null;
+	hoverTitle: Element | null;
+	hoverArtist: Element | null;
+	hoverWrap: HTMLElement | null;
+	hoverBar: HTMLElement | null;
+	hoverCurrent: Element | null;
+	hoverTotal: Element | null;
 };
 
 const POLL_INTERVAL = 15_000;
@@ -113,7 +120,14 @@ function queryEls(): Elements | null {
 		wrap: root.querySelector<HTMLElement>('[data-track-progress-wrap]'),
 		bar: root.querySelector<HTMLElement>('[data-track-progress-bar]'),
 		current: root.querySelector('[data-track-progress-current]'),
-		total: root.querySelector('[data-track-progress-total]')
+		total: root.querySelector('[data-track-progress-total]'),
+		hoverCover: root.querySelector<HTMLImageElement>('[data-hover-cover]'),
+		hoverTitle: root.querySelector('[data-hover-title]'),
+		hoverArtist: root.querySelector('[data-hover-artist]'),
+		hoverWrap: root.querySelector<HTMLElement>('[data-hover-progress-wrap]'),
+		hoverBar: root.querySelector<HTMLElement>('[data-hover-bar]'),
+		hoverCurrent: root.querySelector('[data-hover-current]'),
+		hoverTotal: root.querySelector('[data-hover-total]')
 	};
 }
 
@@ -126,12 +140,23 @@ function paintProgress() {
 		elements.wrap.classList.toggle('hidden', !show);
 		elements.wrap.classList.toggle('flex', show);
 	}
-	if (!show) return;
-	const percent = Math.min(100, (localProgress / duration) * 100);
-	if (elements.bar) elements.bar.style.transform = `scaleX(${percent / 100})`;
-	if (elements.current) elements.current.textContent = formatTime(localProgress);
-	if (elements.total) elements.total.textContent = formatTime(duration);
-	setProgressAria(elements.progress, localProgress, duration);
+	if (show) {
+		const percent = Math.min(100, (localProgress / duration) * 100);
+		if (elements.bar) elements.bar.style.transform = `scaleX(${percent / 100})`;
+		if (elements.current) elements.current.textContent = formatTime(localProgress);
+		if (elements.total) elements.total.textContent = formatTime(duration);
+		setProgressAria(elements.progress, localProgress, duration);
+	}
+	const hoverDuration = currentTrack?.duration ?? 0;
+	const hoverShow = hoverDuration > 0;
+	elements.hoverWrap?.classList.toggle('hidden', !hoverShow);
+	elements.hoverWrap?.classList.toggle('flex', hoverShow);
+	if (hoverShow) {
+		const hoverPercent = Math.min(100, (localProgress / hoverDuration) * 100);
+		if (elements.hoverBar) elements.hoverBar.style.transform = `scaleX(${hoverPercent / 100})`;
+		if (elements.hoverCurrent) elements.hoverCurrent.textContent = formatTime(localProgress);
+		if (elements.hoverTotal) elements.hoverTotal.textContent = formatTime(hoverDuration);
+	}
 }
 
 function updateTrack() {
@@ -148,6 +173,9 @@ function updateTrack() {
 		if (status) status.textContent = 'Connection';
 		setLink(title, 'Nothing playing');
 		setLink(artist, 'Music unavailable');
+		setLink(elements.hoverTitle, 'Nothing playing');
+		setLink(elements.hoverArtist, 'Music unavailable');
+		if (elements.hoverCover) elements.hoverCover.removeAttribute('src');
 		if (cover) {
 			cover.removeAttribute('href');
 			cover.removeAttribute('aria-label');
@@ -164,11 +192,25 @@ function updateTrack() {
 	}
 
 	root.dataset['state'] = track.isPlaying ? 'playing' : 'paused';
-	if (status) status.textContent = track.isPlaying ? '' : 'Last played';
+	if (status)
+		status.textContent = track.isPlaying
+			? 'I am currently listening to'
+			: 'The last song I listened to was';
 
 	setLink(title, track.title, track.url ?? undefined);
 	setLink(artist, track.artist, track.artistUrl ?? undefined);
 	const imageUrl = coverImage(track.images);
+	setLink(elements.hoverTitle, track.title, track.url ?? undefined);
+	setLink(elements.hoverArtist, track.artist, track.artistUrl ?? undefined);
+	if (elements.hoverCover) {
+		if (imageUrl) {
+			elements.hoverCover.src = imageUrl;
+			elements.hoverCover.alt = `Cover art for ${track.title} by ${track.artist}`;
+		} else {
+			elements.hoverCover.removeAttribute('src');
+			elements.hoverCover.alt = '';
+		}
+	}
 	if (image) {
 		if (imageUrl) {
 			image.src = imageUrl;
@@ -247,6 +289,9 @@ function tickProgress() {
 	if (elements?.bar) elements.bar.style.transform = `scaleX(${percent / 100})`;
 	if (elements?.current) elements.current.textContent = formatTime(localProgress);
 	setProgressAria(elements?.progress ?? null, localProgress, duration);
+	if (elements?.hoverBar) elements.hoverBar.style.transform = `scaleX(${percent / 100})`;
+	if (elements?.hoverCurrent) elements.hoverCurrent.textContent = formatTime(localProgress);
+	if (elements?.hoverTotal) elements.hoverTotal.textContent = formatTime(duration);
 	if (localProgress >= duration) {
 		stopProgress();
 		if (retryTimeout === undefined) {
@@ -372,6 +417,26 @@ function initTrackPolling() {
 	els = queryEls();
 	if (!els) return;
 	renderedKey = null;
+	const hoverTrigger = els.root.querySelector<HTMLElement>('[data-track-hover-trigger]');
+	const tooltip = els.root.querySelector<HTMLElement>('[data-track-tooltip]');
+	const positionTooltip = (x: number, y: number) => {
+		if (!tooltip) return;
+		const bounds = tooltip.getBoundingClientRect();
+		const margin = 12;
+		const offset = 16;
+		const left =
+			x + offset + bounds.width > window.innerWidth - margin
+				? x - bounds.width - offset
+				: x + offset;
+		const top =
+			y + offset + bounds.height > window.innerHeight - margin
+				? y - bounds.height - offset
+				: y + offset;
+		tooltip.style.left = `${Math.max(margin, Math.min(left, window.innerWidth - bounds.width - margin))}px`;
+		tooltip.style.top = `${Math.max(margin, Math.min(top, window.innerHeight - bounds.height - margin))}px`;
+	};
+	const onPointerMove = (event: PointerEvent) => positionTooltip(event.clientX, event.clientY);
+	hoverTrigger?.addEventListener('pointermove', onPointerMove);
 
 	const image = els.image;
 	if (image) {
@@ -409,6 +474,7 @@ function initTrackPolling() {
 	removeWakeListeners = () => {
 		window.removeEventListener('online', onOnline);
 		window.removeEventListener('focus', onFocus);
+		hoverTrigger?.removeEventListener('pointermove', onPointerMove);
 	};
 
 	fetchNowPlaying();

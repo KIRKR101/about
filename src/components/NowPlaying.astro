@@ -5,108 +5,49 @@
 // duplicating the data hooks.
 ---
 
-<section class="mt-10" aria-labelledby="listening-heading" data-now-playing data-state="loading">
-	<div class="flex items-baseline justify-between border-b border-bd/80 pb-2.5 sm:px-1.5">
-		<h2 id="listening-heading" class="font-serif text-[20px] leading-none text-ink-90">
-			Listening
-		</h2>
-		<span
-			data-track-status-text
-			class="inline-block h-[12px] w-[5.5rem] text-right font-mono text-[10px] tracking-wider text-ink-50 uppercase"
-		></span>
-	</div>
-
-	<div class="py-4 sm:px-1.5">
-		<div data-track-skeleton class="flex items-center gap-4" aria-hidden="true">
-			<div class="h-20 w-20 shrink-0 animate-pulse rounded-sm bg-ink/5 motion-reduce:animate-none">
-			</div>
-			<div class="flex min-w-0 flex-1 flex-col justify-center gap-1.5">
-				<div class="h-3 w-1/2 animate-pulse rounded-sm bg-ink/7 motion-reduce:animate-none"></div>
-				<div class="h-2.5 w-1/4 animate-pulse rounded-sm bg-ink/5 motion-reduce:animate-none"></div>
-				<div
-					class="mt-1.5 h-[3px] w-3/4 animate-pulse rounded-full bg-ink/5 motion-reduce:animate-none"
-				>
-				</div>
-			</div>
-		</div>
-		<div data-track-content class="hidden">
-			<div class="flex items-center gap-4">
-				<a
-					data-track-cover
-					class="group relative block h-20 w-20 shrink-0 overflow-hidden rounded-sm border border-bd bg-card-bg"
-				>
+<span aria-label="Now playing" data-now-playing data-state="loading">
+	<span data-track-skeleton aria-hidden="true">I am currently listening to music…</span>
+	<span data-track-content class="hidden" aria-live="polite" aria-atomic="true">
+		<span data-track-status-text>I am currently listening to</span>
+		{' '}
+		<span data-track-hover-trigger class="group relative cursor-help">
+			<span data-track-title>Loading…</span>{' '}by{' '}<span data-track-artist>—</span>
+			<span
+				role="tooltip"
+				data-track-tooltip
+				class="pointer-events-none invisible fixed top-0 left-0 z-50 w-[min(18rem,calc(100vw-2rem))] rounded-sm border border-bd bg-card-bg p-3 text-ink-80 opacity-0 shadow-lg transition-opacity duration-150 group-hover:visible group-hover:opacity-100"
+			>
+				<span class="flex items-center gap-3">
 					<img
-						data-track-image
+						data-hover-cover
 						alt=""
-						width="160"
-						height="160"
-						decoding="async"
-						class="hidden h-full w-full object-cover"
+						class="h-12 w-12 shrink-0 rounded-sm bg-ink/5 object-cover"
 					/>
-					<span data-track-placeholder class="absolute inset-0 grid place-items-center text-ink-30">
-						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-							<path
-								d="M9 18V6l10-2v12"
-								stroke="currentColor"
-								stroke-width="1.4"
-								stroke-linecap="round"
-								stroke-linejoin="round"></path>
-							<circle cx="6.5" cy="18" r="2.5" stroke="currentColor" stroke-width="1.4"></circle>
-							<circle cx="16.5" cy="16" r="2.5" stroke="currentColor" stroke-width="1.4"></circle>
-						</svg>
-					</span>
-				</a>
-
-				<div class="min-w-0 flex-1">
-					<div aria-live="polite" aria-atomic="true">
-						<div class="flex items-baseline justify-between gap-3">
-							<div
-								data-track-title
-								class="min-w-0 truncate font-sans text-[14px] leading-snug text-ink-90"
-							>
-								Loading…
-							</div>
-						</div>
-						<div
-							data-track-artist
-							class="mt-0.5 truncate font-sans text-[12.5px] leading-snug text-ink-70"
+					<span class="min-w-0 flex-1">
+						<span data-hover-title class="block truncate font-sans text-[13px] text-ink-90"
+							>Loading…</span
 						>
-							—
-						</div>
-
-						<div data-track-progress-wrap class="mt-2 hidden items-center gap-2.5">
-							<span
-								data-track-progress-current
-								class="w-6 shrink-0 font-mono text-[10px] text-ink-50 tabular-nums">0:00</span
-							>
-							<div
-								data-track-progress
-								class="relative h-[3px] flex-1 overflow-hidden bg-rail"
-								role="progressbar"
-								aria-label="Track progress"
-								aria-valuemin="0"
-								aria-valuemax="0"
-								aria-valuenow="0"
-							>
-								<div
-									data-track-progress-bar
-									class="absolute inset-y-0 left-0 w-full origin-left rounded-full bg-prog motion-reduce:transition-none"
-									aria-hidden="true"
-								>
-								</div>
-							</div>
-							<span
-								data-track-progress-total
-								class="w-6 shrink-0 text-right font-mono text-[10px] text-ink-50 tabular-nums"
-								>0:00</span
-							>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
+						<span data-hover-artist class="mt-0.5 block truncate font-sans text-[11px] text-ink-70"
+							>—</span
+						>
+					</span>
+				</span>
+				<span
+					data-hover-progress-wrap
+					class="mt-2 hidden items-center gap-2 font-mono text-[9px] text-ink-50 tabular-nums"
+				>
+					<span data-hover-current>0:00</span>
+					<span class="relative h-[3px] flex-1 overflow-hidden rounded-full bg-rail">
+						<span
+							data-hover-bar
+							class="absolute inset-y-0 left-0 w-full origin-left rounded-full bg-prog"></span>
+					</span>
+					<span data-hover-total>0:00</span>
+				</span>
+			</span>
+		</span>
+	</span>
+</span>
 
 <script>
 	import '../scripts/now-playing';
