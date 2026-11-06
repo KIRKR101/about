@@ -1,8 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
-import NowPlaying from '../components/NowPlaying.astro';
-import { SITE_EMAIL } from '../lib/site';
 ---
 
 <Layout title={`About`} description="About this site and its author.">
@@ -16,25 +14,32 @@ import { SITE_EMAIL } from '../lib/site';
 			<div class="mb-8 h-px bg-bd"></div>
 			<p class="font-sans text-[15px] leading-[1.8] text-ink-80">
 				I’m a computer engineering student at Warwick. The site is built with Astro and is a place
-				to keep notes, collect things I like, and share what I’m working on.
+				to keep my{' '}<a
+					href="/writings"
+					class="underline decoration-ink/20 underline-offset-2 transition-colors hover:decoration-ink"
+					>writings</a
+				>, collect things I like, and share what I’m working on.
 			</p>
 			<p class="mt-5 font-sans text-[15px] leading-[1.8] text-ink-80">
-				I’ve always liked history, particularly the Dutch Golden Age and its painters, for a long
-				time I created/edited wikipedia pages on the subject. Though my most recent readings have
-				been in philosophy, such as the works of Sartre, Nietzsche, and Voltaire, I am more
-				generally interested in classics, mainly of early-to-mid twentieth century Japanese novels
-				(e.g. Mishima, Matsumoto).
+				I’m a fan of history, particularly the <a
+					href="/writing/de-hooch-vermeer"
+					class="underline decoration-ink/20 underline-offset-2 transition-colors hover:decoration-ink"
+					>Dutch Golden Age painters</a
+				>, and of art more broadly, with a bias towards French Classicism, Romanticism, and the
+				Hague School. I edit Wikipedia, especially aforementioned topics, as much as I have time
+				for. I’m fond of cartography, or any good information graphic for that matter. I read mostly
+				the classics, and even more so the works of postwar Japan, such as Mishima, Seichō
+				Matsumoto, or Murakami. I’m nowhere near as knowledgeable in <a
+					href="/writing/philosophical-credo"
+					class="underline decoration-ink/20 underline-offset-2 transition-colors hover:decoration-ink"
+					>philosophy</a
+				> as I’d like to be, but I’ve read Sartre, Nietzsche, Voltaire, Mill, Hume, and the like. I care
+				about <a
+					href="/writing/rent-control"
+					class="underline decoration-ink/20 underline-offset-2 transition-colors hover:decoration-ink"
+					>politics</a
+				>, too, because I hate the normalisation of dysfunctional systems.
 			</p>
-			<p class="mt-5 font-sans text-[15px] leading-[1.8] text-ink-80">
-				The best way to reach me is by email:
-				<a
-					href={`mailto:${SITE_EMAIL}`}
-					class="ml-1 font-mono text-[14px] text-ink underline decoration-ink/20 underline-offset-2 transition-colors hover:decoration-ink"
-				>
-					{SITE_EMAIL}
-				</a>
-			</p>
-			<NowPlaying />
 		</main>
 		<figure class="mt-10 w-full max-w-[600px]">
 			<img
@@ -46,8 +51,8 @@ import { SITE_EMAIL } from '../lib/site';
 				class="h-auto w-full rounded-sm object-cover"
 				loading="lazy"
 			/>
-			<figcaption class="mt-6 text-center font-mono text-[11px] leading-relaxed text-ink-70">
-				Caspar David Friedrich - The Monk by the Sea
+			<figcaption class="mt-5 text-center font-mono text-[12px] leading-relaxed text-ink-80">
+				Caspar David Friedrich – The Monk by the Sea, c. 1808–10
 			</figcaption>
 		</figure>
 		<div class="w-full max-w-[600px]">
