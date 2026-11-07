@@ -42,7 +42,7 @@ const items = isPhotographyDetail
 >
 	<ol class="flex min-w-0 flex-nowrap items-center gap-2">
 		<li class="shrink-0">
-			<a href="/" class="transition-colors hover:text-ink">Home</a>
+			<a href="/" class="transition-colors duration-100 hover:text-ink">Home</a>
 		</li>
 		{
 			items.map((item, index) => (
@@ -56,7 +56,7 @@ const items = isPhotographyDetail
 								{item.label}
 							</span>
 						) : (
-							<a href={item.href} class="transition-colors hover:text-ink">
+							<a href={item.href} class="transition-colors duration-100 hover:text-ink">
 								{item.label}
 							</a>
 						)}
