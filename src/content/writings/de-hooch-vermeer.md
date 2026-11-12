@@ -518,7 +518,7 @@ Seen now by anybody who has viewed even a little of either's work, the forgeries
 
 Van Meegeren did not really paint seventeenth-century Vermeers and De Hoochs; he painted the Vermeer and De Hooch that experts of the 1930s were so desperately wanting to see.
 
-I am tempted to laugh at the defrauded, but it is more curious wonder what in our own picture of De Hooch will look equally obvious in another hundred years.
+I am tempted to laugh at the defrauded, but it is more curious to wonder what in our own picture of De Hooch will look equally obvious in another hundred years.
 
 ---
 
