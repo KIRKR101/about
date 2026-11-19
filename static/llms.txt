@@ -71,7 +71,7 @@ Write-ups of the author's software projects, each with a description, screenshot
 
 ## Collections
 
-Visual and media collections. These pages are image-heavy and load their data from external APIs (IIIF museum metadata, Last.fm, OpenLibrary, TMDB).
+Visual and media collections. These pages are image-heavy and load their data from external APIs (IIIF museum metadata, OpenLibrary, TMDB).
 
 ### Art
 

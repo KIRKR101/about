@@ -6,6 +6,5 @@ export {
 	SITE_TITLE,
 	SITE_EMAIL,
 	GITHUB_API_BASE,
-	SPOTIFY_API_URL,
-	LASTFM_API_URL
+	SPOTIFY_API_URL
 } from '../../site.config.mjs';

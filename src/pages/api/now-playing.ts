@@ -1,13 +1,13 @@
 import type { APIRoute } from 'astro';
-import { LASTFM_API_URL, SITE_URL, SPOTIFY_API_URL } from '../../lib/site';
+import { SITE_URL, SPOTIFY_API_URL } from '../../lib/site';
 
 // Same-origin now-playing feed.
 //
 // The Spotify proxy only allows a fixed set of browser origins, so calling it
 // directly from the page breaks whenever the site is served from another
-// domain. Fetching it here keeps the browser request same-origin and lets the
-// Last.fm fallback happen server-side. The response stays uncached because a
-// stale song is worse than another small upstream request.
+// domain. Fetching it here keeps the browser request same-origin. The response
+// stays uncached because a stale song is worse than another small upstream
+// request.
 export const prerender = false;
 
 type SpotifyImage = { url?: string; width?: number };
@@ -25,23 +25,9 @@ type SpotifyTrack = {
 	images?: SpotifyImage[];
 };
 
-type LastFmImageSize = 'small' | 'medium' | 'large' | 'extralarge' | 'mega';
-type LastFmTrack = {
-	status?: string;
-	title?: string;
-	artist?: string;
-	album?: string;
-	songUrl?: string;
-	externalUrl?: string;
-	trackUrl?: string;
-	artistUrl?: string;
-	isPlaying?: boolean;
-	images?: Partial<Record<LastFmImageSize, string>>;
-};
-
 type TrackImage = { url: string; width: number };
 export type NowPlaying = {
-	source: 'spotify' | 'lastfm';
+	source: 'spotify';
 	title: string;
 	artist: string;
 	album: string | null;
@@ -72,14 +58,6 @@ function cacheEntry(track: NowPlaying, ttl: number) {
 	});
 }
 
-const LASTFM_WIDTHS: Record<LastFmImageSize, number> = {
-	small: 34,
-	medium: 64,
-	large: 174,
-	extralarge: 300,
-	mega: 500
-};
-
 const fetchJson = async <T>(url: string): Promise<T> => {
 	const controller = new AbortController();
 	const timeout = setTimeout(() => controller.abort(), 5000);
@@ -100,12 +78,6 @@ const spotifyImages = (images: SpotifyImage[] = []): TrackImage[] =>
 		)
 		.sort((a, b) => a.width - b.width)
 		.map(({ url, width }) => ({ url, width }));
-
-const lastFmImages = (images: Partial<Record<LastFmImageSize, string>> = {}): TrackImage[] =>
-	(Object.keys(LASTFM_WIDTHS) as LastFmImageSize[]).flatMap((size) => {
-		const url = images[size];
-		return url ? [{ url, width: LASTFM_WIDTHS[size] }] : [];
-	});
 
 const firstUrl = (...urls: (string | undefined)[]) => urls.find(Boolean) ?? null;
 
@@ -128,19 +100,6 @@ const fromSpotify = (track: SpotifyTrack): NowPlaying => ({
 	images: spotifyImages(track.images)
 });
 
-const fromLastFm = (track: LastFmTrack): NowPlaying => ({
-	source: 'lastfm',
-	title: track.title || 'Unknown track',
-	artist: track.artist || 'Unknown artist',
-	album: track.album || null,
-	url: firstUrl(track.trackUrl, track.songUrl, track.externalUrl),
-	artistUrl: track.artistUrl ?? null,
-	isPlaying: track.isPlaying === true || /currently playing/i.test(track.status ?? ''),
-	duration: null,
-	progress: null,
-	images: lastFmImages(track.images)
-});
-
 const json = (body: unknown, status = 200, cache = 'no-store') =>
 	new Response(JSON.stringify(body), {
 		status,
@@ -152,16 +111,10 @@ const json = (body: unknown, status = 200, cache = 'no-store') =>
 	});
 
 async function sampleUpstream(): Promise<NowPlaying> {
-	try {
-		const track = await fetchJson<SpotifyTrack>(SPOTIFY_API_URL);
-		if (typeof track.isPlaying !== 'boolean' || !validTrack(track))
-			throw new Error('Invalid Spotify response');
-		return fromSpotify(track);
-	} catch {
-		const track = await fetchJson<LastFmTrack>(LASTFM_API_URL);
-		if (!validTrack(track)) throw new Error('Invalid Last.fm response');
-		return fromLastFm(track);
-	}
+	const track = await fetchJson<SpotifyTrack>(SPOTIFY_API_URL);
+	if (typeof track.isPlaying !== 'boolean' || !validTrack(track))
+		throw new Error('Invalid Spotify response');
+	return fromSpotify(track);
 }
 
 export const GET: APIRoute = async ({ cache }) => {

@@ -1,11 +1,10 @@
 // Now-playing widget for src/components/NowPlaying.astro.
 //
 // Data comes from the same-origin /api/now-playing route, which talks to the
-// Spotify proxy and falls back to Last.fm server-side. Polling and the progress
-// ticker pause while the tab is hidden.
+// Spotify proxy. Polling and the progress ticker pause while the tab is hidden.
 type TrackImage = { url: string; width: number };
 type NowPlaying = {
-	source: 'spotify' | 'lastfm';
+	source: 'spotify';
 	title: string;
 	artist: string;
 	album: string | null;
@@ -237,10 +236,7 @@ function updateTrack() {
 			cover.href = track.url;
 			cover.target = '_blank';
 			cover.rel = 'noopener noreferrer';
-			cover.setAttribute(
-				'aria-label',
-				`Open ${track.title} by ${track.artist} on ${track.source === 'spotify' ? 'Spotify' : 'Last.fm'}`
-			);
+			cover.setAttribute('aria-label', `Open ${track.title} by ${track.artist} on Spotify`);
 			cover.classList.add('cursor-pointer');
 		} else {
 			cover.removeAttribute('href');
@@ -326,8 +322,7 @@ async function fetchNowPlaying() {
 		const data = (await response.json()) as NowPlaying;
 		if (
 			!data ||
-			typeof data.source !== 'string' ||
-			!['spotify', 'lastfm'].includes(data.source) ||
+			data.source !== 'spotify' ||
 			typeof data.title !== 'string' ||
 			!data.title.trim() ||
 			typeof data.artist !== 'string' ||

@@ -7,7 +7,7 @@
 // Deliberately NOT derived from the domain:
 //   - SITE_EMAIL. Email lives on its own domain and should keep working when
 //     the website moves. Change it separately if the mail domain ever changes.
-//   - API subdomains below (github., spotify., lastfm.). These are separate
+//   - API subdomains below (github., spotify.). These are separate
 //     deployments, so the API calls keep working the same no matter what the
 //     site domain is.
 //   - Project subdomains (e.g. wasmagick.) in src/lib/projects-data.ts.
@@ -31,4 +31,3 @@ export const SITE_EMAIL = 'theo@kirkr.xyz';
 // API endpoints — independent deployments, intentionally kept off SITE_DOMAIN.
 export const GITHUB_API_BASE = 'https://github.kirkr.xyz';
 export const SPOTIFY_API_URL = 'https://spotify.kirkr.xyz/api/now-playing';
-export const LASTFM_API_URL = 'https://lastfm.kirkr.xyz/api/lastfm-track';
