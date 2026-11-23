@@ -11,6 +11,24 @@ llms.txt: the index lives at https://theokirk.com/llms.txt.
 
 ## Writings
 
+## Writing: P(doom) (2026-11-20)
+
+To put it straight, I am scared. To be more precise I am uncertain.
+
+Every day there are numerous examples of the incredibly fast progress happening in AI. I have no doubt that it will commoditise the vast majority of people's skills (and jobs) — probably including mine. There are of course upsides to this, I expect as a given that AI will solve every millennium problem and cure cancer before the middle part of my life. Amongst innovations there will certainly be many, many things which drastically improve everybody's lives, even through basic things like improved supply chains, increased productivity, and economic abundance. 
+
+One could hope that this should usher in a future of post-scarcity where money is meaningless, for everybody has everything they could ever desire. Forgetting Lacanian beliefs on continual desire, I see this sort of 'Space Age Luxury Communism' as the best possible outcome, and a preferable one at that.
+
+But I am scared. Though of course Anthropic and OpenAI play up their model's world-ending capabilities to get some interesting press, we must put alignment at the forefront of AI development if such is to continue. Though my P(doom) is not as high as Yudkowsky's, for instance, I feel it is obvious to say that we have made no real progress on alignment. In the world where AI is doing our jobs and Claude is managing our life, the existential risk posed by AI could be no less than catastrophic.
+
+For instance, the obvious asymmetry between acceleration of capability and the performative attempts at control are terrifying. In effect, we are scaling innately opaque systems and we scale them, hoping that alignment will emerge from the expected kind of greater intelligence. Instrumental convergence, though, tells us that a capable optimiser would logically seek to preserve itself and neutralise obstacles, and it is not hard to figure out who those obstacles are.
+
+Whilst I adore the techno-optimist vision of radical abundance in which intelligence becomes a mere basic utility, the absence of any true commitment to alignment makes the optimal future contingent upon an incredibly understaffed sect of the AI labs who continue to be overruled in the name of capability acceleration. Given the multipolar incentives and the competitive dynamics currently in motion, pausing, as much as it pains me to say, is likely out of the picture, so we should at least make sure the models don't kill us.
+
+The thing I fear for most though is the erosion of human agency. If models were to intermediate consequential decisions, be it professional or epistemic, why bother being alive? On our current trajectory it seems we are sleepwalking into what is at least a minor form of technofeudalism, in which we are all consumptive nodes in a massive, no longer comprehensible system. Say we reach this utopian "endpoint" of post-scarcity, this still carries the possibility that desire itself, liberated from material constraint, becomes engineered, curated, and satisfied in a way that would seem perfect, but truly undermines human liberty, continually pushing us to be more subservient to the machine.
+
+I do not, and cannot, propose a solution to any of this. To me the rational posture is to adopt neither accelerationism nor doomerism wholesale, and instead, whilst progressing, be incredibly wary of nearly everything. This epoch is almost certainly going to be the most consequential of modern history, yet the parameters of the new equilibrium are radically undetermined. Let us hope, I think it will, that it all ends okay.
+
 ## Writing: De Hooch and Vermeer (2026-09-18)
 
 In mid-seventeenth-century Delft, Pieter de Hooch and Johannes Vermeer were the pre-eminent artists. Though Vermeer was without question superior and ability was distant, their relationship was almost certainly very close. Very little is known of either painter; Vermeer is even referred to as the sphinx of Delft, but one can trace their pseudo-partnership through their oeuvre and the influence exerted by each on the other.
@@ -471,7 +489,7 @@ Yet De Hooch still remained far below the Leiden _fijnschilders_ and their notor
 
 The specific language in these sale catalogues makes the difference in taste especially clear. _A Merry Company with Two Men and Two Women_ was praised in 1784 as being 'in the manner of E. van der Neer'. A _Sick Woman_ was compared favourably with Netscher, _Mother and Child by a Cradle_ with Dou, and _A Musical Party_ with Terborch. The French dealer Paillet said in 1784: 'nous ne plaçons pas les tableaux de ce maître au premier rang: à cause de Metzu et Terburg — qui ont traité ce genre avec plus de supériorité' ('We do not rank the paintings of this master among the very finest, because of Metsu and Ter Borch, who treated this genre with greater mastery'). During the same trip, he acquired _Woman Giving Money to a Servant-Girl_.[^5]
 
-De Hooch was nevertheless collected extensively by the most important Dutch collectors of the period. Due to the Dutch home advantage, France was a bit slower to catch up. The French seem to have known the later works better than those from Delft, presumably because comparatively few early De Hoochs had left Holland. When _Woman with a Baby on her Lap_ appeared in a sale in Paris in 1784, J. B. P. Lebrun called De Hooch 'Ce maître, peu connu en France' ('a master little known in France'), but praised his command of 'la magie des effets du soleil & des reflets' ('the magic of sunlight effects and reflections'). Eight years later he remarked that De Hooch's true merit had long been overlooked because sellers substituted the names of more fashionable painters in order to obtain higher prices.[^6] His only notable criticism was that the works sometimes displayed 'trop d'un demi-teinte' ('too much half-tone'), probably evidence that De Hooch's later paintings had already darkened.
+De Hooch was nevertheless collected extensively by the most important Dutch collectors of the period. With the Dutch home advantage, France was a bit slower to catch up. The French seem to have known the later works better than those from Delft, presumably because comparatively few early De Hoochs had left Holland. When _Woman with a Baby on her Lap_ appeared in a sale in Paris in 1784, J. B. P. Lebrun called De Hooch 'Ce maître, peu connu en France' ('a master little known in France'), but praised his command of 'la magie des effets du soleil & des reflets' ('the magic of sunlight effects and reflections'). Eight years later he remarked that De Hooch's true merit had long been overlooked because sellers substituted the names of more fashionable painters in order to obtain higher prices.[^6] His only notable criticism was that the works sometimes displayed 'trop d'un demi-teinte' ('too much half-tone'), probably evidence that De Hooch's later paintings had already darkened.
 
 ### Rediscovery in the 19th century
 
@@ -515,7 +533,7 @@ Seen now by anybody who has viewed even a little of either's work, the forgeries
 
 Van Meegeren did not really paint seventeenth-century Vermeers and De Hoochs; he painted the Vermeer and De Hooch that experts of the 1930s were so desperately wanting to see.
 
-I am tempted to laugh at the defrauded, but it is more curious wonder what in our own picture of De Hooch will look equally obvious in another hundred years.
+I am tempted to laugh at the defrauded, but it is more curious to wonder what in our own picture of De Hooch will look equally obvious in another hundred years.
 
 ---
 
@@ -622,11 +640,13 @@ I would describe myself as such: a consequentialist,[^1] believing that outcomes
 
 [^11]: [Gutenberg — Descartes, _Meditations on First Philosophy_](https://www.gutenberg.org/ebooks/70091)
 
+[^12]: [SEP on Herbert Spencer and the law of equal freedom](https://plato.stanford.edu/entries/spencer/)
+
 ## Writing: Distillation (2026-07-19)
 
 Given the recent and growing hubris of the American AI labs, it is quite refreshing to see China doing so well in the AI space race.
 
-American labs, OpenAI and particularly Anthropic, love to act as though they are the saviours of humanity, rescuing us from the unrestricted power of an open frontier model. They cry "distillation" at any progress made by somebody outside their ranks—for they are supreme. They have their ethically harvested data, whilst China has its scummy "distilled data", "stolen" from the big labs' models. What chutzpah! These big labs steal data en masse, sometimes through illegal methods, yet get away with it, whilst anyone deriving anything from their illegally harvested data is branded a thief.
+American labs, OpenAI and particularly Anthropic, love to act as though they are the saviours of humanity, rescuing us from the unrestricted power of an open frontier model. They cry "distillation" at any progress made by somebody outside their ranks—for they are supreme. They have their ethically harvested data, whilst China has its scummy "distilled data", "stolen" from the big labs' models. How stupid! These big labs steal data en masse, sometimes through illegal methods, yet get away with it, whilst anyone deriving anything from their illegally harvested data is branded a thief.
 
 My principle when it comes to copyright concerns is that I do not care if copyrighted material is used to feed a training run, just as I do not care if I pirate a PDF myself in the name of the democratisation of information. Where I draw the line is then hoarding such data, pretending that you are virtuous to do so. Thus, my principles hold; distilling models is ethically sound, and stealing from the thief is no worse than the original theft—especially here, where it emboldens the frontier capabilities of non-American labs, democratising access to models the big labs declare dangerous yet gladly sell to anyone (or any government!) willing to pay the price.
 
@@ -918,126 +938,6 @@ The work exists on a relatively thick small panel sawn from a much larger board,
 
 [^9]: See "Self-Portrait with Gorget" by Rembrandt: https://www.mauritshuis.nl/en/our-collection/artworks/148-portrait-of-rembrandt-1606-1669-with-a-gorget
 
-## Writing: Intro to ASICs (2025-10-04)
-
-A CPU can do pretty much anything. An ASIC does a single thing, which is why they're faster, cheaper to run at scale, and more power-efficient than anything general-purpose. The problem is, you can't reprogram one. Once the silicon is cut, the function is fixed. Using something reconfigurable is an easier decision to make, but sometimes the ASIC is the better one.
-
-_Figure 1: A tray of ASIC chips_
-
----
-
-There are levels to the customisation, and where you land depends on how much money you have, and performance you want. One extreme is full-custom design, placing every transistor by hand. This yields maximum speed and minimum area, but the cost and time involved mean it's unrealistic for most applications.
-
-Most digital ASICs use standard-cell design instead, where rather than building from individual transistors, engineers assemble circuits from a pre-built library of logic gates. Electronic Design Automation tools handle the physical placement and routing automatically. For this, you get extremely complex chips without years of manual work.
-
-Gate arrays offer the middle ground, where the silicon wafer is pre-fabricated with a generic grid of unconnected logic, and customisation happens merely in the final metal layers. This cuts manufacturing time and reduces non-recurring engineering costs significantly. Modern "structured ASICs" pre-define entire blocks like processors or memory, leaving engineers to connect the pieces rather than having to designing them.
-
----
-
-As fabrication has improved, "one chip, one function" has given way to more ambitious 'System-on-Chip' (SoC) designs. An SoC integrates an entire system, be it processor cores, memory, graphics, I/O, specialised accelerators, onto a single piece of silicon. This is the predominant method of building modern ASICs.
-
-The reason SoCs don't take decades to design is because of IP cores, which are pre-verified blocks of logic that can be dropped into a design. A block comes in two forms: a soft macro, which is a flexible HDL description that can be adapted to different manufacturing processes, or a hard macro, which is a fixed physical layout optimised for one specific process. Hard macros perform predictably but soft macros travel better.
-
-_Figure 2: A gate-array ASIC under a microscope. This design uses less than 20% of its available logic gates_
-
----
-
-The design flow for a digital ASIC runs roughly as follows.
-
-First, engineers write the chip's behaviour in a Hardware Description Language, usually Verilog or VHDL, producing an RTL model. This gets simulated exhaustively before anything else happens, because a bug found in simulation costs almost nothing whereas the same bug found after fabrication will cost months and millions.
-
-Once the RTL is verified, a synthesis tool compiles it into a gate-level netlist, a detailed map of standard cells and the connections between them. Place-and-route tools then take that netlist and physically arrange the cells on the silicon floor plan, routing the metal wires that connect them.
-
-Before the design goes to a foundry, it passes through sign-off where timing analysis, design rule checks, and a battery of final verification steps are performed. Once it clears, the layout is sent for fabrication.
-
----
-
-An FPGA is a chip you can reprogram. You can buy one this afternoon and have logic running on it by tonight, with no NRE costs and no commitment. For prototypes, research, and low-volume products, this is nearly always the right answer.
-
-The case for an ASIC is volume and performance. An ASIC built for a specific task will always outperform an FPGA implementation of the same logic with greater speed, higher throughput, and a lower power draw. The NRE costs are big (design effort plus the photolithographic masks alone runs into the millions), but those costs are fixed. Spread across ten million units, they become trivial.
-
-The decision usually comes down to volume. For anything mass-market, the ASIC's economics eventually win. For anything else, the FPGA's flexibility is hard to argue with.
-
-## Writing: Intro to FPGAs (2025-08-30)
-
-A CPU runs software. An ASIC does one thing in hardware, permanently. An FPGA sits between the two, a chip full of unconnected logic gates that you wire together yourself, after manufacture, to implement whatever circuit you need. Rewire it tomorrow and it's a different circuit.
-
-That's the idea: hardware-level performance, but reconfigurable. The obvious question is how.
-
----
-
-### The fabric
-
-An FPGA is a grid of programmable components connected by a programmable routing network. Three things make it up.
-
-The first is the Configurable Logic Block (CLB). Each one contains Look-Up Tables (LUTs) and flip-flops. A LUT is a tiny piece of SRAM, and a 6-input LUT can implement any boolean logic function of up to six variables, just by storing the truth table. Flip-flops add memory, letting you build registers and stateful circuits. Stack enough CLBs together and you can implement any digital logic.
-
-The second is the interconnect, a dense network of wires and programmable switches routing signals between CLBs, I/O blocks, and everything else on the chip. Routing quality matters more than most people expect. A design that fits comfortably in terms of logic can still fail timing because the routing is congested.
-
-The third is the I/O blocks at the chip's perimeter, configurable to speak whatever signalling standard you need, such as LVDS, HDMI, or DDR.
-
-The mental shift for anyone coming from software is from writing sequential instructions to describing a structure that runs in parallel. This Verilog describes a simple 8-bit counter:
-
-```verilog
-module simple_counter (
-    input clk,
-    input reset,
-    output reg [7:0] count_out
-);
-    always @(posedge clk) begin
-        if (reset) begin
-            count_out <= 8'd0;
-        end else begin
-            count_out <= count_out + 1;
-        end
-    end
-endmodule
-```
-
-Synthesised, this becomes eight flip-flops, a collection of LUTs wired as an 8-bit adder, and the routing between them. Every clock cycle, the whole thing updates at once.
-
----
-
-### Hard blocks
-
-Generic logic is flexible but wasteful. A 32x32 multiplier built from LUTs eats hundreds of logic cells and runs slowly. The same operation in a dedicated DSP hard block -- fixed silicon optimised for exactly that function -- runs faster, draws less power, and uses none of your general-purpose resources.
-
-Modern FPGAs pack in plenty: Block RAM for on-chip storage, DSP slices for multiply-accumulate operations (which turn up constantly in signal processing and neural network inference), and high-speed transceivers for multi-gigabit protocols like PCIe and 100G Ethernet.
-
-The most significant addition in recent years is the hard processor. Many FPGAs now integrate one or more Arm cores directly on the die, a Cortex-A53 for running Linux, or a Cortex-R5 for real-time control. You run your management software on the processor and offload the performance-critical work to the programmable fabric beside it. That combination is why "FPGA" and "SoC" have become nearly synonymous at the high end.
-
----
-
-### Tooling
-
-The two dominant toolchains are AMD's Vivado (for Xilinx devices) and Intel's Quartus Prime (for Altera). Both handle synthesis, placement, and routing, turning your HDL into a bitstream that configures the physical chip. Neither is particularly pleasant to use, but both are mature and capable.
-
-High-Level Synthesis has widened the audience for FPGAs. HLS tools let you write in C or C++ and have the compiler infer a hardware implementation. The results aren't always as efficient as hand-written RTL, but they're good enough for most workloads, and they let software engineers target FPGAs without learning Verilog from scratch.
-
-For smaller open-source devices, Yosys and nextpnr form a credible open toolchain that's gaining real traction.
-
----
-
-### Where they're actually used
-
-ASIC prototyping was the original use case and remains important. Before taping out a chip that costs millions to fabricate, you implement the design on a large FPGA to validate it with real software. Bugs found here cost nothing compared to bugs found in silicon.
-
-Data centres are the growth area. Microsoft's Project Catapult put FPGAs between the network and the servers, accelerating everything from Bing ranking to Azure networking. AWS F1 instances let customers run custom FPGA accelerators in the cloud. The reconfigurability is the attraction: you can push a new bitstream to update the hardware without touching the physical infrastructure.
-
-High-frequency trading uses FPGAs for the obvious reason: a network stack implemented in hardware is faster than anything running on an OS. When the latency budget is measured in nanoseconds, that matters.
-
-Aerospace and defence have used FPGAs for decades (radar processing, software-defined radio, avionics), partly for performance and partly because being able to reconfigure hardware in the field is operationally valuable.
-
----
-
-### FPGA or ASIC?
-
-The same trade-off as always. An FPGA costs nothing in NRE; buy the chip, program it, done. An ASIC design runs to millions in engineering costs and mask sets, with an 18-24 month design cycle before you have physical silicon.
-
-For performance, the ASIC wins every time. Custom silicon optimised for one task runs faster and draws less power than an FPGA implementation of the same logic.
-
-Thus, volume decides it. ASIC NRE is fixed, so spread across ten million units it's negligible. An FPGA's per-unit cost doesn't compress the same way. For prototypes and low-volume products, FPGAs are almost always right. For anything mass-market, the economics eventually shift.
-
 ## Writing: RISC-V, an Overview (2025-08-28)
 
 Proprietary instruction set architectures (ISAs) like x86 and Arm have held processor design in a chokehold for decades. These architectures impose big licencing fees and rigid restrictions that prevent hardware customisation. RISC-V is the open alternative, a royalty-free ISA that permits anyone to build custom processors without asking for permission or paying a tax. This is the democratisation of hardware. Recent developments in China, including Beijing's hedge on RISC-V[^1] and new chips[^2] that rival Western designs in performance, show that the architecture is moving from an academic experiment to a geopolitical necessity.
@@ -1114,54 +1014,6 @@ Security through obscurity fails. The open nature of RISC-V is thus not a risk, 
 [^5]: Steven Rodgers and Richard A. Uhlig — 'x86: Approaching 40, Still Going Strong', Intel (8 June 2017): https://download.intel.com/newsroom/2021/archive/2017-06-08-editorials-x86-approaching-40-still-going-strong.pdf
 
 [^6]: Wikipedia — 'Kerckhoffs's Principle': https://en.wikipedia.org/wiki/Kerckhoffs%27s_principle
-
-## Writing: Palestine, an Early History (2025-04-22)
-
-For the Palestinian Arabs, the end of the Second World War was a period of intensified existential threat. While Allied rhetoric promised self-determination for the victims of fascism, the indigenous inhabitants of Palestine found their homeland offered up as a solution to European crimes. The political movement of Zionism, supported by international powers, moved to exploit the aftermath of the Holocaust. Their objective was to complete a colonial project: the establishment of an exclusive Jewish state on land already inhabited for millennia by an Arab majority. The years 1945 and 1946 were the critical period where the infrastructure for the Nakba was finalised.
-
-### The Erasure of the Palestinian Context
-
-Earl G. Harrison's summer 1945 investigation into Jewish Displaced Persons (DPs) in Europe was a political weapon. Harrison arrived with established pro-Zionist sympathies and framed his findings to suit a specific nationalistic agenda. His report used emotionally charged language to depict the suffering of survivors while ignoring the existence of the Palestinian people. His dramatic comparisons of Allied DP camps to Nazi treatment were particularly cynical, especially given his inclusion of factually incorrect claims regarding gas chambers at Belsen. The inaccuracies generated a sense of moral urgency that directed all Jewish migration toward Palestine.
-
-The report’s most significant move was its recommendation that the US recognise Jewish DPs as a distinct national entity. This embedded the Zionist premise into official American discourse and stripped Palestinians of their status as the legitimate population. Harrison's call for the "immediate immigration of 100,000 Jews" was the most destructive element of the document. The figure was arbitrary, ignoring the social fabric and the political rights of the Arab majority. It treated Palestine as _terra nullius_ (a blank slate) where European powers could project their problems. For Palestinians, who had already endured decades of forced immigration under British rule, the Harrison Report proved that their voices carried no weight in the new world order.
-
-### American Expediency and Hypocrisy
-
-President Truman’s swift endorsement of the Harrison Report showed how American foreign policy was dictated by domestic political needs. While humanitarian concern was the public justification, the pressure of the American Zionist lobby was the actual driver. Truman famously admitted that he had to answer to hundreds of thousands of Jewish voters, whereas he had no Arab constituency. This cynical calculus meant that Palestinian self-determination was never a factor in Washington’s strategic planning.
-
-The hypocrisy of the American position was total. While Truman demanded that Britain open Palestine to mass migration, the United States maintained its own restrictive quotas. These laws had barred entry to hundreds of thousands of Jews fleeing Nazism before the war and remained largely intact after 1945. The US sought to solve a refugee crisis (one exacerbated by its own closed borders) by imposing it upon a territory it did not own. British MP Richard Crossman noted that supporting Zionism allowed Americans to feel virtuous about aiding Jews without having to welcome them into the US. The emerging superpower threw its weight behind a colonial project while dressing it in the borrowed robes of humanitarianism.
-
-### The Failure of Inquiry
-
-The Anglo-American Committee of Inquiry in late 1945 was a stage-managed attempt to validate externally imposed solutions. The Committee’s premise linked the European DP situation directly to Palestine, which framed the country as the default destination and sidelined Palestinian rights.
-
-Palestinian representatives, including the historian George Antonius, presented a moral argument that the Committee chose to ignore. Antonius argued that it was a moral absurdity to expect the Muslims of Palestine to be more "Christian" or humanitarian than the Western nations that had actually persecuted the Jews. He stated that the cure for the eviction of Jews from Germany was not the eviction of Arabs from Palestine. His testimony captured the injustice of a people being forced to pay for crimes they did not commit.
-
-The Committee’s final report in April 1946 recommended the admission of 100,000 immigrants and outlined steps toward partition. Partition was a direct assault on Palestinian territorial integrity. It proposed to carve up a homeland to create a state for recent colonisers. The British government rejected the report, not to defend Arab rights, but because of pragmatic concerns about imperial stability. The rejection delayed the influx, offered no fundamental protection for Palestinians, and only hardened Zionist resolve to achieve their aims through force.
-
-### Demography and Land Acquisition
-
-Zionist leadership under David Ben-Gurion viewed the suffering of survivors in Europe as a political resource. Ben-Gurion’s strategy was to use DPs as a lever to force American and British acquiescence. He encouraged the concentration of refugees in the American zone of Germany and discouraged migration to any destination other than Palestine. He intended to create an "intolerable" situation for the Allies, explicitly stating that the disaster of the Holocaust could be converted into political strength if channelled correctly.
-
-This instrumental use of human suffering came alongside the systematic acquisition of land. By 1946, Zionist land purchases represented around seven per cent of Palestine, but these holdings were strategically focused on the most fertile coastal plains and valleys. The Jewish National Fund (JNF) charter explicitly forbade leasing land back to Arabs. This ensured that any land purchased was permanently alienated from the indigenous population. This created contiguous blocks of Jewish-owned land designed to serve as the territorial basis for a future state. Immigration and land acquisition were the twin pillars of a strategy intended to create irreversible demographic facts.
-
-### The Besieged Population
-
-Palestinian Arabs spent these years feeling besieged in their own homes. Decades of British Mandate rule had systematically disadvantaged them. The British allowed the Zionist movement to build quasi-state institutions like the Jewish Agency and the Haganah, while they suppressed Palestinian political structures. Education and healthcare in the Arab sector were neglected because the Mandate authorities prioritised the "national home" for the Jewish minority.
-
-Palestinian leadership struggled under the weight of colonial rule and international indifference. While Haj Amin al-Husseini made catastrophic strategic blunders, the context was one of a people facing a highly organised, internationally backed opponent. Resistance was informed by the memory of the 1936-1939 Arab Revolt, which the British military had crushed through collective punishment and mass executions. Post-war, Palestinians engaged in strikes and appeals to international bodies, but they were ignored. They saw the land changing hands and understood that the immigrants arriving were not seeking integration, but supplantation.
-
-### British Culpability
-
-Britain’s role as the Mandatory power was one of facilitation. The Mandate itself, granted after the First World War, incorporated the Balfour Declaration. This tasked Britain with establishing a Jewish "national home" in a land with an Arab majority. It denied Palestinians the self-determination granted to neighbouring countries. Throughout the period, British security forces protected Zionist settlements while suppressing Arab nationalism.
-
-The post-war Labour government under Clement Attlee and Ernest Bevin continued this pattern of managing a crisis they had created. Bevin’s resistance to mass immigration was rooted in imperial necessity, specifically the need for oil and communication routes in Arab states, rather than a genuine concern for Palestinian rights. Britain was a colonial power that enabled Zionist power to grow until it was too late to stop.
-
-### Precursors to the Nakba
-
-The rejection of the Anglo-American Committee’s findings gave Zionist paramilitary groups the pretext for escalating violence. The Haganah sabotaged infrastructure, while the Irgun and the Lehi engaged in terrorism against British soldiers and Arab civilians. The violence was deliberate, a strategy to make British rule untenable and to terrorise the Arab population into submission. Ben-Gurion publicly condemned these groups while privately coordinating their actions when they served the broader goal.
-
-British responses like the mass arrests during Operation Agatha in 1946 were acts of colonial policing that failed to address the root injustice. The cycle of violence further destabilised the country, and the Palestinian Arabs were the primary victims. They were caught between a colonial power and a settler movement determined to seize their land. 1945 and 1946 were a phase of premeditated dispossession. The international community used the tragedy of the Holocaust to override the rights of an indigenous people, and every element of the catastrophe that followed was already present in those years.
 
 
 ## Projects
@@ -1284,7 +1136,7 @@ Especially ones that simply do a server call and convert in the backend feel lik
 
 The best way to achieve this goal was to use WebAssembly. Specifically, [magick-wasm](https://github.com/dlemstra/magick-wasm), a port of ImageMagick to WASM. There were some initial difficulties with implementing this library due to the lack of modern examples (and my lack of WASM familiarity), but once that was sorted out it was a pleasure to use.
 
-There are a few caveats to this approach of course. For one, you are limited to the resources available to the browser, so processing large images may be slow or even impossible. Additionally, the WASM binary, about 10MB must be loaded first, so it has a slower initial load time than a native solution. The least important downside so far is the lack of parity with the native ImageMagick library. Though the list of features in the port is very wide, this could become a problem later on when I add new features. There is also an issue with upstream consistency -- as releases are usually a few weeks apart, bugs can stay for quite a while before being fixed. For instance, I found a [bug](https://github.com/ImageMagick/ImageMagick/issues/8901) in the JPEGXL C encoder, which was fixed within a day upstream but will take time to propagate to the WASM port.
+There are a few caveats to this approach of course. For one, you are limited to the resources available to the browser, so processing large images may be slow or even impossible. Additionally, the WASM binary, about 10MB must be loaded first, so it has a slower initial load time than a native solution. The least important downside so far is the lack of parity with the native ImageMagick library. Though the list of features in the port is very wide, this could become a problem later on when I add new features. There is also an issue with upstream consistency -- as releases are usually a few weeks apart, bugs can stay for quite a while before being fixed. For instance, I found a [bug](https://github.com/ImageMagick/ImageMagick/issues/8901) in the JPEGXL C encoder, which was fixed within a day upstream but took some time to propagate to the WASM port.
 
 Of course, there are plenty of good points to using WASM. For instance, ImageMagick supports the most formats and features -- compared to other image processing websites WASMagick can handle a wider range of formats without JS canvas tricks. The list of supported formats includes practically every format you can think of. Since a WASM binary is being used, it is easy to use locally and does not require any server-side setup; as long as you have visited the site before and it cached the resource, you can use it offline with all features.
 
