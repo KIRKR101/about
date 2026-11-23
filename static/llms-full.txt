@@ -15,7 +15,7 @@ llms.txt: the index lives at https://theokirk.com/llms.txt.
 
 To put it straight, I am scared. To be more precise I am uncertain.
 
-Every day there are numerous examples of the incredibly fast progress happening in AI. I have no doubt that it will commoditise the vast majority of people's skills (and jobs) — probably including mine. There are of course upsides to this, I expect as a given that AI will solve every millennium problem and cure cancer before the middle part of my life. Amongst innovations there will certainly be many, many things which drastically improve everybody's lives, even through basic things like improved supply chains, increased productivity, and economic abundance. 
+Every day there are numerous examples of the incredibly fast progress happening in AI. I have no doubt that it will commoditise the vast majority of people's skills (and jobs) — probably including mine. There are of course upsides to this, I expect as a given that AI will solve every millennium problem and cure cancer before the middle part of my life. Amongst innovations there will certainly be many, many things which drastically improve everybody's lives, even through basic things like improved supply chains, increased productivity, and economic abundance.
 
 One could hope that this should usher in a future of post-scarcity where money is meaningless, for everybody has everything they could ever desire. Forgetting Lacanian beliefs on continual desire, I see this sort of 'Space Age Luxury Communism' as the best possible outcome, and a preferable one at that.
 
