@@ -30,9 +30,10 @@ const writings: RecentWriting[] = (await getCollection('writings'))
 	.slice(0, 5);
 const recentProjects = projects.slice(0, 5);
 const formatDate = (date: string) =>
-	new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(
-		new Date(date)
-	);
+	new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+		.formatToParts(new Date(date))
+		.map(({ type, value }) => (type === 'month' ? value.slice(0, 3) : value))
+		.join('');
 ---
 
 <Layout title={SITE_TITLE} description="Writing on computer engineering, and other interests.">

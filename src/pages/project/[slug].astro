@@ -291,7 +291,10 @@ const notFound = false;
 							day: '2-digit',
 							month: 'short',
 							year: 'numeric'
-						}).format(new Date(d));
+						})
+							.formatToParts(new Date(d))
+							.map(({ type, value }) => (type === 'month' ? value.slice(0, 3) : value))
+							.join('');
 					} catch {
 						return d;
 					}

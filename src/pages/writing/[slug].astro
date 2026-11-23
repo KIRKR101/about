@@ -51,7 +51,10 @@ function formatDate(dateString: string) {
 			day: '2-digit',
 			month: 'short',
 			year: 'numeric'
-		}).format(new Date(dateString));
+		})
+			.formatToParts(new Date(dateString))
+			.map(({ type, value }) => (type === 'month' ? value.slice(0, 3) : value))
+			.join('');
 	} catch {
 		return dateString;
 	}

@@ -268,7 +268,7 @@ if (Astro.locals.prefersMarkdown) {
 			day: 'numeric',
 			month: 'short',
 			year: 'numeric'
-		});
+		}).replace(/\b([A-Za-z]{4,})\b/, (month) => month.slice(0, 3));
 	}
 
 	function renderSkeleton(
