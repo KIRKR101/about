@@ -227,7 +227,7 @@ pre::-webkit-scrollbar-corner {
 	.prose {
 		color: var(--color-ink-90);
 		font-family: var(--font-serif);
-		font-size: 1.125rem;
+		font-size: 1.0625rem;
 		line-height: 1.8;
 	}
 
@@ -263,13 +263,13 @@ pre::-webkit-scrollbar-corner {
 	}
 
 	.prose h1 {
-		font-size: 36px;
+		font-size: 34px;
 	}
 	.prose h2 {
-		font-size: 28px;
+		font-size: 26px;
 	}
 	.prose h3 {
-		font-size: 22px;
+		font-size: 20px;
 	}
 
 	.prose a {
