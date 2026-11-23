@@ -40,9 +40,9 @@ const formatDate = (date: string) =>
 		<main class="relative z-10 w-full max-w-[600px]">
 			<section class="pb-5">
 				<p class="max-w-none font-sans text-[15px] leading-[1.7] text-ink-80 sm:text-[16px]">
-					I am a Computer Engineering student at Warwick. I enjoy systems programming and web
-					programming; this site is built on Astro. I am also interested in politics, philosophy,
-					economics, photography, and art — particularly Dutch.{' '}<NowPlaying />.
+					I am a Computer Engineering student at Warwick, mostly interested in systems programming
+					and web development. Away from the computer, I read philosophy, follow politics, and enjoy
+					studying Dutch art, in books and in person.{' '}<NowPlaying />.
 				</p>
 				<nav
 					aria-label="Main navigation"
@@ -129,7 +129,7 @@ const formatDate = (date: string) =>
 										</span>
 										{writing.snippet && (
 											<>
-												<span class="mx-1.5 hidden text-ink-50 sm:inline">—</span>
+												<span class="mx-1.5 hidden text-ink-50 sm:inline">-</span>
 												<span class="hidden truncate font-sans text-[13px] text-ink-70 sm:inline">
 													{writing.snippet}
 												</span>
@@ -191,7 +191,7 @@ const formatDate = (date: string) =>
 										</span>
 										{project.shortDescription && (
 											<>
-												<span class="mx-1.5 hidden text-ink-50 sm:inline">—</span>
+												<span class="mx-1.5 hidden text-ink-50 sm:inline">-</span>
 												<span class="hidden truncate font-sans text-[13px] text-ink-70 sm:inline">
 													{project.shortDescription}
 												</span>
