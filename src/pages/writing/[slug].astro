@@ -182,6 +182,94 @@ function formatDate(dateString: string) {
 			}
 		});
 
+		// Keep the original links usable for navigation, including on touch devices.
+		const preview = document.createElement('div');
+		preview.className = 'footnote-preview';
+		preview.id = 'footnote-preview';
+		preview.setAttribute('role', 'tooltip');
+		preview.hidden = true;
+		document.body.appendChild(preview);
+		const previewEvents = new AbortController();
+
+		let activeFootnote: HTMLAnchorElement | null = null;
+		let closeTimer: ReturnType<typeof setTimeout>;
+
+		function closePreview() {
+			clearTimeout(closeTimer);
+			activeFootnote?.removeAttribute('aria-describedby');
+			activeFootnote = null;
+			preview.hidden = true;
+		}
+
+		function scheduleClose() {
+			clearTimeout(closeTimer);
+			closeTimer = setTimeout(closePreview, 120);
+		}
+
+		function showPreview(link: HTMLAnchorElement) {
+			const href = link.getAttribute('href');
+			const note = href?.startsWith('#') ? document.getElementById(href.slice(1)) : null;
+			if (!note) return;
+
+			clearTimeout(closeTimer);
+			activeFootnote?.removeAttribute('aria-describedby');
+			activeFootnote = link;
+			const content = note.cloneNode(true) as HTMLElement;
+			content
+				.querySelectorAll('.footnote-backref, .data-footnote-backref')
+				.forEach((backref) => backref.remove());
+			preview.textContent = content.textContent?.trim() ?? '';
+			if (!preview.textContent) return;
+			link.setAttribute('aria-describedby', preview.id);
+			preview.hidden = false;
+
+			const marker = link.getBoundingClientRect();
+			const box = preview.getBoundingClientRect();
+			const left = Math.max(
+				12,
+				Math.min(marker.left + marker.width / 2 - box.width / 2, window.innerWidth - box.width - 12)
+			);
+			const top =
+				marker.bottom + box.height + 8 <= window.innerHeight
+					? marker.bottom + 4
+					: Math.max(8, marker.top - box.height - 4);
+			preview.style.left = `${left}px`;
+			preview.style.top = `${top}px`;
+		}
+
+		article.querySelectorAll<HTMLAnchorElement>('a.footnote-ref').forEach((link) => {
+			link.addEventListener('pointerenter', (event) => {
+				if (event.pointerType !== 'touch') showPreview(link);
+			});
+			link.addEventListener('pointerleave', scheduleClose);
+			link.addEventListener('focus', () => showPreview(link));
+			link.addEventListener('blur', scheduleClose);
+			link.addEventListener('click', closePreview);
+		});
+		preview.addEventListener('pointerenter', () => clearTimeout(closeTimer));
+		preview.addEventListener('pointerleave', scheduleClose);
+		window.addEventListener('scroll', closePreview, {
+			passive: true,
+			signal: previewEvents.signal
+		});
+		window.addEventListener('resize', closePreview, { signal: previewEvents.signal });
+		document.addEventListener(
+			'keydown',
+			(event) => {
+				if (event.key === 'Escape') closePreview();
+			},
+			{ signal: previewEvents.signal }
+		);
+		document.addEventListener(
+			'astro:before-swap',
+			() => {
+				closePreview();
+				previewEvents.abort();
+				preview.remove();
+			},
+			{ once: true }
+		);
+
 		// Footnote backref smooth handling (mirrors src/lib/actions.ts:footnoteBackref)
 		article.addEventListener('click', (e) => {
 			const link = (e.target as Element).closest(

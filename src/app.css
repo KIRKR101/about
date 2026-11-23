@@ -457,6 +457,35 @@ pre::-webkit-scrollbar-corner {
 		opacity: 1;
 	}
 
+	/* Footnote previews */
+	.footnote-preview {
+		position: fixed;
+		z-index: 70;
+		width: min(18rem, calc(100vw - 2rem));
+		max-height: min(300px, 60vh);
+		overflow: auto;
+		padding: 0.75rem;
+		border: 1px solid var(--bd);
+		border-radius: 0.125rem;
+		background: #fff;
+		box-shadow:
+			0 10px 15px -3px rgb(0 0 0 / 0.1),
+			0 4px 6px -4px rgb(0 0 0 / 0.1);
+		color: var(--ink-80);
+		font-family: var(--font-sans);
+		font-size: 13px;
+		line-height: 1.6;
+		overflow-wrap: anywhere;
+	}
+
+	.footnote-preview[hidden] {
+		display: none;
+	}
+
+	.dark .footnote-preview {
+		background: #101010;
+	}
+
 	/* Inline Footnote Markers */
 	.prose sup {
 		font-size: 0.7em;
