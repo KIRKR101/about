@@ -40,7 +40,11 @@ function wrap(text, maxChars, maxLines) {
 	}
 	if (line) lines.push(line);
 	if (lines.length <= maxLines) return lines;
-	const clipped = lines.slice(0, maxLines).join(' ').slice(0, maxLines * maxChars - 2).trimEnd();
+	const clipped = lines
+		.slice(0, maxLines)
+		.join(' ')
+		.slice(0, maxLines * maxChars - 2)
+		.trimEnd();
 	return wrap(`${clipped}…`, maxChars, maxLines);
 }
 
@@ -57,13 +61,16 @@ function renderSvg(title, description = '') {
 	const titleLines = wrap(title, Math.floor(950 / (titleSize * 0.52)), 3);
 	const descriptionLines = wrap(description, 64, 2);
 	const titleLineHeight = Math.round(titleSize * 1.2);
-	const titleTop = Math.max(240, Math.round((height - titleLines.length * titleLineHeight) / 2) + 30);
+	const titleTop = Math.max(
+		240,
+		Math.round((height - titleLines.length * titleLineHeight) / 2) + 30
+	);
 	const descriptionTop = height - 76 - descriptionLines.length * 40;
 	const text = (lines, x, y, lineHeight, size, family, fill) =>
 		lines
 			.map(
 				(line, index) =>
-				`<text x="${x}" y="${y + index * lineHeight}" font-family="${family}" font-size="${size}" fill="${fill}">${escapeXml(line)}</text>`
+					`<text x="${x}" y="${y + index * lineHeight}" font-family="${family}" font-size="${size}" fill="${fill}">${escapeXml(line)}</text>`
 			)
 			.join('\n');
 
@@ -72,7 +79,7 @@ function renderSvg(title, description = '') {
 		<rect x="28" y="28" width="${width - 56}" height="${height - 56}" fill="none" stroke="rgba(16,16,16,.14)"/>
 		<text x="88" y="118" font-family="Arial, sans-serif" font-size="21" font-weight="600" letter-spacing="5" fill="rgba(16,16,16,.55)">${escapeXml(SITE_DOMAIN.toUpperCase())}</text>
 		${text(titleLines, 88, titleTop, titleLineHeight, titleSize, "Georgia, 'Times New Roman', serif", '#101010')}
-		${text(descriptionLines, 88, descriptionTop + 28, 40, 26, "Arial, sans-serif", 'rgba(16,16,16,.62)')}
+		${text(descriptionLines, 88, descriptionTop + 28, 40, 26, 'Arial, sans-serif', 'rgba(16,16,16,.62)')}
 	</svg>`;
 }
 
@@ -96,7 +103,9 @@ await Promise.all(
 	cards.map(async ({ path: relativePath, title, description }) => {
 		const destination = path.join(outputDir, relativePath);
 		await mkdir(path.dirname(destination), { recursive: true });
-		const image = await sharp(Buffer.from(renderSvg(title, description))).webp({ quality: 90 }).toBuffer();
+		const image = await sharp(Buffer.from(renderSvg(title, description)))
+			.webp({ quality: 90 })
+			.toBuffer();
 		await writeFile(destination, image);
 	})
 );

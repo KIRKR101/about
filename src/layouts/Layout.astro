@@ -38,7 +38,9 @@ const canonicalDesc = ogDescription ?? description;
 // An ogImage prop may itself be a relative path; the base URL turns it absolute.
 const canonicalImage = new URL(ogImage ?? '/hero.webp', SITE_URL).href;
 // Custom cards describe themselves via the page title; the shared hero keeps its painting alt.
-const canonicalImageAlt = ogImage ? (ogImageAlt ?? `${canonicalTitle}`) : (ogImageAlt ?? 'Sketch of Landscape with Person on a Path by Anton Mauve');
+const canonicalImageAlt = ogImage
+	? (ogImageAlt ?? `${canonicalTitle}`)
+	: (ogImageAlt ?? 'Sketch of Landscape with Person on a Path by Anton Mauve');
 
 const pathname = Astro.url.pathname;
 const showBreadcrumbs = pathname !== '/';
