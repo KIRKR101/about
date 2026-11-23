@@ -61,6 +61,37 @@ let els: Elements | null = null;
 let renderedKey: string | null = null;
 let requestVersion = 0;
 let failures = 0;
+let nextPollAt = 0;
+
+try {
+	const cached = JSON.parse(sessionStorage.getItem('now-playing') ?? 'null');
+	const track = cached?.track as NowPlaying | undefined;
+	const age = Date.now() - cached?.savedAt;
+	if (
+		track?.source === 'spotify' &&
+		typeof track.title === 'string' &&
+		track.title.trim() &&
+		typeof track.artist === 'string' &&
+		track.artist.trim() &&
+		typeof track.isPlaying === 'boolean' &&
+		Array.isArray(track.images) &&
+		Number.isFinite(age) &&
+		age >= 0 &&
+		age < 300_000
+	) {
+		currentTrack = track;
+		localProgress = Math.min(
+			(Number.isFinite(track.progress) ? Math.max(0, track.progress ?? 0) : 0) +
+				(track.isPlaying ? age : 0),
+			track.duration ?? Number.POSITIVE_INFINITY
+		);
+		progressBase = localProgress;
+		progressAnchor = performance.now();
+		nextPollAt = Number.isFinite(cached.nextPollAt) ? cached.nextPollAt : 0;
+	}
+} catch {
+	// Storage may be unavailable; fetch as usual.
+}
 
 const formatTime = (milliseconds: number) => {
 	const value = Number.isFinite(milliseconds) ? milliseconds : 0;
@@ -102,8 +133,8 @@ const setProgressAria = (element: Element | null, elapsed: number, duration: num
 	element.setAttribute('aria-valuetext', `${formatTime(elapsed)} of ${formatTime(duration)}`);
 };
 
-function queryEls(): Elements | null {
-	const root = document.querySelector<HTMLElement>('[data-now-playing]');
+function queryEls(scope: Document = document): Elements | null {
+	const root = scope.querySelector<HTMLElement>('[data-now-playing]');
 	if (!root) return null;
 	return {
 		root,
@@ -353,9 +384,28 @@ async function fetchNowPlaying() {
 		progressBase = localProgress;
 		progressAnchor = now;
 		failures = 0;
+		const remaining =
+			data.isPlaying && (data.duration ?? 0) > 0
+				? (data.duration ?? 0) - localProgress + 400
+				: Infinity;
+		const recommended = data.stale ? 30_000 : (data.next_poll_ms ?? POLL_INTERVAL);
+		nextPollAt = Date.now() + Math.max(1000, Math.min(recommended, remaining));
+		try {
+			sessionStorage.setItem(
+				'now-playing',
+				JSON.stringify({
+					track: { ...data, progress: localProgress },
+					savedAt: Date.now(),
+					nextPollAt
+				})
+			);
+		} catch {
+			// Storage is optional.
+		}
 		renderIfChanged();
 		startProgress();
 	} catch {
+		if (version !== requestVersion) return;
 		// Keep the last known track visible during a transient network or API error.
 		if (!document.hidden) {
 			pollId = setTimeout(
@@ -368,25 +418,30 @@ async function fetchNowPlaying() {
 		}
 	} finally {
 		isFetching = false;
+		if (version !== requestVersion && els && !document.hidden) startPolling();
 	}
-	if (!document.hidden && pollId === undefined) {
-		const duration = currentTrack?.duration ?? 0;
-		const remaining = duration > 0 ? duration - localProgress + 400 : Infinity;
-		const recommended = currentTrack?.stale
-			? 30_000
-			: (currentTrack?.next_poll_ms ?? POLL_INTERVAL);
+	if (els && !document.hidden && pollId === undefined) {
 		pollId = setTimeout(
 			() => {
 				pollId = undefined;
 				void fetchNowPlaying();
 			},
-			Math.max(1000, Math.min(recommended, remaining)) + Math.random() * 250
+			Math.max(0, nextPollAt - Date.now()) + Math.random() * 250
 		);
 	}
 }
 
 function startPolling() {
-	if (pollId === undefined && !document.hidden) void fetchNowPlaying();
+	if (pollId !== undefined || document.hidden || isFetching) return;
+	const delay = nextPollAt - Date.now();
+	if (!currentTrack || delay <= 0) {
+		void fetchNowPlaying();
+	} else {
+		pollId = setTimeout(() => {
+			pollId = undefined;
+			void fetchNowPlaying();
+		}, delay);
+	}
 }
 
 function stopPolling() {
@@ -412,6 +467,16 @@ function initTrackPolling() {
 	els = queryEls();
 	if (!els) return;
 	renderedKey = null;
+	if (currentTrack) {
+		if (currentTrack.isPlaying) {
+			localProgress = Math.min(
+				progressBase + performance.now() - progressAnchor,
+				currentTrack.duration ?? Number.POSITIVE_INFINITY
+			);
+		}
+		renderIfChanged();
+		if (!document.hidden) startProgress();
+	}
 	const hoverTrigger = els.root.querySelector<HTMLElement>('[data-track-hover-trigger]');
 	const tooltip = els.root.querySelector<HTMLElement>('[data-track-tooltip]');
 	const positionTooltip = (x: number, y: number) => {
@@ -477,12 +542,11 @@ function initTrackPolling() {
 		hoverTrigger?.removeEventListener('pointermove', onPointerMove);
 	};
 
-	fetchNowPlaying();
-	if (!document.hidden) startPolling();
+	startPolling();
 }
 
 initTrackPolling();
-document.addEventListener('astro:before-swap', () => {
+document.addEventListener('astro:before-swap', (event) => {
 	requestVersion++;
 	stopPolling();
 	stopProgress();
@@ -491,6 +555,16 @@ document.addEventListener('astro:before-swap', () => {
 	removeVisibility = undefined;
 	removeWakeListeners?.();
 	removeWakeListeners = undefined;
+	els = queryEls((event as Event & { newDocument: Document }).newDocument);
+	if (els && currentTrack) {
+		if (currentTrack.isPlaying) {
+			localProgress = Math.min(
+				progressBase + performance.now() - progressAnchor,
+				currentTrack.duration ?? Number.POSITIVE_INFINITY
+			);
+		}
+		updateTrack();
+	}
 	els = null;
 });
 document.addEventListener('astro:after-swap', initTrackPolling);

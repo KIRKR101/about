@@ -49,6 +49,58 @@
 	</span>
 </span>
 
+<script is:inline>
+	try {
+		const cached = JSON.parse(sessionStorage.getItem('now-playing') || 'null');
+		const track = cached?.track;
+		const root = document.querySelector('[data-now-playing]');
+		if (
+			root &&
+			track?.source === 'spotify' &&
+			typeof track.title === 'string' &&
+			track.title.trim() &&
+			typeof track.artist === 'string' &&
+			track.artist.trim() &&
+			typeof track.isPlaying === 'boolean' &&
+			Array.isArray(track.images) &&
+			Number.isFinite(cached.savedAt) &&
+			Date.now() - cached.savedAt < 300000 &&
+			Date.now() >= cached.savedAt
+		) {
+			/** @param {string} selector @param {string} text @param {string | null} href */
+			const setText = (selector, text, href) => {
+				const element = root.querySelector(selector);
+				if (!element) return;
+				if (href && /^https?:\/\//i.test(href)) {
+					const link = document.createElement('a');
+					link.href = href;
+					link.target = '_blank';
+					link.rel = 'noopener noreferrer';
+					link.className =
+						'underline decoration-transparent underline-offset-2 transition-[text-decoration-color] duration-100 hover:decoration-current';
+					link.textContent = text;
+					element.replaceChildren(link);
+				} else {
+					element.textContent = text;
+				}
+			};
+			root.setAttribute('data-state', track.isPlaying ? 'playing' : 'paused');
+			const status = root.querySelector('[data-track-status-text]');
+			if (status)
+				status.textContent = track.isPlaying
+					? 'I am currently listening to'
+					: 'The last song I listened to was';
+			setText('[data-track-title]', track.title, track.url);
+			setText('[data-track-artist]', track.artist, track.artistUrl);
+			setText('[data-hover-title]', track.title, track.url);
+			setText('[data-hover-artist]', track.artist, track.artistUrl);
+			root.querySelector('[data-track-skeleton]')?.classList.add('hidden');
+			root.querySelector('[data-track-content]')?.classList.remove('hidden');
+		}
+	} catch {
+		// Storage may be unavailable; the widget will load normally.
+	}
+</script>
 <script>
 	import '../scripts/now-playing';
 </script>
